@@ -228,6 +228,121 @@
             color: white;
         }
 
+        /* Guided Tour Styles */
+        .tour-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.8);
+            z-index: 1000;
+            display: none;
+        }
+
+        .tour-highlight {
+            position: absolute;
+            background: rgba(102, 126, 234, 0.2);
+            border: 3px solid #667eea;
+            border-radius: 10px;
+            pointer-events: none;
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0% { box-shadow: 0 0 0 0 rgba(102, 126, 234, 0.7); }
+            70% { box-shadow: 0 0 0 20px rgba(102, 126, 234, 0); }
+            100% { box-shadow: 0 0 0 0 rgba(102, 126, 234, 0); }
+        }
+
+        .tour-tooltip {
+            position: absolute;
+            background: white;
+            padding: 20px;
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+            max-width: 320px;
+            z-index: 1001;
+        }
+
+        .tour-tooltip::before {
+            content: '';
+            position: absolute;
+            width: 0;
+            height: 0;
+            border: 10px solid transparent;
+            border-bottom-color: white;
+            top: -20px;
+            left: 50%;
+            transform: translateX(-50%);
+        }
+
+        .tooltip-header {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 10px;
+        }
+
+        .tooltip-icon {
+            font-size: 1.5em;
+            color: #667eea;
+        }
+
+        .tooltip-title {
+            font-weight: 600;
+            color: #333;
+            font-size: 1.1em;
+        }
+
+        .tooltip-text {
+            color: #666;
+            line-height: 1.5;
+            margin-bottom: 15px;
+        }
+
+        .tooltip-buttons {
+            display: flex;
+            gap: 10px;
+            justify-content: flex-end;
+        }
+
+        .tooltip-button {
+            padding: 8px 15px;
+            border: none;
+            border-radius: 8px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .tooltip-skip {
+            background: #f8f9fa;
+            color: #666;
+        }
+
+        .tooltip-next {
+            background: #667eea;
+            color: white;
+        }
+
+        .tooltip-button:hover {
+            transform: translateY(-1px);
+        }
+
+        .tour-progress {
+            position: fixed;
+            top: 20px;
+            left: 20px;
+            background: rgba(255, 255, 255, 0.9);
+            padding: 10px 15px;
+            border-radius: 20px;
+            font-weight: 600;
+            color: #667eea;
+            z-index: 1002;
+            display: none;
+        }
+
         @media (max-width: 480px) {
             .container {
                 margin: 0;
@@ -328,12 +443,156 @@
         </div>
     </div>
 
+    <!-- Guided Tour Elements -->
+    <div class="tour-overlay" id="tourOverlay"></div>
+    <div class="tour-progress" id="tourProgress">Step 1 of 5</div>
+
     <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
     <script>
         // Initialize map
         let map;
         let userMarker;
         let connectionMarkers = [];
+        let isInTourMode = false;
+        let currentTourStep = 0;
+
+        // Tour configuration for map page
+        const tourSteps = [
+            {
+                target: '.location-banner',
+                title: 'Location-Based Discovery',
+                text: 'The app automatically detects when you\'re near institutions where your network connections work. This banner shows real-time opportunities.',
+                icon: '📍'
+            },
+            {
+                target: '.search-bar',
+                title: 'Smart Institution Search',
+                text: 'Search for any institution, help type, or specific need. Try "Hindustan Lever", "Gangaram Hospital", or "Marriage Lawyer".',
+                icon: '🔍'
+            },
+            {
+                target: '.connection-legend',
+                title: 'Color-Coded Network',
+                text: 'Green dots are direct contacts, blue are friends of friends, yellow are 3rd degree, red are 4th degree. Closer connections = faster help.',
+                icon: '🎨'
+            },
+            {
+                target: '.help-button',
+                title: 'Emergency Help System',
+                text: 'Large, prominent SOS button for urgent situations. Your request will route through the best connection path automatically.',
+                icon: '🆘'
+            },
+            {
+                target: '.action-grid',
+                title: 'Quick Actions',
+                text: 'Access your network, view help history, learn how it works, and find nearby connections. Everything you need is one tap away.',
+                icon: '⚡'
+            }
+        ];
+
+        // Initialize page
+        function initPage() {
+            const urlParams = new URLSearchParams(window.location.search);
+            if (urlParams.get('tour') === 'true') {
+                isInTourMode = true;
+                setTimeout(startTour, 2000); // Wait for map to load
+            }
+        }
+
+        function startTour() {
+            document.getElementById('tourOverlay').style.display = 'block';
+            document.getElementById('tourProgress').style.display = 'block';
+            showTourStep(0);
+        }
+
+        function showTourStep(stepIndex) {
+            if (stepIndex >= tourSteps.length) {
+                endTour();
+                return;
+            }
+
+            currentTourStep = stepIndex;
+            const step = tourSteps[stepIndex];
+            
+            // Update progress
+            document.getElementById('tourProgress').textContent = `Step ${stepIndex + 1} of ${tourSteps.length}`;
+
+            // Clear previous highlights
+            const existingHighlight = document.querySelector('.tour-highlight');
+            const existingTooltip = document.querySelector('.tour-tooltip');
+            if (existingHighlight) existingHighlight.remove();
+            if (existingTooltip) existingTooltip.remove();
+
+            // Find target element
+            const targetElement = document.querySelector(step.target);
+            if (!targetElement) return;
+
+            // Create highlight
+            const highlight = document.createElement('div');
+            highlight.className = 'tour-highlight';
+            
+            const rect = targetElement.getBoundingClientRect();
+            highlight.style.left = (rect.left - 5) + 'px';
+            highlight.style.top = (rect.top - 5) + 'px';
+            highlight.style.width = (rect.width + 10) + 'px';
+            highlight.style.height = (rect.height + 10) + 'px';
+            
+            document.body.appendChild(highlight);
+
+            // Create tooltip
+            const tooltip = document.createElement('div');
+            tooltip.className = 'tour-tooltip';
+            
+            tooltip.innerHTML = `
+                <div class="tooltip-header">
+                    <span class="tooltip-icon">${step.icon}</span>
+                    <span class="tooltip-title">${step.title}</span>
+                </div>
+                <div class="tooltip-text">${step.text}</div>
+                <div class="tooltip-buttons">
+                    <button class="tooltip-button tooltip-skip" onclick="endTour()">Skip Tour</button>
+                    <button class="tooltip-button tooltip-next" onclick="nextTourStep()">
+                        ${stepIndex === tourSteps.length - 1 ? 'Try Help Request' : 'Next'}
+                    </button>
+                </div>
+            `;
+
+            // Position tooltip
+            tooltip.style.left = Math.max(10, (rect.left + rect.width/2 - 160)) + 'px';
+            tooltip.style.top = (rect.bottom + 20) + 'px';
+
+            // Adjust if tooltip goes off screen
+            if (rect.bottom + 200 > window.innerHeight) {
+                tooltip.style.top = (rect.top - 180) + 'px';
+            }
+
+            document.body.appendChild(tooltip);
+        }
+
+        function nextTourStep() {
+            if (currentTourStep === tourSteps.length - 1) {
+                endTour();
+                // Auto-trigger help request for demo
+                setTimeout(() => {
+                    if (isInTourMode) {
+                        needHelp();
+                    }
+                }, 500);
+            } else {
+                showTourStep(currentTourStep + 1);
+            }
+        }
+
+        function endTour() {
+            document.getElementById('tourOverlay').style.display = 'none';
+            document.getElementById('tourProgress').style.display = 'none';
+            
+            // Clean up
+            const highlight = document.querySelector('.tour-highlight');
+            const tooltip = document.querySelector('.tour-tooltip');
+            if (highlight) highlight.remove();
+            if (tooltip) tooltip.remove();
+        }
 
         function initMap() {
             // Initialize map centered on Delhi
@@ -428,7 +687,12 @@
         }
 
         function needHelp() {
-            window.location.href = 'help-request.html';
+            if (isInTourMode) {
+                alert('🎯 Demo Mode\n\nGreat! You\'re about to see the help request process. This shows how your request routes through your network to find the best helper.\n\nNext: Experience the category selection and routing system!');
+                window.location.href = 'help-request.html?tour=true';
+            } else {
+                window.location.href = 'help-request.html';
+            }
         }
 
         function findNearby() {
@@ -450,20 +714,25 @@
         });
 
         // Initialize map when page loads
-        window.addEventListener('load', initMap);
+        window.addEventListener('load', function() {
+            initMap();
+            initPage();
+        });
 
         // Show welcome message
         setTimeout(() => {
-            const banner = document.querySelector('.location-banner');
-            banner.style.background = '#4CAF50';
-            banner.style.color = 'white';
-            banner.innerHTML = '✅ Welcome back! Your network is ready to help.';
-            
-            setTimeout(() => {
-                banner.style.background = '#e3f2fd';
-                banner.style.color = '#1976d2';
-                banner.innerHTML = '📍 You are near 3 institutions with connections';
-            }, 3000);
+            if (!isInTourMode) {
+                const banner = document.querySelector('.location-banner');
+                banner.style.background = '#4CAF50';
+                banner.style.color = 'white';
+                banner.innerHTML = '✅ Welcome back! Your network is ready to help.';
+                
+                setTimeout(() => {
+                    banner.style.background = '#e3f2fd';
+                    banner.style.color = '#1976d2';
+                    banner.innerHTML = '📍 You are near 3 institutions with connections';
+                }, 3000);
+            }
         }, 2000);
     </script>
 </body>

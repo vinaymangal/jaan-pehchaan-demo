@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Jaan Pehchaan - Your Network is Your Net Worth</title>
+    <title>Jaan Pehchaan - Know & Recognize</title>
     <style>
         * {
             margin: 0;
@@ -12,126 +12,485 @@
         }
 
         body {
-            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Arial, sans-serif;
-            background-color: #f5f5f5;
-            color: #333;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
         }
 
         .container {
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.2);
+            overflow: hidden;
+            width: 100%;
             max-width: 400px;
-            margin: 0 auto;
-            min-height: 100vh;
-            background-color: white;
-            box-shadow: 0 0 20px rgba(0,0,0,0.1);
-        }
-
-        .landing-screen {
             text-align: center;
-            padding: 40px 20px;
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            min-height: 100vh;
+            position: relative;
         }
 
-        .logo {
-            width: 120px;
-            height: 120px;
+        .header {
             background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            border-radius: 30px;
-            margin: 0 auto 30px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
             color: white;
-            font-size: 48px;
-            font-weight: bold;
+            padding: 40px 20px;
         }
 
-        h1 {
-            color: #333;
+        .app-icon {
+            font-size: 4em;
+            margin-bottom: 20px;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+        }
+
+        .app-title {
+            font-size: 2.5em;
             margin-bottom: 10px;
-            font-size: 28px;
+            font-weight: 700;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+        }
+
+        .app-subtitle {
+            font-size: 1.2em;
+            opacity: 0.9;
+            margin-bottom: 10px;
+            font-weight: 300;
         }
 
         .tagline {
-            color: #666;
-            margin-bottom: 40px;
-            font-size: 16px;
+            font-size: 0.9em;
+            opacity: 0.8;
+            font-style: italic;
         }
 
-        .hindi-text {
-            color: #888;
-            font-size: 14px;
-            margin-bottom: 40px;
+        .content {
+            padding: 40px 30px;
         }
 
-        .google-login-btn {
-            background-color: white;
-            border: 2px solid #ddd;
-            padding: 12px 24px;
-            border-radius: 8px;
-            display: inline-flex;
-            align-items: center;
-            gap: 12px;
+        .description {
+            font-size: 1.1em;
+            color: #555;
+            line-height: 1.6;
+            margin-bottom: 30px;
+        }
+
+        .highlight {
+            color: #667eea;
+            font-weight: 600;
+        }
+
+        .login-button {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            padding: 18px 40px;
+            border-radius: 50px;
+            font-size: 1.1em;
+            font-weight: 600;
             cursor: pointer;
             transition: all 0.3s ease;
-            text-decoration: none;
-            color: #333;
-            font-size: 16px;
+            box-shadow: 0 8px 20px rgba(102, 126, 234, 0.3);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
             margin: 0 auto;
         }
 
-        .google-login-btn:hover {
-            border-color: #4285f4;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        .login-button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 12px 30px rgba(102, 126, 234, 0.4);
         }
 
-        .google-icon {
-            width: 20px;
-            height: 20px;
+        .features {
+            margin-top: 40px;
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
         }
 
-        .demo-note {
+        .feature {
+            background: #f8f9fa;
+            padding: 20px;
+            border-radius: 15px;
+            transition: transform 0.3s ease;
+        }
+
+        .feature:hover {
+            transform: translateY(-3px);
+        }
+
+        .feature-icon {
+            font-size: 2em;
+            margin-bottom: 10px;
+        }
+
+        .feature-title {
+            font-weight: 600;
+            color: #333;
+            margin-bottom: 5px;
+        }
+
+        .feature-description {
+            font-size: 0.9em;
+            color: #666;
+            line-height: 1.4;
+        }
+
+        /* Guided Tour Styles */
+        .tour-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.8);
+            z-index: 1000;
+            display: none;
+        }
+
+        .tour-highlight {
             position: absolute;
-            top: 10px;
-            right: 10px;
-            background-color: #ff6b6b;
+            background: rgba(102, 126, 234, 0.2);
+            border: 3px solid #667eea;
+            border-radius: 10px;
+            pointer-events: none;
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0% { box-shadow: 0 0 0 0 rgba(102, 126, 234, 0.7); }
+            70% { box-shadow: 0 0 0 20px rgba(102, 126, 234, 0); }
+            100% { box-shadow: 0 0 0 0 rgba(102, 126, 234, 0); }
+        }
+
+        .tour-tooltip {
+            position: absolute;
+            background: white;
+            padding: 20px;
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+            max-width: 300px;
+            z-index: 1001;
+        }
+
+        .tour-tooltip::before {
+            content: '';
+            position: absolute;
+            width: 0;
+            height: 0;
+            border: 10px solid transparent;
+            border-bottom-color: white;
+            top: -20px;
+            left: 50%;
+            transform: translateX(-50%);
+        }
+
+        .tooltip-header {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 10px;
+        }
+
+        .tooltip-icon {
+            font-size: 1.5em;
+            color: #667eea;
+        }
+
+        .tooltip-title {
+            font-weight: 600;
+            color: #333;
+            font-size: 1.1em;
+        }
+
+        .tooltip-text {
+            color: #666;
+            line-height: 1.5;
+            margin-bottom: 15px;
+        }
+
+        .tooltip-buttons {
+            display: flex;
+            gap: 10px;
+            justify-content: flex-end;
+        }
+
+        .tooltip-button {
+            padding: 8px 15px;
+            border: none;
+            border-radius: 8px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .tooltip-skip {
+            background: #f8f9fa;
+            color: #666;
+        }
+
+        .tooltip-next {
+            background: #667eea;
             color: white;
-            padding: 5px 10px;
-            border-radius: 5px;
-            font-size: 12px;
+        }
+
+        .tooltip-button:hover {
+            transform: translateY(-1px);
+        }
+
+        .tour-progress {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            background: rgba(255, 255, 255, 0.9);
+            padding: 10px 15px;
+            border-radius: 20px;
+            font-weight: 600;
+            color: #667eea;
+            z-index: 1002;
+            display: none;
+        }
+
+        @media (max-width: 480px) {
+            .container {
+                margin: 10px;
+                max-width: none;
+            }
+            
+            .features {
+                grid-template-columns: 1fr;
+                gap: 15px;
+            }
+            
+            .content {
+                padding: 30px 20px;
+            }
         }
     </style>
 </head>
 <body>
     <div class="container">
-        <div class="demo-note">DEMO VERSION</div>
-        
-        <div class="landing-screen" id="landingScreen">
-            <div class="logo">JP</div>
-            <h1>Jaan Pehchaan</h1>
-            <p class="tagline">Your Network is Your Net Worth</p>
-            <p class="hindi-text">जान पहचान - आपका नेटवर्क ही आपकी ताकत है</p>
-            
-            <button class="google-login-btn" onclick="simulateLogin()">
-                <svg class="google-icon" viewBox="0 0 24 24">
-                    <path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/>
-                    <path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/>
-                    <path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z"/>
-                    <path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"/>
-                </svg>
+        <!-- Header -->
+        <div class="header">
+            <div class="app-icon">🤝</div>
+            <h1 class="app-title">Jaan Pehchaan</h1>
+            <p class="app-subtitle">जान पहचान</p>
+            <p class="tagline">Know & Recognize</p>
+        </div>
+
+        <!-- Content -->
+        <div class="content">
+            <p class="description">
+                Discover <span class="highlight">hidden connections</span> in your network and get help from people you never knew could assist you.
+            </p>
+
+            <button class="login-button" id="loginButton" onclick="login()">
+                <span>🔐</span>
                 Continue with Google
             </button>
+
+            <!-- Features Grid -->
+            <div class="features" id="featuresGrid">
+                <div class="feature">
+                    <div class="feature-icon">🔍</div>
+                    <div class="feature-title">Discover</div>
+                    <div class="feature-description">Find connections before you need them</div>
+                </div>
+                <div class="feature">
+                    <div class="feature-icon">🏢</div>
+                    <div class="feature-title">Map</div>
+                    <div class="feature-description">Know who works where in your network</div>
+                </div>
+                <div class="feature">
+                    <div class="feature-icon">🚀</div>
+                    <div class="feature-title">Skip Hassles</div>
+                    <div class="feature-description">Avoid bureaucratic nightmares</div>
+                </div>
+                <div class="feature">
+                    <div class="feature-icon">💡</div>
+                    <div class="feature-title">Hidden Value</div>
+                    <div class="feature-description">Unlock your network's potential</div>
+                </div>
+            </div>
         </div>
     </div>
 
+    <!-- Guided Tour Elements -->
+    <div class="tour-overlay" id="tourOverlay"></div>
+    <div class="tour-progress" id="tourProgress">Step 1 of 5</div>
+
     <script>
-function simulateLogin() {
-    alert('Login simulation! In the real app, this would connect to Google.');
-    // For demo, we'll proceed to contact invitation
-    window.location.href = 'invite-contacts.html';
-}
+        // Tour configuration
+        const tourSteps = [
+            {
+                target: '.app-title',
+                title: 'Welcome to Jaan Pehchaan',
+                text: 'This app helps you discover hidden connections in your network. The name means "Know & Recognize" in Hindi/Urdu.',
+                icon: '👋'
+            },
+            {
+                target: '.description',
+                title: 'The Core Problem We Solve',
+                text: 'Ever struggled at a government office, only to later learn a friend\'s relative works there? We solve this exact problem.',
+                icon: '💡'
+            },
+            {
+                target: '#loginButton',
+                title: 'Simple Google Login',
+                text: 'No complex registration needed. Just one-tap Google login to get started with building your network.',
+                icon: '🔐'
+            },
+            {
+                target: '#featuresGrid',
+                title: 'Four Key Features',
+                text: 'Discover connections proactively, map workplaces, skip bureaucratic hassles, and unlock hidden value in your network.',
+                icon: '⭐'
+            },
+            {
+                target: '#loginButton',
+                title: 'Ready to Start?',
+                text: 'Click "Continue with Google" to begin building your network and discovering hidden connections!',
+                icon: '🚀'
+            }
+        ];
+
+        let currentTourStep = 0;
+        let isInTourMode = false;
+
+        // Check if we're in tour mode
+        function initTour() {
+            const urlParams = new URLSearchParams(window.location.search);
+            if (urlParams.get('tour') === 'true') {
+                isInTourMode = true;
+                startTour();
+            }
+        }
+
+        function startTour() {
+            document.getElementById('tourOverlay').style.display = 'block';
+            document.getElementById('tourProgress').style.display = 'block';
+            showTourStep(0);
+        }
+
+        function showTourStep(stepIndex) {
+            if (stepIndex >= tourSteps.length) {
+                endTour();
+                return;
+            }
+
+            currentTourStep = stepIndex;
+            const step = tourSteps[stepIndex];
+            
+            // Update progress
+            document.getElementById('tourProgress').textContent = `Step ${stepIndex + 1} of ${tourSteps.length}`;
+
+            // Clear previous highlights
+            const existingHighlight = document.querySelector('.tour-highlight');
+            const existingTooltip = document.querySelector('.tour-tooltip');
+            if (existingHighlight) existingHighlight.remove();
+            if (existingTooltip) existingTooltip.remove();
+
+            // Find target element
+            const targetElement = document.querySelector(step.target);
+            if (!targetElement) return;
+
+            // Create highlight
+            const highlight = document.createElement('div');
+            highlight.className = 'tour-highlight';
+            
+            const rect = targetElement.getBoundingClientRect();
+            highlight.style.left = (rect.left - 5) + 'px';
+            highlight.style.top = (rect.top - 5) + 'px';
+            highlight.style.width = (rect.width + 10) + 'px';
+            highlight.style.height = (rect.height + 10) + 'px';
+            
+            document.body.appendChild(highlight);
+
+            // Create tooltip
+            const tooltip = document.createElement('div');
+            tooltip.className = 'tour-tooltip';
+            
+            tooltip.innerHTML = `
+                <div class="tooltip-header">
+                    <span class="tooltip-icon">${step.icon}</span>
+                    <span class="tooltip-title">${step.title}</span>
+                </div>
+                <div class="tooltip-text">${step.text}</div>
+                <div class="tooltip-buttons">
+                    <button class="tooltip-button tooltip-skip" onclick="endTour()">Skip Tour</button>
+                    <button class="tooltip-button tooltip-next" onclick="nextTourStep()">
+                        ${stepIndex === tourSteps.length - 1 ? 'Finish' : 'Next'}
+                    </button>
+                </div>
+            `;
+
+            // Position tooltip
+            tooltip.style.left = (rect.left + rect.width/2 - 150) + 'px';
+            tooltip.style.top = (rect.bottom + 20) + 'px';
+
+            // Adjust if tooltip goes off screen
+            if (rect.bottom + 200 > window.innerHeight) {
+                tooltip.style.top = (rect.top - 180) + 'px';
+                // Change arrow direction
+                tooltip.style.setProperty('--arrow-position', 'bottom');
+            }
+
+            document.body.appendChild(tooltip);
+        }
+
+        function nextTourStep() {
+            if (currentTourStep === tourSteps.length - 1) {
+                endTour();
+            } else {
+                showTourStep(currentTourStep + 1);
+            }
+        }
+
+        function endTour() {
+            document.getElementById('tourOverlay').style.display = 'none';
+            document.getElementById('tourProgress').style.display = 'none';
+            
+            // Clean up
+            const highlight = document.querySelector('.tour-highlight');
+            const tooltip = document.querySelector('.tour-tooltip');
+            if (highlight) highlight.remove();
+            if (tooltip) tooltip.remove();
+
+            // Show completion message
+            setTimeout(() => {
+                alert('🎉 Tour Complete!\n\nYou\'ve learned about Jaan Pehchaan\'s key features. Ready to start building your network?\n\nClick "Continue with Google" to begin!');
+            }, 500);
+        }
+
+        function login() {
+            if (isInTourMode) {
+                // In tour mode, show tour message and continue
+                alert('🎯 Tour Mode\n\nIn the real app, this would authenticate with Google. For the tour, we\'ll continue to the next step: building your network!\n\nNext: Invite your first 5 connections.');
+                window.location.href = 'invite-contacts.html?tour=true';
+            } else {
+                // Normal login flow
+                window.location.href = 'invite-contacts.html';
+            }
+        }
+
+        // Initialize tour when page loads
+        window.addEventListener('load', initTour);
+
+        // Add some demo animations
+        window.addEventListener('load', function() {
+            setTimeout(() => {
+                document.querySelectorAll('.feature').forEach((feature, index) => {
+                    setTimeout(() => {
+                        feature.style.transform = 'translateY(-3px)';
+                        setTimeout(() => {
+                            feature.style.transform = 'translateY(0)';
+                        }, 200);
+                    }, index * 100);
+                });
+            }, 1000);
+        });
     </script>
 </body>
 </html>

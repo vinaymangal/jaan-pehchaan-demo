@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Jaan Pehchaan - Request Help</title>
+    <title>Request Help - Jaan Pehchaan</title>
     <style>
         * {
             margin: 0;
@@ -12,447 +12,851 @@
         }
 
         body {
-            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Arial, sans-serif;
-            background-color: #f5f5f5;
-            color: #333;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 10px;
         }
 
         .container {
             max-width: 400px;
             margin: 0 auto;
-            min-height: 100vh;
-            background-color: white;
-            box-shadow: 0 0 20px rgba(0,0,0,0.1);
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+            overflow: hidden;
+            min-height: calc(100vh - 20px);
             display: flex;
             flex-direction: column;
         }
 
         .header {
-            background-color: white;
-            padding: 15px;
-            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
-            display: flex;
-            align-items: center;
-            gap: 15px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 20px;
+            text-align: center;
+            position: relative;
         }
 
         .back-button {
+            position: absolute;
+            left: 20px;
+            top: 50%;
+            transform: translateY(-50%);
             background: none;
             border: none;
+            color: white;
             font-size: 24px;
             cursor: pointer;
             padding: 5px;
+            border-radius: 50%;
+            transition: background-color 0.3s;
         }
 
-        .header h2 {
-            font-size: 20px;
-            color: #333;
+        .back-button:hover {
+            background-color: rgba(255, 255, 255, 0.2);
+        }
+
+        .header h1 {
+            font-size: 1.5em;
+            margin-bottom: 5px;
+        }
+
+        .header p {
+            font-size: 0.9em;
+            opacity: 0.9;
         }
 
         .content {
             flex: 1;
-            padding: 20px;
+            padding: 30px 20px;
             overflow-y: auto;
         }
 
-        .section-title {
-            font-size: 16px;
-            color: #666;
-            margin-bottom: 15px;
-        }
-
-        .help-categories {
-            display: grid;
-            grid-template-columns: repeat(2, 1fr);
-            gap: 15px;
+        .intro-section {
+            text-align: center;
             margin-bottom: 30px;
         }
 
+        .intro-icon {
+            font-size: 3em;
+            margin-bottom: 15px;
+        }
+
+        .intro-title {
+            font-size: 1.3em;
+            font-weight: 600;
+            color: #333;
+            margin-bottom: 10px;
+        }
+
+        .intro-description {
+            color: #666;
+            line-height: 1.5;
+            margin-bottom: 20px;
+        }
+
+        .urgency-banner {
+            background: #fff3e0;
+            padding: 15px;
+            border-radius: 10px;
+            border-left: 4px solid #ff9800;
+            margin-bottom: 30px;
+        }
+
+        .urgency-title {
+            font-weight: 600;
+            color: #f57c00;
+            margin-bottom: 5px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .urgency-text {
+            color: #f57c00;
+            font-size: 0.9em;
+            line-height: 1.4;
+        }
+
+        .categories-section {
+            margin-bottom: 30px;
+        }
+
+        .section-title {
+            font-size: 1.1em;
+            font-weight: 600;
+            color: #333;
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .section-icon {
+            color: #667eea;
+            font-size: 1.2em;
+        }
+
+        .categories-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+
         .category-card {
-            background-color: #f8f9fa;
-            border: 2px solid #e9ecef;
-            border-radius: 12px;
-            padding: 20px;
+            background: #f8f9fa;
+            padding: 20px 15px;
+            border-radius: 15px;
             text-align: center;
             cursor: pointer;
             transition: all 0.3s ease;
+            border: 2px solid transparent;
         }
 
         .category-card:hover {
-            border-color: #667eea;
-            background-color: #f3f4ff;
+            transform: translateY(-3px);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
         }
 
         .category-card.selected {
             border-color: #667eea;
-            background-color: #667eea;
-            color: white;
+            background: rgba(102, 126, 234, 0.1);
         }
 
         .category-icon {
-            font-size: 32px;
-            margin-bottom: 8px;
+            font-size: 2.5em;
+            margin-bottom: 10px;
         }
 
-        .category-name {
-            font-size: 14px;
-            font-weight: 500;
+        .category-title {
+            font-weight: 600;
+            color: #333;
+            margin-bottom: 5px;
+            font-size: 0.9em;
         }
 
-        .help-description {
-            margin-bottom: 20px;
+        .category-examples {
+            font-size: 0.8em;
+            color: #666;
+            line-height: 1.3;
         }
 
-        .help-description textarea {
-            width: 100%;
-            padding: 12px;
-            border: 2px solid #e9ecef;
-            border-radius: 8px;
-            font-size: 16px;
-            font-family: inherit;
-            resize: vertical;
-            min-height: 100px;
-        }
-
-        .help-description textarea:focus {
-            outline: none;
-            border-color: #667eea;
-        }
-
-        .voice-input {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            margin-top: 10px;
-            color: #667eea;
-            cursor: pointer;
-        }
-
-        .urgency-section {
+        .request-details {
             margin-bottom: 30px;
         }
 
-        .urgency-options {
-            display: flex;
-            gap: 10px;
-        }
-
-        .urgency-button {
-            flex: 1;
-            padding: 10px;
-            border: 2px solid #e9ecef;
-            background-color: #f8f9fa;
-            border-radius: 8px;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            text-align: center;
-        }
-
-        .urgency-button:hover {
-            border-color: #667eea;
-        }
-
-        .urgency-button.selected {
-            border-color: #667eea;
-            background-color: #667eea;
-            color: white;
-        }
-
-        .suggested-connections {
+        .input-group {
             margin-bottom: 20px;
         }
 
-        .connection-chain {
-            background-color: #f8f9fa;
-            border-radius: 8px;
-            padding: 15px;
-            margin-bottom: 10px;
+        .input-label {
+            font-weight: 600;
+            color: #333;
+            margin-bottom: 8px;
+            display: block;
         }
 
-        .chain-path {
+        .text-input {
+            width: 100%;
+            padding: 15px;
+            border: 2px solid #e0e0e0;
+            border-radius: 10px;
+            font-size: 1em;
+            resize: vertical;
+            min-height: 100px;
+            outline: none;
+            transition: border-color 0.3s;
+        }
+
+        .text-input:focus {
+            border-color: #667eea;
+        }
+
+        .urgency-selector {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 20px;
+        }
+
+        .urgency-option {
+            flex: 1;
+            padding: 12px 15px;
+            border: 2px solid #e0e0e0;
+            border-radius: 10px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-size: 0.9em;
+        }
+
+        .urgency-option.selected {
+            border-color: #667eea;
+            background: rgba(102, 126, 234, 0.1);
+            color: #667eea;
+            font-weight: 600;
+        }
+
+        .connection-routing {
+            background: #e8f5e8;
+            padding: 20px;
+            border-radius: 15px;
+            margin-bottom: 30px;
+            border-left: 4px solid #4CAF50;
+        }
+
+        .routing-title {
+            font-weight: 600;
+            color: #2e7d32;
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .routing-path {
             display: flex;
             align-items: center;
             gap: 10px;
             margin-bottom: 10px;
-            flex-wrap: wrap;
         }
 
-        .chain-person {
-            display: flex;
-            align-items: center;
-            gap: 5px;
+        .path-step {
+            background: #4CAF50;
+            color: white;
+            padding: 8px 12px;
+            border-radius: 20px;
+            font-size: 0.8em;
+            font-weight: 600;
         }
 
-        .chain-arrow {
-            color: #999;
+        .path-arrow {
+            color: #4CAF50;
+            font-size: 1.2em;
         }
 
-        .person-badge {
-            background-color: white;
-            padding: 5px 10px;
-            border-radius: 15px;
-            font-size: 14px;
-            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
-        }
-
-        .target-info {
-            font-size: 14px;
-            color: #666;
-            margin-top: 5px;
-        }
-
-        .bottom-panel {
-            background-color: white;
-            padding: 15px;
-            box-shadow: 0 -2px 10px rgba(0,0,0,0.1);
+        .routing-explanation {
+            color: #2e7d32;
+            font-size: 0.9em;
+            line-height: 1.4;
         }
 
         .submit-button {
             width: 100%;
             background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
             color: white;
-            padding: 15px;
             border: none;
-            border-radius: 8px;
-            font-size: 18px;
-            font-weight: bold;
+            padding: 18px;
+            border-radius: 15px;
+            font-size: 1.1em;
+            font-weight: 600;
             cursor: pointer;
-            transition: opacity 0.3s ease;
+            transition: all 0.3s ease;
+            box-shadow: 0 5px 15px rgba(102, 126, 234, 0.3);
         }
 
         .submit-button:hover {
-            opacity: 0.9;
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(102, 126, 234, 0.4);
         }
 
         .submit-button:disabled {
-            opacity: 0.5;
+            background: #ccc;
             cursor: not-allowed;
+            transform: none;
+            box-shadow: none;
         }
 
-        .demo-note {
+        .voice-input {
+            background: #f8f9fa;
+            border: 2px dashed #667eea;
+            border-radius: 10px;
+            padding: 20px;
+            text-align: center;
+            margin-bottom: 20px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .voice-input:hover {
+            background: rgba(102, 126, 234, 0.1);
+        }
+
+        .voice-icon {
+            font-size: 2em;
+            color: #667eea;
+            margin-bottom: 10px;
+        }
+
+        .voice-text {
+            color: #667eea;
+            font-weight: 600;
+        }
+
+        /* Guided Tour Styles */
+        .tour-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.8);
+            z-index: 1000;
+            display: none;
+        }
+
+        .tour-highlight {
             position: absolute;
-            top: 10px;
-            right: 10px;
-            background-color: #ff6b6b;
+            background: rgba(102, 126, 234, 0.2);
+            border: 3px solid #667eea;
+            border-radius: 10px;
+            pointer-events: none;
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0% { box-shadow: 0 0 0 0 rgba(102, 126, 234, 0.7); }
+            70% { box-shadow: 0 0 0 20px rgba(102, 126, 234, 0); }
+            100% { box-shadow: 0 0 0 0 rgba(102, 126, 234, 0); }
+        }
+
+        .tour-tooltip {
+            position: absolute;
+            background: white;
+            padding: 20px;
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+            max-width: 320px;
+            z-index: 1001;
+        }
+
+        .tour-tooltip::before {
+            content: '';
+            position: absolute;
+            width: 0;
+            height: 0;
+            border: 10px solid transparent;
+            border-bottom-color: white;
+            top: -20px;
+            left: 50%;
+            transform: translateX(-50%);
+        }
+
+        .tooltip-header {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 10px;
+        }
+
+        .tooltip-icon {
+            font-size: 1.5em;
+            color: #667eea;
+        }
+
+        .tooltip-title {
+            font-weight: 600;
+            color: #333;
+            font-size: 1.1em;
+        }
+
+        .tooltip-text {
+            color: #666;
+            line-height: 1.5;
+            margin-bottom: 15px;
+        }
+
+        .tooltip-buttons {
+            display: flex;
+            gap: 10px;
+            justify-content: flex-end;
+        }
+
+        .tooltip-button {
+            padding: 8px 15px;
+            border: none;
+            border-radius: 8px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .tooltip-skip {
+            background: #f8f9fa;
+            color: #666;
+        }
+
+        .tooltip-next {
+            background: #667eea;
             color: white;
-            padding: 5px 10px;
-            border-radius: 5px;
-            font-size: 12px;
+        }
+
+        .tooltip-button:hover {
+            transform: translateY(-1px);
+        }
+
+        .tour-progress {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            background: rgba(255, 255, 255, 0.9);
+            padding: 10px 15px;
+            border-radius: 20px;
+            font-weight: 600;
+            color: #667eea;
             z-index: 1002;
+            display: none;
+        }
+
+        @media (max-width: 480px) {
+            .container {
+                margin: 0;
+                border-radius: 0;
+                min-height: 100vh;
+            }
+            
+            .content {
+                padding: 20px 15px;
+            }
+            
+            .categories-grid {
+                grid-template-columns: 1fr;
+                gap: 10px;
+            }
         }
     </style>
 </head>
 <body>
     <div class="container">
-        <div class="demo-note">DEMO VERSION</div>
-        
+        <!-- Header -->
         <div class="header">
             <button class="back-button" onclick="goBack()">←</button>
-            <h2>Request Help</h2>
+            <h1>Request Help</h1>
+            <p>जान पहचान • Know & Recognize</p>
         </div>
 
+        <!-- Content -->
         <div class="content">
-            <div class="section-title">What kind of help do you need?</div>
-            
-            <div class="help-categories">
-                <div class="category-card" onclick="selectCategory(this, 'government')">
-                    <div class="category-icon">🏛️</div>
-                    <div class="category-name">Government Services</div>
-                </div>
-                
-                <div class="category-card" onclick="selectCategory(this, 'banking')">
-                    <div class="category-icon">🏦</div>
-                    <div class="category-name">Banking & Finance</div>
-                </div>
-                
-                <div class="category-card" onclick="selectCategory(this, 'healthcare')">
-                    <div class="category-icon">🏥</div>
-                    <div class="category-name">Healthcare</div>
-                </div>
-                
-                <div class="category-card" onclick="selectCategory(this, 'education')">
-                    <div class="category-icon">🎓</div>
-                    <div class="category-name">Education</div>
-                </div>
-                
-                <div class="category-card" onclick="selectCategory(this, 'legal')">
-                    <div class="category-icon">⚖️</div>
-                    <div class="category-name">Legal</div>
-                </div>
-                
-                <div class="category-card" onclick="selectCategory(this, 'professional')">
-                    <div class="category-icon">💼</div>
-                    <div class="category-name">Professional</div>
+            <!-- Introduction -->
+            <div class="intro-section" id="introSection">
+                <div class="intro-icon">🆘</div>
+                <div class="intro-title">What help do you need?</div>
+                <div class="intro-description">
+                    Your request will be routed through your network to find the best person to help you. Choose a category and describe your need.
                 </div>
             </div>
 
-            <div class="help-description">
-                <div class="section-title">Describe your need</div>
-                <textarea placeholder="Type or speak your request... Example: I need help renewing my driving license" id="helpDescription"></textarea>
-                <div class="voice-input" onclick="startVoiceInput()">
-                    <span>🎤</span>
-                    <span>Use voice input</span>
+            <!-- Urgency Banner -->
+            <div class="urgency-banner" id="urgencyBanner">
+                <div class="urgency-title">
+                    ⚡ Smart Routing System
+                </div>
+                <div class="urgency-text">
+                    Our algorithm finds the shortest path to the right person based on expertise, availability, and relationship strength.
                 </div>
             </div>
 
-            <div class="urgency-section">
-                <div class="section-title">How urgent is this?</div>
-                <div class="urgency-options">
-                    <div class="urgency-button" onclick="selectUrgency(this, 'low')">
-                        <div>😌</div>
-                        <div>Can wait</div>
-                    </div>
-                    <div class="urgency-button" onclick="selectUrgency(this, 'medium')">
-                        <div>😐</div>
-                        <div>Soon</div>
-                    </div>
-                    <div class="urgency-button selected" onclick="selectUrgency(this, 'high')">
-                        <div>😰</div>
-                        <div>Urgent</div>
-                    </div>
+            <!-- Categories -->
+            <div class="categories-section" id="categoriesSection">
+                <div class="section-title">
+                    <span class="section-icon">📂</span>
+                    Select Help Category
                 </div>
-            </div>
-
-            <div class="suggested-connections" id="suggestedConnections" style="display: none;">
-                <div class="section-title">Best connection path for your request</div>
                 
-                <div class="connection-chain">
-                    <div class="chain-path">
-                        <div class="chain-person">
-                            <span class="person-badge" style="background-color: #10b981; color: white;">You</span>
+                <div class="categories-grid">
+                    <div class="category-card" onclick="selectCategory('government')">
+                        <div class="category-icon">🏛️</div>
+                        <div class="category-title">Government Services</div>
+                        <div class="category-examples">Licenses, permits, documents, taxes</div>
+                    </div>
+                    
+                    <div class="category-card" onclick="selectCategory('banking')">
+                        <div class="category-icon">🏦</div>
+                        <div class="category-title">Banking & Finance</div>
+                        <div class="category-examples">Loans, accounts, investments</div>
+                    </div>
+                    
+                    <div class="category-card" onclick="selectCategory('healthcare')">
+                        <div class="category-icon">🏥</div>
+                        <div class="category-title">Healthcare</div>
+                        <div class="category-examples">Appointments, specialists, insurance</div>
+                    </div>
+                    
+                    <div class="category-card" onclick="selectCategory('education')">
+                        <div class="category-icon">🎓</div>
+                        <div class="category-title">Education</div>
+                        <div class="category-examples">Admissions, scholarships, guidance</div>
+                    </div>
+                    
+                    <div class="category-card" onclick="selectCategory('legal')">
+                        <div class="category-icon">⚖️</div>
+                        <div class="category-title">Legal Services</div>
+                        <div class="category-examples">Documentation, court procedures</div>
+                    </div>
+                    
+                    <div class="category-card" onclick="selectCategory('professional')">
+                        <div class="category-icon">💼</div>
+                        <div class="category-title">Professional</div>
+                        <div class="category-examples">Job referrals, business connections</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Request Details -->
+            <div class="request-details" id="requestDetails">
+                <div class="section-title">
+                    <span class="section-icon">✍️</span>
+                    Describe Your Need
+                </div>
+                
+                <!-- Voice Input Option -->
+                <div class="voice-input" onclick="startVoiceInput()" id="voiceInput">
+                    <div class="voice-icon">🎤</div>
+                    <div class="voice-text">Tap to use voice input</div>
+                </div>
+                
+                <div class="input-group">
+                    <label class="input-label">What specific help do you need?</label>
+                    <textarea class="text-input" id="helpDescription" placeholder="Be specific about your situation. For example: 'I need help getting a home loan approved quickly. Looking for guidance on documentation and which banks have the best rates for first-time buyers.'"></textarea>
+                </div>
+                
+                <div class="input-group">
+                    <label class="input-label">How urgent is this?</label>
+                    <div class="urgency-selector" id="urgencySelector">
+                        <div class="urgency-option" onclick="selectUrgency('low')">
+                            📅 This Week
                         </div>
-                        <span class="chain-arrow">→</span>
-                        <div class="chain-person">
-                            <span class="person-badge">Raj Kumar</span>
+                        <div class="urgency-option" onclick="selectUrgency('medium')">
+                            ⏰ Today
                         </div>
-                        <span class="chain-arrow">→</span>
-                        <div class="chain-person">
-                            <span class="person-badge">Priya Sharma</span>
+                        <div class="urgency-option" onclick="selectUrgency('high')">
+                            🚨 Urgent
                         </div>
-                    </div>
-                    <div class="target-info">
-                        <strong>Priya Sharma</strong> - Senior Inspector at Delhi RTO Office
                     </div>
                 </div>
             </div>
-        </div>
 
-        <div class="bottom-panel">
-            <button class="submit-button" onclick="submitHelpRequest()" disabled id="submitButton">
+            <!-- Connection Routing Preview -->
+            <div class="connection-routing" id="connectionRouting" style="display: none;">
+                <div class="routing-title">
+                    🎯 Best Connection Path Found
+                </div>
+                <div class="routing-path">
+                    <div class="path-step">You</div>
+                    <div class="path-arrow">→</div>
+                    <div class="path-step">Amit</div>
+                    <div class="path-arrow">→</div>
+                    <div class="path-step">Rajesh (Bank Manager)</div>
+                </div>
+                <div class="routing-explanation">
+                    Your request will go to Amit Sharma (your direct contact), who will forward it to Rajesh Kumar (Senior Manager at SBI). Expected response time: 2-4 hours.
+                </div>
+            </div>
+
+            <!-- Submit Button -->
+            <button class="submit-button" id="submitButton" onclick="submitRequest()" disabled>
                 Send Help Request
             </button>
         </div>
     </div>
 
-    <script>
-        let selectedCategory = null;
-        let selectedUrgency = 'high';
+    <!-- Guided Tour Elements -->
+    <div class="tour-overlay" id="tourOverlay"></div>
+    <div class="tour-progress" id="tourProgress">Step 1 of 4</div>
 
-        function goBack() {
-            window.location.href = 'map.html';
+    <script>
+        let selectedCategory = '';
+        let selectedUrgency = '';
+        let isInTourMode = false;
+        let currentTourStep = 0;
+
+        // Tour configuration for help-request page
+        const tourSteps = [
+            {
+                target: '#introSection',
+                title: 'Help Request System',
+                text: 'This is where users describe what help they need. The system will find the best person in their network to assist them.',
+                icon: '🆘'
+            },
+            {
+                target: '#categoriesSection',
+                title: 'Smart Category Selection',
+                text: 'Six main categories cover 90% of help needs in India: Government, Banking, Healthcare, Education, Legal, and Professional services.',
+                icon: '📂'
+            },
+            {
+                target: '#voiceInput',
+                title: 'Voice Input for Urgency',
+                text: 'Voice input helps users quickly describe their needs during stressful situations when typing might be difficult.',
+                icon: '🎤'
+            },
+            {
+                target: '#connectionRouting',
+                title: 'Intelligent Routing',
+                text: 'The system shows users exactly how their request will travel through their network to reach the right helper.',
+                icon: '🎯'
+            }
+        ];
+
+        // Initialize page
+        function initPage() {
+            const urlParams = new URLSearchParams(window.location.search);
+            if (urlParams.get('tour') === 'true') {
+                isInTourMode = true;
+                setTimeout(startTour, 1000);
+            }
         }
 
-        function selectCategory(element, category) {
-            // Remove previous selection
+        function startTour() {
+            document.getElementById('tourOverlay').style.display = 'block';
+            document.getElementById('tourProgress').style.display = 'block';
+            showTourStep(0);
+        }
+
+        function showTourStep(stepIndex) {
+            if (stepIndex >= tourSteps.length) {
+                endTour();
+                return;
+            }
+
+            currentTourStep = stepIndex;
+            const step = tourSteps[stepIndex];
+            
+            // Update progress
+            document.getElementById('tourProgress').textContent = `Step ${stepIndex + 1} of ${tourSteps.length}`;
+
+            // Clear previous highlights
+            const existingHighlight = document.querySelector('.tour-highlight');
+            const existingTooltip = document.querySelector('.tour-tooltip');
+            if (existingHighlight) existingHighlight.remove();
+            if (existingTooltip) existingTooltip.remove();
+
+            // Special handling for connection routing step
+            if (step.target === '#connectionRouting') {
+                document.getElementById('connectionRouting').style.display = 'block';
+            }
+
+            // Find target element
+            const targetElement = document.querySelector(step.target);
+            if (!targetElement) return;
+
+            // Create highlight
+            const highlight = document.createElement('div');
+            highlight.className = 'tour-highlight';
+            
+            const rect = targetElement.getBoundingClientRect();
+            highlight.style.left = (rect.left - 5) + 'px';
+            highlight.style.top = (rect.top - 5) + 'px';
+            highlight.style.width = (rect.width + 10) + 'px';
+            highlight.style.height = (rect.height + 10) + 'px';
+            
+            document.body.appendChild(highlight);
+
+            // Create tooltip
+            const tooltip = document.createElement('div');
+            tooltip.className = 'tour-tooltip';
+            
+            tooltip.innerHTML = `
+                <div class="tooltip-header">
+                    <span class="tooltip-icon">${step.icon}</span>
+                    <span class="tooltip-title">${step.title}</span>
+                </div>
+                <div class="tooltip-text">${step.text}</div>
+                <div class="tooltip-buttons">
+                    <button class="tooltip-button tooltip-skip" onclick="endTour()">Skip Tour</button>
+                    <button class="tooltip-button tooltip-next" onclick="nextTourStep()">
+                        ${stepIndex === tourSteps.length - 1 ? 'Submit Demo Request' : 'Next'}
+                    </button>
+                </div>
+            `;
+
+            // Position tooltip
+            tooltip.style.left = Math.max(10, (rect.left + rect.width/2 - 160)) + 'px';
+            tooltip.style.top = (rect.bottom + 20) + 'px';
+
+            // Adjust if tooltip goes off screen
+            if (rect.bottom + 200 > window.innerHeight) {
+                tooltip.style.top = (rect.top - 180) + 'px';
+            }
+
+            document.body.appendChild(tooltip);
+        }
+
+        function nextTourStep() {
+            if (currentTourStep === tourSteps.length - 1) {
+                endTour();
+                // Auto-fill form for demo
+                setTimeout(() => {
+                    if (isInTourMode) {
+                        autoFillDemoRequest();
+                    }
+                }, 500);
+            } else {
+                showTourStep(currentTourStep + 1);
+            }
+        }
+
+        function endTour() {
+            document.getElementById('tourOverlay').style.display = 'none';
+            document.getElementById('tourProgress').style.display = 'none';
+            
+            // Clean up
+            const highlight = document.querySelector('.tour-highlight');
+            const tooltip = document.querySelector('.tour-tooltip');
+            if (highlight) highlight.remove();
+            if (tooltip) tooltip.remove();
+        }
+
+        function autoFillDemoRequest() {
+            // Auto-select banking category
+            selectCategory('banking');
+            
+            // Fill description
+            document.getElementById('helpDescription').value = 'I need help getting a home loan approved quickly. Looking for guidance on documentation and which banks have the best rates for first-time buyers.';
+            
+            // Select urgency
+            selectUrgency('medium');
+            
+            // Show routing
+            document.getElementById('connectionRouting').style.display = 'block';
+            
+            // Enable submit button
+            updateSubmitButton();
+            
+            alert('🎯 Demo Mode\n\nForm auto-filled with a realistic banking help request. This shows how users would describe their needs and see the connection routing.\n\nClick "Send Help Request" to see the success confirmation!');
+        }
+
+        function selectCategory(category) {
+            selectedCategory = category;
+            
+            // Remove previous selections
             document.querySelectorAll('.category-card').forEach(card => {
                 card.classList.remove('selected');
             });
             
             // Add selection to clicked card
-            element.classList.add('selected');
-            selectedCategory = category;
+            event.target.closest('.category-card').classList.add('selected');
             
-            // Show suggested connections based on category
-            showSuggestedConnections(category);
-            
-            // Enable submit button
-            checkSubmitButton();
+            updateSubmitButton();
         }
 
-        function selectUrgency(element, urgency) {
-            // Remove previous selection
-            document.querySelectorAll('.urgency-button').forEach(button => {
-                button.classList.remove('selected');
+        function selectUrgency(urgency) {
+            selectedUrgency = urgency;
+            
+            // Remove previous selections
+            document.querySelectorAll('.urgency-option').forEach(option => {
+                option.classList.remove('selected');
             });
             
-            // Add selection to clicked button
-            element.classList.add('selected');
-            selectedUrgency = urgency;
-        }
-
-        function showSuggestedConnections(category) {
-            const connections = {
-                'government': {
-                    path: ['You', 'Raj Kumar', 'Priya Sharma'],
-                    target: 'Priya Sharma - Senior Inspector at Delhi RTO Office'
-                },
-                'banking': {
-                    path: ['You', 'Raj Kumar'],
-                    target: 'Raj Kumar - Branch Manager at State Bank of India'
-                },
-                'healthcare': {
-                    path: ['You', 'Neha Patel', 'Dr. Amit Verma'],
-                    target: 'Dr. Amit Verma - Cardiologist at Apollo Hospital'
-                },
-                'education': {
-                    path: ['You', 'Neha Patel'],
-                    target: 'Neha Patel - Principal at DPS School'
-                },
-                'legal': {
-                    path: ['You', 'Raj Kumar', 'Priya Sharma', 'Sanjay Gupta'],
-                    target: 'Sanjay Gupta - Advocate at Delhi High Court'
-                },
-                'professional': {
-                    path: ['You', 'Raj Kumar'],
-                    target: 'Raj Kumar - Branch Manager (can connect you further)'
-                }
-            };
-
-            const connectionData = connections[category];
-            if (connectionData) {
-                // Update the chain path
-                let pathHTML = '';
-                connectionData.path.forEach((person, index) => {
-                    if (index > 0) pathHTML += '<span class="chain-arrow">→</span>';
-                    const badgeColor = person === 'You' ? 'style="background-color: #10b981; color: white;"' : '';
-                    pathHTML += `
-                        <div class="chain-person">
-                            <span class="person-badge" ${badgeColor}>${person}</span>
-                        </div>
-                    `;
-                });
-                
-                document.querySelector('.chain-path').innerHTML = pathHTML;
-                document.querySelector('.target-info').innerHTML = `<strong>${connectionData.target.split(' - ')[0]}</strong> - ${connectionData.target.split(' - ')[1]}`;
-                document.getElementById('suggestedConnections').style.display = 'block';
+            // Add selection to clicked option
+            event.target.classList.add('selected');
+            
+            updateSubmitButton();
+            
+            // Show routing if both category and urgency selected
+            if (selectedCategory && selectedUrgency) {
+                showConnectionRouting();
             }
         }
 
-        function checkSubmitButton() {
-            const description = document.getElementById('helpDescription').value;
+        function showConnectionRouting() {
+            document.getElementById('connectionRouting').style.display = 'block';
+        }
+
+        function updateSubmitButton() {
+            const description = document.getElementById('helpDescription').value.trim();
             const submitButton = document.getElementById('submitButton');
             
-            if (selectedCategory && description.trim().length > 0) {
+            if (selectedCategory && selectedUrgency && description.length > 10) {
                 submitButton.disabled = false;
             } else {
                 submitButton.disabled = true;
             }
         }
 
-        document.getElementById('helpDescription').addEventListener('input', checkSubmitButton);
-
         function startVoiceInput() {
-            alert('Demo: Voice input would be activated here. In real app, this would use speech recognition.');
-            // Demo: Add sample text
-            document.getElementById('helpDescription').value = 'I need help renewing my driving license. My old one expired last month.';
-            checkSubmitButton();
+            alert('🎤 Voice Input\n\nIn the real app, this would start voice recording to help users quickly describe their needs during urgent situations.\n\nFor this demo, you can type in the text area below.');
         }
 
-        function submitHelpRequest() {
-            alert('Demo: Help request sent! In real app, this would notify your connections and track the request progress.');
-            // Show success screen
-            window.location.href = 'success.html';
+        function submitRequest() {
+            if (isInTourMode) {
+                alert('🎯 Demo Mode\n\nExcellent! Your help request is being processed. The system will route it through your network to find the best helper.\n\nNext: See the success confirmation and tracking information!');
+                window.location.href = 'success.html?tour=true';
+            } else {
+                window.location.href = 'success.html';
+            }
         }
+
+        function goBack() {
+            if (document.referrer && document.referrer !== '') {
+                window.history.back();
+            } else {
+                window.location.href = 'map.html';
+            }
+        }
+
+        // Update submit button when typing
+        document.getElementById('helpDescription').addEventListener('input', updateSubmitButton);
+
+        // Initialize when page loads
+        window.addEventListener('load', initPage);
+
+        // Add some demo animations
+        window.addEventListener('load', function() {
+            if (!isInTourMode) {
+                setTimeout(() => {
+                    document.querySelectorAll('.category-card').forEach((card, index) => {
+                        setTimeout(() => {
+                            card.style.transform = 'scale(1.05)';
+                            setTimeout(() => {
+                                card.style.transform = 'scale(1)';
+                            }, 200);
+                        }, index * 100);
+                    });
+                }, 1000);
+            }
+        });
     </script>
 </body>
 </html>

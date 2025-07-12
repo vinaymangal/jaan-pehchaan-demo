@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Jaan Pehchaan - Request Sent</title>
+    <title>Request Sent - Jaan Pehchaan</title>
     <style>
         * {
             margin: 0;
@@ -12,235 +12,707 @@
         }
 
         body {
-            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Arial, sans-serif;
-            background-color: #f5f5f5;
-            color: #333;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 10px;
         }
 
         .container {
             max-width: 400px;
             margin: 0 auto;
-            min-height: 100vh;
-            background-color: white;
-            box-shadow: 0 0 20px rgba(0,0,0,0.1);
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+            overflow: hidden;
+            min-height: calc(100vh - 20px);
             display: flex;
             flex-direction: column;
-            justify-content: center;
-            align-items: center;
+        }
+
+        .header {
+            background: linear-gradient(135deg, #4CAF50 0%, #45a049 100%);
+            color: white;
             padding: 20px;
+            text-align: center;
+            position: relative;
+        }
+
+        .header h1 {
+            font-size: 1.5em;
+            margin-bottom: 5px;
+        }
+
+        .header p {
+            font-size: 0.9em;
+            opacity: 0.9;
+        }
+
+        .content {
+            flex: 1;
+            padding: 30px 20px;
             text-align: center;
         }
 
-        .success-icon {
-            width: 80px;
-            height: 80px;
-            background-color: #10b981;
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
+        .success-animation {
+            font-size: 4em;
             margin-bottom: 20px;
-            animation: scaleIn 0.5s ease-out;
+            animation: bounce 2s infinite;
         }
 
-        @keyframes scaleIn {
-            from {
-                transform: scale(0);
-                opacity: 0;
+        @keyframes bounce {
+            0%, 20%, 50%, 80%, 100% {
+                transform: translateY(0);
             }
-            to {
-                transform: scale(1);
-                opacity: 1;
+            40% {
+                transform: translateY(-10px);
+            }
+            60% {
+                transform: translateY(-5px);
             }
         }
 
-        .success-icon svg {
-            width: 40px;
-            height: 40px;
-            stroke: white;
-            stroke-width: 3;
-        }
-
-        h1 {
-            font-size: 24px;
+        .success-title {
+            font-size: 1.5em;
+            font-weight: 600;
+            color: #4CAF50;
             margin-bottom: 10px;
-            color: #333;
         }
 
-        .message {
+        .success-message {
             color: #666;
-            margin-bottom: 30px;
             line-height: 1.5;
+            margin-bottom: 30px;
         }
 
-        .request-details {
-            background-color: #f8f9fa;
-            border-radius: 12px;
+        .request-summary {
+            background: #f8f9fa;
             padding: 20px;
+            border-radius: 15px;
             margin-bottom: 30px;
-            width: 100%;
             text-align: left;
         }
 
-        .detail-row {
-            display: flex;
-            justify-content: space-between;
-            margin-bottom: 10px;
-            font-size: 14px;
-        }
-
-        .detail-label {
-            color: #666;
-        }
-
-        .detail-value {
-            font-weight: 500;
+        .summary-title {
+            font-weight: 600;
             color: #333;
-        }
-
-        .connection-status {
-            background-color: #f3f4ff;
-            border: 1px solid #e0e7ff;
-            border-radius: 8px;
-            padding: 15px;
-            margin-bottom: 20px;
-            width: 100%;
-        }
-
-        .status-item {
+            margin-bottom: 15px;
             display: flex;
             align-items: center;
             gap: 10px;
-            margin-bottom: 10px;
-            font-size: 14px;
         }
 
-        .status-item:last-child {
+        .summary-item {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 10px;
+            padding-bottom: 8px;
+            border-bottom: 1px solid #e9ecef;
+        }
+
+        .summary-item:last-child {
+            border-bottom: none;
             margin-bottom: 0;
         }
 
-        .status-dot {
-            width: 8px;
-            height: 8px;
-            border-radius: 50%;
-            background-color: #10b981;
+        .summary-label {
+            color: #666;
+            font-size: 0.9em;
         }
 
-        .status-dot.pending {
-            background-color: #fbbf24;
+        .summary-value {
+            color: #333;
+            font-weight: 500;
+            text-align: right;
+        }
+
+        .tracking-section {
+            background: #e3f2fd;
+            padding: 20px;
+            border-radius: 15px;
+            margin-bottom: 30px;
+            border-left: 4px solid #2196f3;
+        }
+
+        .tracking-title {
+            font-weight: 600;
+            color: #1976d2;
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .tracking-steps {
+            list-style: none;
+        }
+
+        .tracking-step {
+            display: flex;
+            align-items: center;
+            margin-bottom: 12px;
+            font-size: 0.9em;
+        }
+
+        .tracking-step:last-child {
+            margin-bottom: 0;
+        }
+
+        .step-icon {
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-right: 12px;
+            font-size: 0.8em;
+        }
+
+        .step-completed {
+            background: #4CAF50;
+            color: white;
+        }
+
+        .step-current {
+            background: #2196f3;
+            color: white;
+            animation: pulse-step 2s infinite;
+        }
+
+        .step-pending {
+            background: #e0e0e0;
+            color: #999;
+        }
+
+        @keyframes pulse-step {
+            0% { box-shadow: 0 0 0 0 rgba(33, 150, 243, 0.7); }
+            70% { box-shadow: 0 0 0 10px rgba(33, 150, 243, 0); }
+            100% { box-shadow: 0 0 0 0 rgba(33, 150, 243, 0); }
+        }
+
+        .step-text {
+            color: #1976d2;
+        }
+
+        .connection-path {
+            background: #e8f5e8;
+            padding: 20px;
+            border-radius: 15px;
+            margin-bottom: 30px;
+            border-left: 4px solid #4CAF50;
+        }
+
+        .path-title {
+            font-weight: 600;
+            color: #2e7d32;
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .path-flow {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 15px;
+            flex-wrap: wrap;
+        }
+
+        .path-person {
+            background: #4CAF50;
+            color: white;
+            padding: 8px 12px;
+            border-radius: 20px;
+            font-size: 0.8em;
+            font-weight: 600;
+        }
+
+        .path-arrow {
+            color: #4CAF50;
+            font-size: 1.2em;
+        }
+
+        .path-explanation {
+            color: #2e7d32;
+            font-size: 0.9em;
+            line-height: 1.4;
+        }
+
+        .expected-response {
+            background: #fff3e0;
+            padding: 15px;
+            border-radius: 10px;
+            margin-bottom: 30px;
+            border-left: 4px solid #ff9800;
+        }
+
+        .response-title {
+            font-weight: 600;
+            color: #f57c00;
+            margin-bottom: 8px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .response-text {
+            color: #f57c00;
+            font-size: 0.9em;
         }
 
         .action-buttons {
-            display: flex;
-            gap: 10px;
-            width: 100%;
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+            margin-bottom: 20px;
         }
 
-        .button {
-            flex: 1;
-            padding: 12px;
-            border-radius: 8px;
-            font-size: 16px;
-            font-weight: 500;
+        .action-button {
+            padding: 12px 15px;
+            border: 2px solid #667eea;
+            background: #f8f9fa;
+            color: #667eea;
+            border-radius: 10px;
+            font-size: 0.9em;
+            font-weight: 600;
             cursor: pointer;
             transition: all 0.3s ease;
             text-decoration: none;
-            text-align: center;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+        }
+
+        .action-button:hover {
+            background: #667eea;
+            color: white;
+            transform: translateY(-2px);
         }
 
         .primary-button {
+            width: 100%;
             background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
             color: white;
             border: none;
+            padding: 15px;
+            border-radius: 10px;
+            font-size: 1em;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            margin-bottom: 15px;
         }
 
-        .secondary-button {
-            background-color: white;
+        .primary-button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(102, 126, 234, 0.3);
+        }
+
+        .tips-section {
+            background: #f8f9fa;
+            padding: 20px;
+            border-radius: 15px;
+            margin-bottom: 20px;
+            text-align: left;
+        }
+
+        .tips-title {
+            font-weight: 600;
+            color: #333;
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .tip-item {
+            margin-bottom: 10px;
+            font-size: 0.9em;
+            color: #666;
+            display: flex;
+            align-items: flex-start;
+            gap: 8px;
+        }
+
+        .tip-icon {
+            color: #667eea;
+            margin-top: 2px;
+        }
+
+        /* Guided Tour Styles */
+        .tour-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.8);
+            z-index: 1000;
+            display: none;
+        }
+
+        .tour-highlight {
+            position: absolute;
+            background: rgba(102, 126, 234, 0.2);
+            border: 3px solid #667eea;
+            border-radius: 10px;
+            pointer-events: none;
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0% { box-shadow: 0 0 0 0 rgba(102, 126, 234, 0.7); }
+            70% { box-shadow: 0 0 0 20px rgba(102, 126, 234, 0); }
+            100% { box-shadow: 0 0 0 0 rgba(102, 126, 234, 0); }
+        }
+
+        .tour-tooltip {
+            position: absolute;
+            background: white;
+            padding: 25px;
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+            max-width: 350px;
+            z-index: 1001;
+        }
+
+        .tour-tooltip::before {
+            content: '';
+            position: absolute;
+            width: 0;
+            height: 0;
+            border: 10px solid transparent;
+            border-bottom-color: white;
+            top: -20px;
+            left: 50%;
+            transform: translateX(-50%);
+        }
+
+        .tooltip-header {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 15px;
+        }
+
+        .tooltip-icon {
+            font-size: 2em;
+            color: #4CAF50;
+        }
+
+        .tooltip-title {
+            font-weight: 600;
+            color: #333;
+            font-size: 1.2em;
+        }
+
+        .tooltip-text {
+            color: #666;
+            line-height: 1.6;
+            margin-bottom: 20px;
+        }
+
+        .tooltip-buttons {
+            display: flex;
+            gap: 10px;
+            justify-content: center;
+        }
+
+        .tooltip-button {
+            padding: 10px 20px;
+            border: none;
+            border-radius: 8px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .tooltip-primary {
+            background: #4CAF50;
+            color: white;
+        }
+
+        .tooltip-secondary {
+            background: #f8f9fa;
             color: #667eea;
             border: 2px solid #667eea;
         }
 
-        .primary-button:hover {
-            opacity: 0.9;
+        .tooltip-button:hover {
+            transform: translateY(-1px);
         }
 
-        .secondary-button:hover {
-            background-color: #f3f4ff;
-        }
-
-        .demo-note {
-            position: absolute;
-            top: 10px;
-            right: 10px;
-            background-color: #ff6b6b;
-            color: white;
-            padding: 5px 10px;
-            border-radius: 5px;
-            font-size: 12px;
+        @media (max-width: 480px) {
+            .container {
+                margin: 0;
+                border-radius: 0;
+                min-height: 100vh;
+            }
+            
+            .content {
+                padding: 20px 15px;
+            }
+            
+            .action-buttons {
+                grid-template-columns: 1fr;
+                gap: 10px;
+            }
         }
     </style>
 </head>
 <body>
     <div class="container">
-        <div class="demo-note">DEMO VERSION</div>
-        
-        <div class="success-icon">
-            <svg viewBox="0 0 24 24" fill="none">
-                <path d="M5 13l4 4L19 7" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"/>
-            </svg>
+        <!-- Header -->
+        <div class="header">
+            <h1>Request Sent Successfully!</h1>
+            <p>जान पहचान • Know & Recognize</p>
         </div>
-        
-        <h1>Help Request Sent!</h1>
-        <p class="message">Your request has been sent through your connection network. You'll be notified when someone responds.</p>
-        
-        <div class="request-details">
-            <div class="detail-row">
-                <span class="detail-label">Request ID:</span>
-                <span class="detail-value">#JP2024001</span>
+
+        <!-- Content -->
+        <div class="content">
+            <!-- Success Animation -->
+            <div class="success-animation">✅</div>
+            <div class="success-title">Help is on the way!</div>
+            <div class="success-message">
+                Your request has been sent through your network. You'll be notified as soon as someone responds.
             </div>
-            <div class="detail-row">
-                <span class="detail-label">Category:</span>
-                <span class="detail-value">Government Services</span>
+
+            <!-- Request Summary -->
+            <div class="request-summary" id="requestSummary">
+                <div class="summary-title">
+                    📋 Request Summary
+                </div>
+                <div class="summary-item">
+                    <span class="summary-label">Category:</span>
+                    <span class="summary-value">Banking & Finance</span>
+                </div>
+                <div class="summary-item">
+                    <span class="summary-label">Urgency:</span>
+                    <span class="summary-value">Today</span>
+                </div>
+                <div class="summary-item">
+                    <span class="summary-label">Request ID:</span>
+                    <span class="summary-value">#JP2025-0147</span>
+                </div>
+                <div class="summary-item">
+                    <span class="summary-label">Submitted:</span>
+                    <span class="summary-value">Just now</span>
+                </div>
             </div>
-            <div class="detail-row">
-                <span class="detail-label">Urgency:</span>
-                <span class="detail-value">Urgent</span>
+
+            <!-- Tracking Section -->
+            <div class="tracking-section" id="trackingSection">
+                <div class="tracking-title">
+                    📍 Request Status
+                </div>
+                <ul class="tracking-steps">
+                    <li class="tracking-step">
+                        <div class="step-icon step-completed">✓</div>
+                        <div class="step-text">Request submitted</div>
+                    </li>
+                    <li class="tracking-step">
+                        <div class="step-icon step-current">2</div>
+                        <div class="step-text">Routing through network...</div>
+                    </li>
+                    <li class="tracking-step">
+                        <div class="step-icon step-pending">3</div>
+                        <div class="step-text">Helper contacted</div>
+                    </li>
+                    <li class="tracking-step">
+                        <div class="step-icon step-pending">4</div>
+                        <div class="step-text">Response received</div>
+                    </li>
+                </ul>
             </div>
-            <div class="detail-row">
-                <span class="detail-label">Sent to:</span>
-                <span class="detail-value">Raj Kumar</span>
+
+            <!-- Connection Path -->
+            <div class="connection-path" id="connectionPath">
+                <div class="path-title">
+                    🎯 Your Connection Path
+                </div>
+                <div class="path-flow">
+                    <div class="path-person">You</div>
+                    <div class="path-arrow">→</div>
+                    <div class="path-person">Amit Sharma</div>
+                    <div class="path-arrow">→</div>
+                    <div class="path-person">Rajesh Kumar</div>
+                </div>
+                <div class="path-explanation">
+                    Your request is being forwarded to Rajesh Kumar (Senior Manager at SBI) through Amit Sharma (your direct contact).
+                </div>
             </div>
-        </div>
-        
-        <div class="connection-status">
-            <div class="status-item">
-                <div class="status-dot"></div>
-                <span>Request sent to Raj Kumar (1st connection)</span>
+
+            <!-- Expected Response -->
+            <div class="expected-response">
+                <div class="response-title">
+                    ⏱️ Expected Response Time
+                </div>
+                <div class="response-text">
+                    Based on historical data, you should receive a response within 2-4 hours. We'll notify you immediately when someone replies.
+                </div>
             </div>
-            <div class="status-item">
-                <div class="status-dot pending"></div>
-                <span>Waiting for Raj Kumar to forward to Priya Sharma</span>
+
+            <!-- Tips Section -->
+            <div class="tips-section">
+                <div class="tips-title">
+                    💡 While You Wait
+                </div>
+                <div class="tip-item">
+                    <span class="tip-icon">📱</span>
+                    <span>Keep your phone nearby for quick responses</span>
+                </div>
+                <div class="tip-item">
+                    <span class="tip-icon">📝</span>
+                    <span>Prepare any documents you might need</span>
+                </div>
+                <div class="tip-item">
+                    <span class="tip-icon">🤝</span>
+                    <span>Be ready to help others in return</span>
+                </div>
+                <div class="tip-item">
+                    <span class="tip-icon">⭐</span>
+                    <span>Rate your helper after receiving assistance</span>
+                </div>
             </div>
-            <div class="status-item">
-                <div class="status-dot pending"></div>
-                <span>Priya Sharma will receive your request</span>
+
+            <!-- Action Buttons -->
+            <div class="action-buttons">
+                <a href="history.html" class="action-button">
+                    📋 View History
+                </a>
+                <a href="profile.html" class="action-button">
+                    👤 My Profile
+                </a>
             </div>
-        </div>
-        
-        <div class="action-buttons">
-            <button class="secondary-button" onclick="trackRequest()">Track Request</button>
-            <button class="primary-button" onclick="goHome()">Back to Map</button>
+
+            <!-- Primary Action -->
+            <button class="primary-button" onclick="goToMap()">
+                🗺️ Back to Network Map
+            </button>
         </div>
     </div>
 
+    <!-- Guided Tour Elements -->
+    <div class="tour-overlay" id="tourOverlay"></div>
+
     <script>
-        function trackRequest() {
-            alert('Demo: In real app, this would show live tracking of your request through the connection chain.');
+        let isInTourMode = false;
+
+        // Initialize page
+        function initPage() {
+            const urlParams = new URLSearchParams(window.location.search);
+            if (urlParams.get('tour') === 'true') {
+                isInTourMode = true;
+                setTimeout(showTourCompletion, 1500);
+            }
+            
+            // Simulate real-time updates
+            setTimeout(updateStatus, 3000);
+            setTimeout(updateStatus, 8000);
         }
-        
-        function goHome() {
-            window.location.href = 'map.html';
+
+        function showTourCompletion() {
+            const overlay = document.getElementById('tourOverlay');
+            overlay.style.display = 'block';
+
+            // Create completion tooltip
+            const tooltip = document.createElement('div');
+            tooltip.className = 'tour-tooltip';
+            tooltip.style.position = 'fixed';
+            tooltip.style.top = '50%';
+            tooltip.style.left = '50%';
+            tooltip.style.transform = 'translate(-50%, -50%)';
+            
+            tooltip.innerHTML = `
+                <div class="tooltip-header">
+                    <span class="tooltip-icon">🎉</span>
+                    <span class="tooltip-title">Tour Complete!</span>
+                </div>
+                <div class="tooltip-text">
+                    Congratulations! You've experienced the complete Jaan Pehchaan user journey:<br><br>
+                    ✅ Network building with AI suggestions<br>
+                    ✅ Interactive connection discovery<br>
+                    ✅ Smart help request routing<br>
+                    ✅ Real-time tracking and status updates<br><br>
+                    This demonstrates how Indians can leverage their networks to solve everyday problems more efficiently.
+                </div>
+                <div class="tooltip-buttons">
+                    <button class="tooltip-button tooltip-secondary" onclick="goToDemo()">
+                        🎯 Back to Demo Hub
+                    </button>
+                    <button class="tooltip-button tooltip-primary" onclick="exploreFreeMode()">
+                        🗺️ Explore App Freely
+                    </button>
+                </div>
+            `;
+
+            document.body.appendChild(tooltip);
         }
+
+        function goToDemo() {
+            window.location.href = 'demo-guide.html';
+        }
+
+        function exploreFreeMode() {
+            // Remove tour mode and go to map
+            const overlay = document.getElementById('tourOverlay');
+            overlay.style.display = 'none';
+            
+            const tooltip = document.querySelector('.tour-tooltip');
+            if (tooltip) tooltip.remove();
+            
+            alert('🎉 Demo Complete!\n\nYou can now explore the app freely. All features are fully functional:\n\n• View your network and connections\n• Browse help history\n• Update settings and preferences\n• Learn more about how it works\n\nFeel free to click around and experience the full app!');
+            
+            setTimeout(() => {
+                window.location.href = 'map.html';
+            }, 1000);
+        }
+
+        function updateStatus() {
+            // Simulate status updates
+            const steps = document.querySelectorAll('.tracking-step');
+            const currentStep = document.querySelector('.step-current');
+            
+            if (currentStep) {
+                currentStep.classList.remove('step-current');
+                currentStep.classList.add('step-completed');
+                currentStep.querySelector('.step-icon').textContent = '✓';
+                
+                const nextStep = currentStep.parentElement.nextElementSibling;
+                if (nextStep) {
+                    const nextIcon = nextStep.querySelector('.step-icon');
+                    nextIcon.classList.remove('step-pending');
+                    nextIcon.classList.add('step-current');
+                    
+                    // Update step number
+                    const stepNumber = Array.from(steps).indexOf(nextStep) + 1;
+                    if (stepNumber <= 4) {
+                        nextIcon.textContent = stepNumber;
+                    }
+                }
+            }
+        }
+
+        function goToMap() {
+            if (isInTourMode) {
+                exploreFreeMode();
+            } else {
+                window.location.href = 'map.html';
+            }
+        }
+
+        // Initialize when page loads
+        window.addEventListener('load', initPage);
+
+        // Simulate notification after 10 seconds
+        setTimeout(() => {
+            if (!isInTourMode) {
+                alert('📱 New Response!\n\nRajesh Kumar from SBI has responded to your help request:\n\n"Happy to help with your home loan query! I can guide you through the documentation process. Best rates currently at 8.5% for first-time buyers. When can we connect?"\n\n⭐ Rate this response in your help history.');
+            }
+        }, 10000);
     </script>
 </body>
 </html>

@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Jaan Pehchaan - Invite Contacts</title>
+    <title>Invite Contacts - Jaan Pehchaan</title>
     <style>
         * {
             margin: 0;
@@ -12,17 +12,20 @@
         }
 
         body {
-            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Arial, sans-serif;
-            background-color: #f5f5f5;
-            color: #333;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 10px;
         }
 
         .container {
             max-width: 400px;
             margin: 0 auto;
-            min-height: 100vh;
-            background-color: white;
-            box-shadow: 0 0 20px rgba(0,0,0,0.1);
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+            overflow: hidden;
+            min-height: calc(100vh - 20px);
             display: flex;
             flex-direction: column;
         }
@@ -30,48 +33,78 @@
         .header {
             background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
             color: white;
-            padding: 30px 20px;
+            padding: 20px;
             text-align: center;
         }
 
         .header h1 {
-            font-size: 24px;
-            margin-bottom: 10px;
-        }
-
-        .header p {
-            font-size: 16px;
-            opacity: 0.9;
-        }
-
-        .trust-message {
-            background-color: #f3f4ff;
-            border-left: 4px solid #667eea;
-            padding: 15px;
-            margin: 20px;
-            border-radius: 0 8px 8px 0;
-        }
-
-        .trust-message h3 {
-            font-size: 16px;
-            color: #667eea;
+            font-size: 1.5em;
             margin-bottom: 5px;
         }
 
-        .trust-message p {
-            font-size: 14px;
-            color: #666;
-            line-height: 1.5;
+        .header p {
+            font-size: 0.9em;
+            opacity: 0.9;
         }
 
         .content {
             flex: 1;
-            padding: 20px;
-            overflow-y: auto;
+            padding: 30px 20px;
+        }
+
+        .intro-section {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        .intro-icon {
+            font-size: 3em;
+            margin-bottom: 15px;
+        }
+
+        .intro-title {
+            font-size: 1.3em;
+            font-weight: 600;
+            color: #333;
+            margin-bottom: 10px;
+        }
+
+        .intro-description {
+            color: #666;
+            line-height: 1.5;
+            margin-bottom: 20px;
+        }
+
+        .trust-note {
+            background: #e8f5e8;
+            padding: 15px;
+            border-radius: 10px;
+            border-left: 4px solid #4CAF50;
+            margin-bottom: 30px;
+        }
+
+        .trust-title {
+            font-weight: 600;
+            color: #2e7d32;
+            margin-bottom: 5px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .trust-text {
+            color: #2e7d32;
+            font-size: 0.9em;
+            line-height: 1.4;
+        }
+
+        .ai-suggestions {
+            margin-bottom: 30px;
         }
 
         .section-title {
-            font-size: 16px;
+            font-size: 1.1em;
+            font-weight: 600;
             color: #333;
             margin-bottom: 15px;
             display: flex;
@@ -79,59 +112,43 @@
             gap: 10px;
         }
 
+        .suggestion-icon {
+            color: #667eea;
+            font-size: 1.2em;
+        }
+
         .contact-list {
+            background: #f8f9fa;
+            border-radius: 15px;
+            padding: 20px;
             margin-bottom: 20px;
         }
 
         .contact-item {
             display: flex;
             align-items: center;
-            padding: 15px;
-            background-color: #f8f9fa;
-            border-radius: 8px;
-            margin-bottom: 10px;
+            padding: 12px 0;
+            border-bottom: 1px solid #e9ecef;
             cursor: pointer;
             transition: all 0.3s ease;
         }
 
+        .contact-item:last-child {
+            border-bottom: none;
+        }
+
         .contact-item:hover {
-            background-color: #f3f4ff;
+            background: rgba(102, 126, 234, 0.1);
+            margin: 0 -10px;
+            padding: 12px 10px;
+            border-radius: 8px;
         }
 
         .contact-item.selected {
-            background-color: #667eea;
-            color: white;
-        }
-
-        .contact-avatar {
-            width: 40px;
-            height: 40px;
-            border-radius: 50%;
-            background-color: #ddd;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            margin-right: 15px;
-            font-weight: bold;
-            font-size: 18px;
-        }
-
-        .contact-item.selected .contact-avatar {
-            background-color: rgba(255,255,255,0.3);
-        }
-
-        .contact-info {
-            flex: 1;
-        }
-
-        .contact-name {
-            font-weight: 500;
-            margin-bottom: 2px;
-        }
-
-        .contact-phone {
-            font-size: 14px;
-            opacity: 0.8;
+            background: rgba(102, 126, 234, 0.1);
+            margin: 0 -10px;
+            padding: 12px 10px;
+            border-radius: 8px;
         }
 
         .contact-checkbox {
@@ -139,285 +156,588 @@
             height: 20px;
             border: 2px solid #ddd;
             border-radius: 4px;
+            margin-right: 15px;
             display: flex;
             align-items: center;
             justify-content: center;
+            transition: all 0.3s ease;
         }
 
         .contact-item.selected .contact-checkbox {
-            background-color: white;
-            border-color: white;
+            background: #667eea;
+            border-color: #667eea;
+            color: white;
         }
 
-        .contact-checkbox::after {
-            content: '✓';
-            color: #667eea;
+        .contact-avatar {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
             font-weight: bold;
+            margin-right: 15px;
+        }
+
+        .contact-info {
+            flex: 1;
+        }
+
+        .contact-name {
+            font-weight: 600;
+            color: #333;
+            margin-bottom: 2px;
+        }
+
+        .contact-relation {
+            font-size: 0.8em;
+            color: #667eea;
+            margin-bottom: 2px;
+        }
+
+        .contact-meta {
+            font-size: 0.8em;
+            color: #888;
+        }
+
+        .selection-counter {
+            text-align: center;
+            margin-bottom: 20px;
+            padding: 15px;
+            background: #fff3e0;
+            border-radius: 10px;
+            border: 2px solid #ff9800;
+        }
+
+        .counter-text {
+            color: #f57c00;
+            font-weight: 600;
+        }
+
+        .continue-button {
+            width: 100%;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            padding: 18px;
+            border-radius: 15px;
+            font-size: 1.1em;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 5px 15px rgba(102, 126, 234, 0.3);
+        }
+
+        .continue-button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(102, 126, 234, 0.4);
+        }
+
+        .continue-button:disabled {
+            background: #ccc;
+            cursor: not-allowed;
+            transform: none;
+            box-shadow: none;
+        }
+
+        .skip-option {
+            text-align: center;
+            margin-top: 15px;
+        }
+
+        .skip-link {
+            color: #667eea;
+            text-decoration: none;
+            font-size: 0.9em;
+        }
+
+        .skip-link:hover {
+            text-decoration: underline;
+        }
+
+        /* Guided Tour Styles */
+        .tour-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.8);
+            z-index: 1000;
             display: none;
         }
 
-        .contact-item.selected .contact-checkbox::after {
-            display: block;
+        .tour-highlight {
+            position: absolute;
+            background: rgba(102, 126, 234, 0.2);
+            border: 3px solid #667eea;
+            border-radius: 10px;
+            pointer-events: none;
+            animation: pulse 2s infinite;
         }
 
-        .ai-suggestion {
-            background-color: #fff3cd;
-            border: 1px solid #ffeaa7;
-            padding: 12px;
-            border-radius: 8px;
-            margin-bottom: 15px;
-            font-size: 14px;
-            color: #856404;
+        @keyframes pulse {
+            0% { box-shadow: 0 0 0 0 rgba(102, 126, 234, 0.7); }
+            70% { box-shadow: 0 0 0 20px rgba(102, 126, 234, 0); }
+            100% { box-shadow: 0 0 0 0 rgba(102, 126, 234, 0); }
         }
 
-        .bottom-panel {
-            background-color: white;
-            padding: 15px 20px;
-            box-shadow: 0 -2px 10px rgba(0,0,0,0.1);
+        .tour-tooltip {
+            position: absolute;
+            background: white;
+            padding: 20px;
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+            max-width: 320px;
+            z-index: 1001;
         }
 
-        .selection-count {
-            text-align: center;
+        .tour-tooltip::before {
+            content: '';
+            position: absolute;
+            width: 0;
+            height: 0;
+            border: 10px solid transparent;
+            border-bottom-color: white;
+            top: -20px;
+            left: 50%;
+            transform: translateX(-50%);
+        }
+
+        .tooltip-header {
+            display: flex;
+            align-items: center;
+            gap: 10px;
             margin-bottom: 10px;
-            font-size: 14px;
-            color: #666;
         }
 
-        .button-group {
+        .tooltip-icon {
+            font-size: 1.5em;
+            color: #667eea;
+        }
+
+        .tooltip-title {
+            font-weight: 600;
+            color: #333;
+            font-size: 1.1em;
+        }
+
+        .tooltip-text {
+            color: #666;
+            line-height: 1.5;
+            margin-bottom: 15px;
+        }
+
+        .tooltip-buttons {
             display: flex;
             gap: 10px;
+            justify-content: flex-end;
         }
 
-        .button {
-            flex: 1;
-            padding: 12px;
+        .tooltip-button {
+            padding: 8px 15px;
+            border: none;
             border-radius: 8px;
-            font-size: 16px;
-            font-weight: 500;
+            font-weight: 600;
             cursor: pointer;
             transition: all 0.3s ease;
-            border: none;
         }
 
-        .skip-button {
-            background-color: #f8f9fa;
+        .tooltip-skip {
+            background: #f8f9fa;
             color: #666;
         }
 
-        .invite-button {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        .tooltip-next {
+            background: #667eea;
             color: white;
         }
 
-        .invite-button:disabled {
-            opacity: 0.5;
-            cursor: not-allowed;
+        .tooltip-button:hover {
+            transform: translateY(-1px);
         }
 
-        .skip-button:hover {
-            background-color: #e9ecef;
-        }
-
-        .invite-button:hover:not(:disabled) {
-            opacity: 0.9;
-        }
-
-        .demo-note {
-            position: absolute;
-            top: 10px;
-            right: 10px;
-            background-color: #ff6b6b;
-            color: white;
-            padding: 5px 10px;
-            border-radius: 5px;
-            font-size: 12px;
+        .tour-progress {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            background: rgba(255, 255, 255, 0.9);
+            padding: 10px 15px;
+            border-radius: 20px;
+            font-weight: 600;
+            color: #667eea;
             z-index: 1002;
+            display: none;
         }
 
-        .loading-spinner {
-            display: inline-block;
-            width: 16px;
-            height: 16px;
-            border: 2px solid #f3f3f3;
-            border-top: 2px solid #667eea;
-            border-radius: 50%;
-            animation: spin 1s linear infinite;
-            margin-right: 8px;
-        }
-
-        @keyframes spin {
-            0% { transform: rotate(0deg); }
-            100% { transform: rotate(360deg); }
+        @media (max-width: 480px) {
+            .container {
+                margin: 0;
+                border-radius: 0;
+                min-height: 100vh;
+            }
+            
+            .content {
+                padding: 20px 15px;
+            }
         }
     </style>
 </head>
 <body>
     <div class="container">
-        <div class="demo-note">DEMO VERSION</div>
-        
+        <!-- Header -->
         <div class="header">
             <h1>Build Your Network</h1>
-            <p>Invite contacts to unlock the power of connections</p>
+            <p>जान पहचान • Know & Recognize</p>
         </div>
 
-        <div class="trust-message">
-            <h3>🔐 Why this matters</h3>
-            <p>Your first connections create trusted pathways to help. Each person you add can connect you to their network, expanding your reach up to 4 degrees.</p>
-        </div>
-
+        <!-- Content -->
         <div class="content">
-            <div class="section-title">
-                <span class="loading-spinner" id="loadingSpinner"></span>
-                <span id="sectionTitle">Analyzing your contacts...</span>
-            </div>
-
-            <div class="ai-suggestion" id="aiSuggestion" style="display: none;">
-                💡 <strong>AI Suggestion:</strong> Based on your call history, we recommend inviting these 5 contacts who you interact with most frequently.
-            </div>
-
-            <div class="contact-list" id="contactList" style="display: none;">
-                <div class="contact-item" onclick="toggleContact(this)">
-                    <div class="contact-avatar" style="background-color: #10b981;">RK</div>
-                    <div class="contact-info">
-                        <div class="contact-name">Raj Kumar</div>
-                        <div class="contact-phone">+91 98765 43210</div>
-                    </div>
-                    <div class="contact-checkbox"></div>
-                </div>
-
-                <div class="contact-item" onclick="toggleContact(this)">
-                    <div class="contact-avatar" style="background-color: #3b82f6;">PS</div>
-                    <div class="contact-info">
-                        <div class="contact-name">Priya Sharma</div>
-                        <div class="contact-phone">+91 98765 43211</div>
-                    </div>
-                    <div class="contact-checkbox"></div>
-                </div>
-
-                <div class="contact-item" onclick="toggleContact(this)">
-                    <div class="contact-avatar" style="background-color: #f59e0b;">AV</div>
-                    <div class="contact-info">
-                        <div class="contact-name">Amit Verma</div>
-                        <div class="contact-phone">+91 98765 43212</div>
-                    </div>
-                    <div class="contact-checkbox"></div>
-                </div>
-
-                <div class="contact-item" onclick="toggleContact(this)">
-                    <div class="contact-avatar" style="background-color: #ef4444;">NP</div>
-                    <div class="contact-info">
-                        <div class="contact-name">Neha Patel</div>
-                        <div class="contact-phone">+91 98765 43213</div>
-                    </div>
-                    <div class="contact-checkbox"></div>
-                </div>
-
-                <div class="contact-item" onclick="toggleContact(this)">
-                    <div class="contact-avatar" style="background-color: #8b5cf6;">SG</div>
-                    <div class="contact-info">
-                        <div class="contact-name">Sanjay Gupta</div>
-                        <div class="contact-phone">+91 98765 43214</div>
-                    </div>
-                    <div class="contact-checkbox"></div>
-                </div>
-
-                <div class="contact-item" onclick="toggleContact(this)">
-                    <div class="contact-avatar" style="background-color: #ec4899;">MM</div>
-                    <div class="contact-info">
-                        <div class="contact-name">Meera Mehta</div>
-                        <div class="contact-phone">+91 98765 43215</div>
-                    </div>
-                    <div class="contact-checkbox"></div>
-                </div>
-
-                <div class="contact-item" onclick="toggleContact(this)">
-                    <div class="contact-avatar" style="background-color: #14b8a6;">VK</div>
-                    <div class="contact-info">
-                        <div class="contact-name">Vikram Khanna</div>
-                        <div class="contact-phone">+91 98765 43216</div>
-                    </div>
-                    <div class="contact-checkbox"></div>
-                </div>
-
-                <div class="contact-item" onclick="toggleContact(this)">
-                    <div class="contact-avatar" style="background-color: #f97316;">RS</div>
-                    <div class="contact-info">
-                        <div class="contact-name">Rashmi Singh</div>
-                        <div class="contact-phone">+91 98765 43217</div>
-                    </div>
-                    <div class="contact-checkbox"></div>
+            <!-- Introduction -->
+            <div class="intro-section" id="introSection">
+                <div class="intro-icon">👥</div>
+                <div class="intro-title">Invite Your First 5 Connections</div>
+                <div class="intro-description">
+                    Start with your most trusted contacts. Each connection you add exponentially expands your network's reach and potential for help.
                 </div>
             </div>
-        </div>
 
-        <div class="bottom-panel">
-            <div class="selection-count" id="selectionCount">Select up to 5 contacts</div>
-            <div class="button-group">
-                <button class="button skip-button" onclick="skipInvite()">Skip for now</button>
-                <button class="button invite-button" onclick="sendInvites()" disabled id="inviteButton">
-                    Send Invites
-                </button>
+            <!-- Trust Note -->
+            <div class="trust-note" id="trustNote">
+                <div class="trust-title">
+                    🔒 Trust Chain Principle
+                </div>
+                <div class="trust-text">
+                    Each connection vouches for the next, creating a reliable network up to 4-5 degrees of separation. Quality over quantity ensures trustworthy help.
+                </div>
+            </div>
+
+            <!-- AI Suggestions -->
+            <div class="ai-suggestions" id="aiSuggestions">
+                <div class="section-title">
+                    <span class="suggestion-icon">🤖</span>
+                    AI-Powered Suggestions
+                </div>
+                
+                <div class="contact-list" id="contactList">
+                    <div class="contact-item" onclick="toggleContact(1)">
+                        <div class="contact-checkbox" id="checkbox-1"></div>
+                        <div class="contact-avatar">AM</div>
+                        <div class="contact-info">
+                            <div class="contact-name">Amit Sharma</div>
+                            <div class="contact-relation">College Friend • Close Contact</div>
+                            <div class="contact-meta">📞 Called 25 times this month</div>
+                        </div>
+                    </div>
+                    
+                    <div class="contact-item" onclick="toggleContact(2)">
+                        <div class="contact-checkbox" id="checkbox-2"></div>
+                        <div class="contact-avatar">PG</div>
+                        <div class="contact-info">
+                            <div class="contact-name">Priya Gupta</div>
+                            <div class="contact-relation">Colleague • Trusted Contact</div>
+                            <div class="contact-meta">💬 Frequent WhatsApp messages</div>
+                        </div>
+                    </div>
+                    
+                    <div class="contact-item" onclick="toggleContact(3)">
+                        <div class="contact-checkbox" id="checkbox-3"></div>
+                        <div class="contact-avatar">RK</div>
+                        <div class="contact-info">
+                            <div class="contact-name">Rohit Kumar</div>
+                            <div class="contact-relation">Neighbor • Family Friend</div>
+                            <div class="contact-meta">📱 Emergency contact listed</div>
+                        </div>
+                    </div>
+                    
+                    <div class="contact-item" onclick="toggleContact(4)">
+                        <div class="contact-checkbox" id="checkbox-4"></div>
+                        <div class="contact-avatar">SY</div>
+                        <div class="contact-info">
+                            <div class="contact-name">Sunita Yadav</div>
+                            <div class="contact-relation">Family Friend • Long-term Contact</div>
+                            <div class="contact-meta">📞 Regular calls for 3+ years</div>
+                        </div>
+                    </div>
+                    
+                    <div class="contact-item" onclick="toggleContact(5)">
+                        <div class="contact-checkbox" id="checkbox-5"></div>
+                        <div class="contact-avatar">VJ</div>
+                        <div class="contact-info">
+                            <div class="contact-name">Vikash Jain</div>
+                            <div class="contact-relation">Business Partner • Professional Contact</div>
+                            <div class="contact-meta">💼 Work collaboration history</div>
+                        </div>
+                    </div>
+                    
+                    <div class="contact-item" onclick="toggleContact(6)">
+                        <div class="contact-checkbox" id="checkbox-6"></div>
+                        <div class="contact-avatar">DN</div>
+                        <div class="contact-info">
+                            <div class="contact-name">Dr. Neha Agarwal</div>
+                            <div class="contact-relation">Family Doctor • Professional Contact</div>
+                            <div class="contact-meta">🏥 Medical consultation history</div>
+                        </div>
+                    </div>
+                    
+                    <div class="contact-item" onclick="toggleContact(7)">
+                        <div class="contact-checkbox" id="checkbox-7"></div>
+                        <div class="contact-avatar">AK</div>
+                        <div class="contact-info">
+                            <div class="contact-name">Ankit Kapoor</div>
+                            <div class="contact-relation">Cousin • Family Connection</div>
+                            <div class="contact-meta">👨‍👩‍👧‍👦 Family group member</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Selection Counter -->
+            <div class="selection-counter" id="selectionCounter">
+                <div class="counter-text">0 of 5 contacts selected</div>
+            </div>
+
+            <!-- Continue Button -->
+            <button class="continue-button" id="continueButton" onclick="continue_to_map()" disabled>
+                Continue to Network Map
+            </button>
+
+            <!-- Skip Option -->
+            <div class="skip-option">
+                <a href="#" class="skip-link" onclick="skipForNow()">Skip for now - I'll add contacts later</a>
             </div>
         </div>
     </div>
 
+    <!-- Guided Tour Elements -->
+    <div class="tour-overlay" id="tourOverlay"></div>
+    <div class="tour-progress" id="tourProgress">Step 1 of 4</div>
+
     <script>
-        let selectedContacts = 0;
-        const maxContacts = 5;
+        let selectedContacts = [];
+        let isInTourMode = false;
+        let currentTourStep = 0;
 
-        // Simulate contact loading
-        setTimeout(() => {
-            document.getElementById('loadingSpinner').style.display = 'none';
-            document.getElementById('sectionTitle').textContent = 'Suggested contacts';
-            document.getElementById('aiSuggestion').style.display = 'block';
-            document.getElementById('contactList').style.display = 'block';
-            
-            // Auto-select first 5 contacts as AI suggestion
-            const contacts = document.querySelectorAll('.contact-item');
-            for (let i = 0; i < 5 && i < contacts.length; i++) {
-                toggleContact(contacts[i], true);
+        // Tour configuration for invite-contacts page
+        const tourSteps = [
+            {
+                target: '#introSection',
+                title: 'Network Foundation',
+                text: 'Start with your 5 most trusted contacts. This creates the foundation of your network. Each person you invite can connect you to their networks too.',
+                icon: '👥'
+            },
+            {
+                target: '#trustNote',
+                title: 'Trust Chain System',
+                text: 'Your network works on trust. Each connection vouches for the next person, ensuring you get reliable help up to 4-5 degrees of separation.',
+                icon: '🔒'
+            },
+            {
+                target: '#aiSuggestions',
+                title: 'AI-Powered Suggestions',
+                text: 'Our AI analyzes your call frequency, message patterns, and contact relationships to suggest the best people to invite first.',
+                icon: '🤖'
+            },
+            {
+                target: '#continueButton',
+                title: 'Ready to Explore',
+                text: 'Select any 5 contacts to continue. In the real app, they\'ll receive invitation messages. For this demo, we\'ll show you the network map next!',
+                icon: '🚀'
             }
-        }, 1500);
+        ];
 
-        function toggleContact(element, forceSelect = false) {
-            if (element.classList.contains('selected') && !forceSelect) {
-                element.classList.remove('selected');
-                selectedContacts--;
-            } else if (!element.classList.contains('selected') && selectedContacts < maxContacts) {
-                element.classList.add('selected');
-                selectedContacts++;
-            } else if (selectedContacts >= maxContacts && !element.classList.contains('selected')) {
-                alert(`You can select maximum ${maxContacts} contacts`);
+        // Initialize page
+        function initPage() {
+            const urlParams = new URLSearchParams(window.location.search);
+            if (urlParams.get('tour') === 'true') {
+                isInTourMode = true;
+                setTimeout(startTour, 1000); // Small delay for page to load
+            }
+        }
+
+        function startTour() {
+            document.getElementById('tourOverlay').style.display = 'block';
+            document.getElementById('tourProgress').style.display = 'block';
+            showTourStep(0);
+        }
+
+        function showTourStep(stepIndex) {
+            if (stepIndex >= tourSteps.length) {
+                endTour();
                 return;
             }
 
+            currentTourStep = stepIndex;
+            const step = tourSteps[stepIndex];
+            
+            // Update progress
+            document.getElementById('tourProgress').textContent = `Step ${stepIndex + 1} of ${tourSteps.length}`;
+
+            // Clear previous highlights
+            const existingHighlight = document.querySelector('.tour-highlight');
+            const existingTooltip = document.querySelector('.tour-tooltip');
+            if (existingHighlight) existingHighlight.remove();
+            if (existingTooltip) existingTooltip.remove();
+
+            // Find target element
+            const targetElement = document.querySelector(step.target);
+            if (!targetElement) return;
+
+            // Create highlight
+            const highlight = document.createElement('div');
+            highlight.className = 'tour-highlight';
+            
+            const rect = targetElement.getBoundingClientRect();
+            highlight.style.left = (rect.left - 5) + 'px';
+            highlight.style.top = (rect.top - 5) + 'px';
+            highlight.style.width = (rect.width + 10) + 'px';
+            highlight.style.height = (rect.height + 10) + 'px';
+            
+            document.body.appendChild(highlight);
+
+            // Create tooltip
+            const tooltip = document.createElement('div');
+            tooltip.className = 'tour-tooltip';
+            
+            tooltip.innerHTML = `
+                <div class="tooltip-header">
+                    <span class="tooltip-icon">${step.icon}</span>
+                    <span class="tooltip-title">${step.title}</span>
+                </div>
+                <div class="tooltip-text">${step.text}</div>
+                <div class="tooltip-buttons">
+                    <button class="tooltip-button tooltip-skip" onclick="endTour()">Skip Tour</button>
+                    <button class="tooltip-button tooltip-next" onclick="nextTourStep()">
+                        ${stepIndex === tourSteps.length - 1 ? 'Continue Demo' : 'Next'}
+                    </button>
+                </div>
+            `;
+
+            // Position tooltip
+            tooltip.style.left = Math.max(10, (rect.left + rect.width/2 - 160)) + 'px';
+            tooltip.style.top = (rect.bottom + 20) + 'px';
+
+            // Adjust if tooltip goes off screen
+            if (rect.bottom + 200 > window.innerHeight) {
+                tooltip.style.top = (rect.top - 180) + 'px';
+            }
+
+            document.body.appendChild(tooltip);
+        }
+
+        function nextTourStep() {
+            if (currentTourStep === tourSteps.length - 1) {
+                // Auto-select 5 contacts for demo
+                if (isInTourMode) {
+                    autoSelectContactsForDemo();
+                }
+                endTour();
+            } else {
+                showTourStep(currentTourStep + 1);
+            }
+        }
+
+        function endTour() {
+            document.getElementById('tourOverlay').style.display = 'none';
+            document.getElementById('tourProgress').style.display = 'none';
+            
+            // Clean up
+            const highlight = document.querySelector('.tour-highlight');
+            const tooltip = document.querySelector('.tour-tooltip');
+            if (highlight) highlight.remove();
+            if (tooltip) tooltip.remove();
+        }
+
+        function autoSelectContactsForDemo() {
+            // Auto-select first 5 contacts for demo
+            for (let i = 1; i <= 5; i++) {
+                toggleContact(i, true);
+            }
+        }
+
+        function toggleContact(id, forceSelect = false) {
+            const contactItem = document.querySelector(`#checkbox-${id}`).parentElement;
+            const checkbox = document.getElementById(`checkbox-${id}`);
+            
+            if (contactItem.classList.contains('selected') && !forceSelect) {
+                // Deselect
+                contactItem.classList.remove('selected');
+                checkbox.innerHTML = '';
+                selectedContacts = selectedContacts.filter(contact => contact !== id);
+            } else if (selectedContacts.length < 5 || forceSelect) {
+                // Select
+                contactItem.classList.add('selected');
+                checkbox.innerHTML = '✓';
+                if (!selectedContacts.includes(id)) {
+                    selectedContacts.push(id);
+                }
+            }
+            
             updateUI();
         }
 
         function updateUI() {
-            const inviteButton = document.getElementById('inviteButton');
-            const selectionCount = document.getElementById('selectionCount');
+            const counter = document.getElementById('selectionCounter');
+            const continueButton = document.getElementById('continueButton');
             
-            if (selectedContacts > 0) {
-                inviteButton.disabled = false;
-                selectionCount.textContent = `${selectedContacts} of ${maxContacts} contacts selected`;
+            counter.querySelector('.counter-text').textContent = 
+                `${selectedContacts.length} of 5 contacts selected`;
+            
+            if (selectedContacts.length > 0) {
+                continueButton.disabled = false;
+                counter.style.borderColor = '#4CAF50';
+                counter.style.background = '#e8f5e8';
+                counter.querySelector('.counter-text').style.color = '#2e7d32';
             } else {
-                inviteButton.disabled = true;
-                selectionCount.textContent = `Select up to ${maxContacts} contacts`;
+                continueButton.disabled = true;
+                counter.style.borderColor = '#ff9800';
+                counter.style.background = '#fff3e0';
+                counter.querySelector('.counter-text').style.color = '#f57c00';
             }
         }
 
-        function sendInvites() {
-            alert(`Demo: Sending invites to ${selectedContacts} contacts. In real app, this would send SMS/WhatsApp invitations.`);
-            // Proceed to map
-            window.location.href = 'map.html';
-        }
-
-        function skipInvite() {
-            if (confirm('Are you sure? Inviting contacts helps you get help faster through trusted connections.')) {
+        function continue_to_map() {
+            if (selectedContacts.length === 0) return;
+            
+            if (isInTourMode) {
+                alert('🎯 Demo Mode\n\nExcellent! You\'ve selected your first 5 contacts. In the real app, they would receive invitation messages.\n\nNext: See how your network appears on the interactive map with connection discovery!');
+                window.location.href = 'map.html?tour=true';
+            } else {
                 window.location.href = 'map.html';
             }
         }
+
+        function skipForNow() {
+            if (isInTourMode) {
+                alert('🎯 Demo Mode\n\nSkipping contact invitation. In the real app, you can always add contacts later from settings.\n\nFor the demo, we\'ll show you the map with sample connections!');
+                window.location.href = 'map.html?tour=true';
+            } else {
+                window.location.href = 'map.html';
+            }
+        }
+
+        // Initialize when page loads
+        window.addEventListener('load', initPage);
+
+        // Add some demo animations
+        window.addEventListener('load', function() {
+            if (!isInTourMode) {
+                // Only run animations if not in tour mode
+                setTimeout(() => {
+                    document.querySelectorAll('.contact-item').forEach((item, index) => {
+                        setTimeout(() => {
+                            item.style.transform = 'translateX(10px)';
+                            setTimeout(() => {
+                                item.style.transform = 'translateX(0)';
+                            }, 200);
+                        }, index * 100);
+                    });
+                }, 1000);
+            }
+        });
     </script>
 </body>
 </html>
