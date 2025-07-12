@@ -451,6 +451,44 @@
                 </div>
             </div>
 
+            <!-- Demo & Support Section -->
+            <div class="settings-section">
+                <div class="section-title">
+                    <span class="section-icon">🎯</span>
+                    Demo & Support
+                </div>
+                
+                <div class="setting-item">
+                    <div class="setting-info">
+                        <div class="setting-label">Investor Demo Mode</div>
+                        <div class="setting-description">Interactive walkthrough for presentations and demos</div>
+                    </div>
+                    <a href="demo-guide.html" class="dropdown-select" style="text-decoration: none; padding: 8px 15px;">
+                        Launch Demo →
+                    </a>
+                </div>
+                
+                <div class="setting-item">
+                    <div class="setting-info">
+                        <div class="setting-label">How It Works Guide</div>
+                        <div class="setting-description">Learn about app features and benefits</div>
+                    </div>
+                    <a href="about.html" class="dropdown-select" style="text-decoration: none; padding: 8px 15px;">
+                        View Guide →
+                    </a>
+                </div>
+                
+                <div class="setting-item">
+                    <div class="setting-info">
+                        <div class="setting-label">Share App</div>
+                        <div class="setting-description">Invite friends and colleagues to join</div>
+                    </div>
+                    <button class="dropdown-select" onclick="shareApp()" style="padding: 8px 15px;">
+                        Share App 📱
+                    </button>
+                </div>
+            </div>
+
             <!-- Save Button -->
             <button class="save-button" onclick="saveSettings()">
                 💾 Save All Settings
@@ -520,6 +558,39 @@
             
             if (confirmed) {
                 alert('✅ Data Cleared\n\nAll your data has been cleared successfully. Your account settings have been reset to default.\n\nYou can start fresh! 🆕');
+            }
+        }
+
+        function shareApp() {
+            if (navigator.share) {
+                // Use native sharing if available
+                navigator.share({
+                    title: 'Jaan Pehchaan - Know & Recognize',
+                    text: 'Discover hidden connections in your network and get help from people you never knew could assist you!',
+                    url: window.location.origin
+                });
+            } else {
+                // Fallback for browsers without native sharing
+                const shareText = `🤝 Jaan Pehchaan - Know & Recognize
+
+Discover hidden connections in your network and get help from people you never knew could assist you!
+
+✅ Find connections before you need them
+✅ Skip bureaucratic hassles  
+✅ Get insider guidance
+✅ Help others in return
+
+Try the demo: ${window.location.origin}
+
+#JaanPehchaan #Networking #India`;
+
+                // Copy to clipboard
+                navigator.clipboard.writeText(shareText).then(() => {
+                    showToast('Share text copied to clipboard! 📋');
+                }).catch(() => {
+                    // Fallback alert if clipboard fails
+                    alert('📱 Share Jaan Pehchaan\n\n' + shareText);
+                });
             }
         }
 
