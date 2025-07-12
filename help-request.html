@@ -1,0 +1,458 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Jaan Pehchaan - Request Help</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Arial, sans-serif;
+            background-color: #f5f5f5;
+            color: #333;
+        }
+
+        .container {
+            max-width: 400px;
+            margin: 0 auto;
+            min-height: 100vh;
+            background-color: white;
+            box-shadow: 0 0 20px rgba(0,0,0,0.1);
+            display: flex;
+            flex-direction: column;
+        }
+
+        .header {
+            background-color: white;
+            padding: 15px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .back-button {
+            background: none;
+            border: none;
+            font-size: 24px;
+            cursor: pointer;
+            padding: 5px;
+        }
+
+        .header h2 {
+            font-size: 20px;
+            color: #333;
+        }
+
+        .content {
+            flex: 1;
+            padding: 20px;
+            overflow-y: auto;
+        }
+
+        .section-title {
+            font-size: 16px;
+            color: #666;
+            margin-bottom: 15px;
+        }
+
+        .help-categories {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 15px;
+            margin-bottom: 30px;
+        }
+
+        .category-card {
+            background-color: #f8f9fa;
+            border: 2px solid #e9ecef;
+            border-radius: 12px;
+            padding: 20px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .category-card:hover {
+            border-color: #667eea;
+            background-color: #f3f4ff;
+        }
+
+        .category-card.selected {
+            border-color: #667eea;
+            background-color: #667eea;
+            color: white;
+        }
+
+        .category-icon {
+            font-size: 32px;
+            margin-bottom: 8px;
+        }
+
+        .category-name {
+            font-size: 14px;
+            font-weight: 500;
+        }
+
+        .help-description {
+            margin-bottom: 20px;
+        }
+
+        .help-description textarea {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid #e9ecef;
+            border-radius: 8px;
+            font-size: 16px;
+            font-family: inherit;
+            resize: vertical;
+            min-height: 100px;
+        }
+
+        .help-description textarea:focus {
+            outline: none;
+            border-color: #667eea;
+        }
+
+        .voice-input {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-top: 10px;
+            color: #667eea;
+            cursor: pointer;
+        }
+
+        .urgency-section {
+            margin-bottom: 30px;
+        }
+
+        .urgency-options {
+            display: flex;
+            gap: 10px;
+        }
+
+        .urgency-button {
+            flex: 1;
+            padding: 10px;
+            border: 2px solid #e9ecef;
+            background-color: #f8f9fa;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-align: center;
+        }
+
+        .urgency-button:hover {
+            border-color: #667eea;
+        }
+
+        .urgency-button.selected {
+            border-color: #667eea;
+            background-color: #667eea;
+            color: white;
+        }
+
+        .suggested-connections {
+            margin-bottom: 20px;
+        }
+
+        .connection-chain {
+            background-color: #f8f9fa;
+            border-radius: 8px;
+            padding: 15px;
+            margin-bottom: 10px;
+        }
+
+        .chain-path {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 10px;
+            flex-wrap: wrap;
+        }
+
+        .chain-person {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+
+        .chain-arrow {
+            color: #999;
+        }
+
+        .person-badge {
+            background-color: white;
+            padding: 5px 10px;
+            border-radius: 15px;
+            font-size: 14px;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+        }
+
+        .target-info {
+            font-size: 14px;
+            color: #666;
+            margin-top: 5px;
+        }
+
+        .bottom-panel {
+            background-color: white;
+            padding: 15px;
+            box-shadow: 0 -2px 10px rgba(0,0,0,0.1);
+        }
+
+        .submit-button {
+            width: 100%;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 15px;
+            border: none;
+            border-radius: 8px;
+            font-size: 18px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: opacity 0.3s ease;
+        }
+
+        .submit-button:hover {
+            opacity: 0.9;
+        }
+
+        .submit-button:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+
+        .demo-note {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            background-color: #ff6b6b;
+            color: white;
+            padding: 5px 10px;
+            border-radius: 5px;
+            font-size: 12px;
+            z-index: 1002;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="demo-note">DEMO VERSION</div>
+        
+        <div class="header">
+            <button class="back-button" onclick="goBack()">←</button>
+            <h2>Request Help</h2>
+        </div>
+
+        <div class="content">
+            <div class="section-title">What kind of help do you need?</div>
+            
+            <div class="help-categories">
+                <div class="category-card" onclick="selectCategory(this, 'government')">
+                    <div class="category-icon">🏛️</div>
+                    <div class="category-name">Government Services</div>
+                </div>
+                
+                <div class="category-card" onclick="selectCategory(this, 'banking')">
+                    <div class="category-icon">🏦</div>
+                    <div class="category-name">Banking & Finance</div>
+                </div>
+                
+                <div class="category-card" onclick="selectCategory(this, 'healthcare')">
+                    <div class="category-icon">🏥</div>
+                    <div class="category-name">Healthcare</div>
+                </div>
+                
+                <div class="category-card" onclick="selectCategory(this, 'education')">
+                    <div class="category-icon">🎓</div>
+                    <div class="category-name">Education</div>
+                </div>
+                
+                <div class="category-card" onclick="selectCategory(this, 'legal')">
+                    <div class="category-icon">⚖️</div>
+                    <div class="category-name">Legal</div>
+                </div>
+                
+                <div class="category-card" onclick="selectCategory(this, 'professional')">
+                    <div class="category-icon">💼</div>
+                    <div class="category-name">Professional</div>
+                </div>
+            </div>
+
+            <div class="help-description">
+                <div class="section-title">Describe your need</div>
+                <textarea placeholder="Type or speak your request... Example: I need help renewing my driving license" id="helpDescription"></textarea>
+                <div class="voice-input" onclick="startVoiceInput()">
+                    <span>🎤</span>
+                    <span>Use voice input</span>
+                </div>
+            </div>
+
+            <div class="urgency-section">
+                <div class="section-title">How urgent is this?</div>
+                <div class="urgency-options">
+                    <div class="urgency-button" onclick="selectUrgency(this, 'low')">
+                        <div>😌</div>
+                        <div>Can wait</div>
+                    </div>
+                    <div class="urgency-button" onclick="selectUrgency(this, 'medium')">
+                        <div>😐</div>
+                        <div>Soon</div>
+                    </div>
+                    <div class="urgency-button selected" onclick="selectUrgency(this, 'high')">
+                        <div>😰</div>
+                        <div>Urgent</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="suggested-connections" id="suggestedConnections" style="display: none;">
+                <div class="section-title">Best connection path for your request</div>
+                
+                <div class="connection-chain">
+                    <div class="chain-path">
+                        <div class="chain-person">
+                            <span class="person-badge" style="background-color: #10b981; color: white;">You</span>
+                        </div>
+                        <span class="chain-arrow">→</span>
+                        <div class="chain-person">
+                            <span class="person-badge">Raj Kumar</span>
+                        </div>
+                        <span class="chain-arrow">→</span>
+                        <div class="chain-person">
+                            <span class="person-badge">Priya Sharma</span>
+                        </div>
+                    </div>
+                    <div class="target-info">
+                        <strong>Priya Sharma</strong> - Senior Inspector at Delhi RTO Office
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="bottom-panel">
+            <button class="submit-button" onclick="submitHelpRequest()" disabled id="submitButton">
+                Send Help Request
+            </button>
+        </div>
+    </div>
+
+    <script>
+        let selectedCategory = null;
+        let selectedUrgency = 'high';
+
+        function goBack() {
+            window.location.href = 'map.html';
+        }
+
+        function selectCategory(element, category) {
+            // Remove previous selection
+            document.querySelectorAll('.category-card').forEach(card => {
+                card.classList.remove('selected');
+            });
+            
+            // Add selection to clicked card
+            element.classList.add('selected');
+            selectedCategory = category;
+            
+            // Show suggested connections based on category
+            showSuggestedConnections(category);
+            
+            // Enable submit button
+            checkSubmitButton();
+        }
+
+        function selectUrgency(element, urgency) {
+            // Remove previous selection
+            document.querySelectorAll('.urgency-button').forEach(button => {
+                button.classList.remove('selected');
+            });
+            
+            // Add selection to clicked button
+            element.classList.add('selected');
+            selectedUrgency = urgency;
+        }
+
+        function showSuggestedConnections(category) {
+            const connections = {
+                'government': {
+                    path: ['You', 'Raj Kumar', 'Priya Sharma'],
+                    target: 'Priya Sharma - Senior Inspector at Delhi RTO Office'
+                },
+                'banking': {
+                    path: ['You', 'Raj Kumar'],
+                    target: 'Raj Kumar - Branch Manager at State Bank of India'
+                },
+                'healthcare': {
+                    path: ['You', 'Neha Patel', 'Dr. Amit Verma'],
+                    target: 'Dr. Amit Verma - Cardiologist at Apollo Hospital'
+                },
+                'education': {
+                    path: ['You', 'Neha Patel'],
+                    target: 'Neha Patel - Principal at DPS School'
+                },
+                'legal': {
+                    path: ['You', 'Raj Kumar', 'Priya Sharma', 'Sanjay Gupta'],
+                    target: 'Sanjay Gupta - Advocate at Delhi High Court'
+                },
+                'professional': {
+                    path: ['You', 'Raj Kumar'],
+                    target: 'Raj Kumar - Branch Manager (can connect you further)'
+                }
+            };
+
+            const connectionData = connections[category];
+            if (connectionData) {
+                // Update the chain path
+                let pathHTML = '';
+                connectionData.path.forEach((person, index) => {
+                    if (index > 0) pathHTML += '<span class="chain-arrow">→</span>';
+                    const badgeColor = person === 'You' ? 'style="background-color: #10b981; color: white;"' : '';
+                    pathHTML += `
+                        <div class="chain-person">
+                            <span class="person-badge" ${badgeColor}>${person}</span>
+                        </div>
+                    `;
+                });
+                
+                document.querySelector('.chain-path').innerHTML = pathHTML;
+                document.querySelector('.target-info').innerHTML = `<strong>${connectionData.target.split(' - ')[0]}</strong> - ${connectionData.target.split(' - ')[1]}`;
+                document.getElementById('suggestedConnections').style.display = 'block';
+            }
+        }
+
+        function checkSubmitButton() {
+            const description = document.getElementById('helpDescription').value;
+            const submitButton = document.getElementById('submitButton');
+            
+            if (selectedCategory && description.trim().length > 0) {
+                submitButton.disabled = false;
+            } else {
+                submitButton.disabled = true;
+            }
+        }
+
+        document.getElementById('helpDescription').addEventListener('input', checkSubmitButton);
+
+        function startVoiceInput() {
+            alert('Demo: Voice input would be activated here. In real app, this would use speech recognition.');
+            // Demo: Add sample text
+            document.getElementById('helpDescription').value = 'I need help renewing my driving license. My old one expired last month.';
+            checkSubmitButton();
+        }
+
+        function submitHelpRequest() {
+            alert('Demo: Help request sent! In real app, this would notify your connections and track the request progress.');
+            // Show success screen
+            window.location.href = 'success.html';
+        }
+    </script>
+</body>
+</html>
