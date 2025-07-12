@@ -1,0 +1,672 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Help History - Jaan Pehchaan</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 10px;
+        }
+
+        .container {
+            max-width: 400px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+            overflow: hidden;
+            min-height: calc(100vh - 20px);
+            display: flex;
+            flex-direction: column;
+        }
+
+        .header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 20px;
+            text-align: center;
+            position: relative;
+        }
+
+        .back-button {
+            position: absolute;
+            left: 20px;
+            top: 50%;
+            transform: translateY(-50%);
+            background: none;
+            border: none;
+            color: white;
+            font-size: 24px;
+            cursor: pointer;
+            padding: 5px;
+            border-radius: 50%;
+            transition: background-color 0.3s;
+        }
+
+        .back-button:hover {
+            background-color: rgba(255, 255, 255, 0.2);
+        }
+
+        .header h1 {
+            font-size: 1.5em;
+            margin-bottom: 5px;
+        }
+
+        .header p {
+            font-size: 0.9em;
+            opacity: 0.9;
+        }
+
+        .stats-summary {
+            background: #f8f9fa;
+            padding: 20px;
+            border-bottom: 1px solid #e0e0e0;
+        }
+
+        .summary-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr 1fr;
+            gap: 15px;
+            text-align: center;
+        }
+
+        .summary-item {
+            background: white;
+            padding: 15px 10px;
+            border-radius: 10px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        .summary-number {
+            font-size: 1.5em;
+            font-weight: bold;
+            color: #667eea;
+            display: block;
+        }
+
+        .summary-label {
+            color: #666;
+            font-size: 0.8em;
+            margin-top: 5px;
+        }
+
+        .filter-tabs {
+            display: flex;
+            background: white;
+            border-bottom: 1px solid #e0e0e0;
+            overflow-x: auto;
+        }
+
+        .tab {
+            flex: 1;
+            padding: 15px 10px;
+            text-align: center;
+            background: none;
+            border: none;
+            cursor: pointer;
+            font-size: 0.9em;
+            color: #666;
+            transition: all 0.3s ease;
+            border-bottom: 3px solid transparent;
+            min-width: 80px;
+        }
+
+        .tab.active {
+            color: #667eea;
+            border-bottom-color: #667eea;
+            font-weight: 600;
+        }
+
+        .tab:hover {
+            background: #f8f9fa;
+        }
+
+        .history-list {
+            flex: 1;
+            overflow-y: auto;
+            padding: 0 0 20px 0;
+        }
+
+        .history-item {
+            padding: 15px 20px;
+            border-bottom: 1px solid #f0f0f0;
+            position: relative;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+
+        .history-item:hover {
+            background: #f8f9fa;
+        }
+
+        .history-item:last-child {
+            border-bottom: none;
+        }
+
+        .request-header {
+            display: flex;
+            justify-content: between;
+            align-items: flex-start;
+            margin-bottom: 10px;
+        }
+
+        .request-info {
+            flex: 1;
+        }
+
+        .request-title {
+            font-weight: 600;
+            color: #333;
+            margin-bottom: 5px;
+            font-size: 1em;
+        }
+
+        .request-category {
+            color: #667eea;
+            font-size: 0.9em;
+            margin-bottom: 5px;
+        }
+
+        .request-date {
+            color: #888;
+            font-size: 0.8em;
+        }
+
+        .status-badge {
+            padding: 4px 10px;
+            border-radius: 12px;
+            font-size: 0.7em;
+            font-weight: 600;
+            color: white;
+            margin-left: 10px;
+        }
+
+        .status-completed { background: #4CAF50; }
+        .status-pending { background: #FF9800; }
+        .status-in-progress { background: #2196F3; }
+        .status-cancelled { background: #999; }
+
+        .request-details {
+            margin-top: 10px;
+            font-size: 0.9em;
+            color: #666;
+            line-height: 1.4;
+        }
+
+        .helper-info {
+            display: flex;
+            align-items: center;
+            margin-top: 10px;
+            padding: 10px;
+            background: #f8f9fa;
+            border-radius: 8px;
+        }
+
+        .helper-avatar {
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: bold;
+            margin-right: 10px;
+            font-size: 0.9em;
+        }
+
+        .helper-name {
+            flex: 1;
+            font-weight: 500;
+            color: #333;
+        }
+
+        .response-time {
+            color: #888;
+            font-size: 0.8em;
+        }
+
+        .request-actions {
+            display: flex;
+            gap: 8px;
+            margin-top: 10px;
+        }
+
+        .action-btn {
+            padding: 6px 12px;
+            border: 1px solid #667eea;
+            background: none;
+            color: #667eea;
+            border-radius: 15px;
+            font-size: 0.8em;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .action-btn:hover {
+            background: #667eea;
+            color: white;
+        }
+
+        .empty-state {
+            text-align: center;
+            padding: 60px 20px;
+            color: #888;
+            display: none;
+        }
+
+        .empty-state.show {
+            display: block;
+        }
+
+        .empty-state-icon {
+            font-size: 4em;
+            margin-bottom: 20px;
+        }
+
+        .empty-state h3 {
+            margin-bottom: 10px;
+            color: #666;
+        }
+
+        .rating-stars {
+            margin-top: 8px;
+        }
+
+        .star {
+            color: #FFD700;
+            font-size: 0.9em;
+        }
+
+        .star.empty {
+            color: #ddd;
+        }
+
+        @media (max-width: 480px) {
+            .container {
+                margin: 0;
+                border-radius: 0;
+                min-height: 100vh;
+            }
+            
+            .summary-grid {
+                gap: 10px;
+            }
+            
+            .history-item {
+                padding: 12px 15px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- Header -->
+        <div class="header">
+            <button class="back-button" onclick="goBack()">←</button>
+            <h1>Help History</h1>
+            <p>जान पहचान • Know & Recognize</p>
+        </div>
+
+        <!-- Summary Statistics -->
+        <div class="stats-summary">
+            <div class="summary-grid">
+                <div class="summary-item">
+                    <span class="summary-number">31</span>
+                    <div class="summary-label">Total Requests</div>
+                </div>
+                <div class="summary-item">
+                    <span class="summary-number">28</span>
+                    <div class="summary-label">Completed</div>
+                </div>
+                <div class="summary-item">
+                    <span class="summary-number">4.6</span>
+                    <div class="summary-label">Avg Rating</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Filter Tabs -->
+        <div class="filter-tabs">
+            <button class="tab active" onclick="filterHistory('all')">All</button>
+            <button class="tab" onclick="filterHistory('completed')">Completed</button>
+            <button class="tab" onclick="filterHistory('pending')">Pending</button>
+            <button class="tab" onclick="filterHistory('received')">Help Given</button>
+        </div>
+
+        <!-- History List -->
+        <div class="history-list" id="historyList">
+            <!-- History items will be populated by JavaScript -->
+        </div>
+
+        <!-- Empty State -->
+        <div class="empty-state" id="emptyState">
+            <div class="empty-state-icon">📋</div>
+            <h3>No help requests found</h3>
+            <p>Your help history will appear here when you start using the app</p>
+        </div>
+    </div>
+
+    <script>
+        // Sample history data
+        const historyData = [
+            {
+                id: 1,
+                title: "Bank loan application help",
+                category: "Banking & Finance",
+                date: "2 days ago",
+                status: "completed",
+                description: "Need guidance for home loan application process at SBI",
+                helper: {
+                    name: "Rajesh Kumar",
+                    initials: "RK",
+                    responseTime: "1.5 hrs"
+                },
+                rating: 5,
+                type: "requested"
+            },
+            {
+                id: 2,
+                title: "Passport renewal urgent",
+                category: "Government Services",
+                date: "1 week ago",
+                status: "completed",
+                description: "Urgent passport renewal needed for overseas travel",
+                helper: {
+                    name: "Anita Gupta",
+                    initials: "AG",
+                    responseTime: "30 mins"
+                },
+                rating: 5,
+                type: "requested"
+            },
+            {
+                id: 3,
+                title: "Medical specialist referral",
+                category: "Healthcare",
+                date: "2 weeks ago",
+                status: "completed",
+                description: "Need cardiologist appointment at AIIMS",
+                helper: {
+                    name: "Dr. Priya Sharma",
+                    initials: "PS",
+                    responseTime: "45 mins"
+                },
+                rating: 4,
+                type: "requested"
+            },
+            {
+                id: 4,
+                title: "Job application guidance",
+                category: "Professional",
+                date: "3 weeks ago",
+                status: "in-progress",
+                description: "Help with software engineer position at TCS",
+                helper: {
+                    name: "Vikash Singh",
+                    initials: "VS",
+                    responseTime: "2 hrs"
+                },
+                rating: 0,
+                type: "requested"
+            },
+            {
+                id: 5,
+                title: "Helped with school admission",
+                category: "Education",
+                date: "1 month ago",
+                status: "completed",
+                description: "Guided someone through DPS admission process",
+                helper: {
+                    name: "You helped",
+                    initials: "ME",
+                    responseTime: "1 hr"
+                },
+                rating: 5,
+                type: "given"
+            },
+            {
+                id: 6,
+                title: "Income tax filing assistance",
+                category: "Government Services",
+                date: "1 month ago",
+                status: "completed",
+                description: "Help with ITR filing and tax calculations",
+                helper: {
+                    name: "Anita Gupta",
+                    initials: "AG",
+                    responseTime: "3 hrs"
+                },
+                rating: 4,
+                type: "requested"
+            },
+            {
+                id: 7,
+                title: "Helped with car loan",
+                category: "Banking & Finance",
+                date: "2 months ago",
+                status: "completed",
+                description: "Guided colleague through car loan approval process",
+                helper: {
+                    name: "You helped",
+                    initials: "ME",
+                    responseTime: "2.5 hrs"
+                },
+                rating: 5,
+                type: "given"
+            },
+            {
+                id: 8,
+                title: "Property documentation help",
+                category: "Legal",
+                date: "2 months ago",
+                status: "pending",
+                description: "Need help with property registration documents",
+                helper: {
+                    name: "Waiting for response",
+                    initials: "?",
+                    responseTime: "N/A"
+                },
+                rating: 0,
+                type: "requested"
+            }
+        ];
+
+        let currentFilter = 'all';
+
+        function renderHistory(history = historyData) {
+            const historyList = document.getElementById('historyList');
+            const emptyState = document.getElementById('emptyState');
+
+            if (history.length === 0) {
+                historyList.style.display = 'none';
+                emptyState.classList.add('show');
+                return;
+            }
+
+            historyList.style.display = 'block';
+            emptyState.classList.remove('show');
+
+            historyList.innerHTML = history.map(item => `
+                <div class="history-item" onclick="viewDetails(${item.id})">
+                    <div class="request-header">
+                        <div class="request-info">
+                            <div class="request-title">${item.title}</div>
+                            <div class="request-category">${item.category}</div>
+                            <div class="request-date">📅 ${item.date}</div>
+                        </div>
+                        <div class="status-badge status-${item.status}">
+                            ${item.status.charAt(0).toUpperCase() + item.status.slice(1).replace('-', ' ')}
+                        </div>
+                    </div>
+                    
+                    <div class="request-details">
+                        ${item.description}
+                    </div>
+
+                    <div class="helper-info">
+                        <div class="helper-avatar">${item.helper.initials}</div>
+                        <div class="helper-name">${item.helper.name}</div>
+                        <div class="response-time">${item.helper.responseTime}</div>
+                    </div>
+
+                    ${item.rating > 0 ? `
+                        <div class="rating-stars">
+                            ${generateStars(item.rating)}
+                        </div>
+                    ` : ''}
+
+                    ${item.status === 'completed' ? `
+                        <div class="request-actions">
+                            <button class="action-btn" onclick="requestAgain(${item.id}); event.stopPropagation();">Request Again</button>
+                            <button class="action-btn" onclick="thankHelper(${item.id}); event.stopPropagation();">Say Thanks</button>
+                        </div>
+                    ` : ''}
+                </div>
+            `).join('');
+        }
+
+        function generateStars(rating) {
+            let stars = '';
+            for (let i = 1; i <= 5; i++) {
+                stars += `<span class="star ${i <= rating ? '' : 'empty'}">★</span>`;
+            }
+            return stars;
+        }
+
+        function filterHistory(filter) {
+            currentFilter = filter;
+            
+            // Update active tab
+            document.querySelectorAll('.tab').forEach(tab => tab.classList.remove('active'));
+            event.target.classList.add('active');
+
+            let filteredHistory = [...historyData];
+
+            if (filter === 'completed') {
+                filteredHistory = filteredHistory.filter(item => item.status === 'completed');
+            } else if (filter === 'pending') {
+                filteredHistory = filteredHistory.filter(item => item.status === 'pending' || item.status === 'in-progress');
+            } else if (filter === 'received') {
+                filteredHistory = filteredHistory.filter(item => item.type === 'given');
+            }
+
+            renderHistory(filteredHistory);
+        }
+
+        function viewDetails(id) {
+            const item = historyData.find(h => h.id === id);
+            if (!item) return;
+
+            let detailsText = `📋 ${item.title}\n\n`;
+            detailsText += `📂 Category: ${item.category}\n`;
+            detailsText += `📅 Date: ${item.date}\n`;
+            detailsText += `🏷️ Status: ${item.status}\n\n`;
+            detailsText += `📝 Description:\n${item.description}\n\n`;
+            
+            if (item.helper.name !== 'Waiting for response') {
+                detailsText += `👤 Helper: ${item.helper.name}\n`;
+                detailsText += `⏱️ Response Time: ${item.helper.responseTime}\n`;
+            }
+            
+            if (item.rating > 0) {
+                detailsText += `⭐ Rating: ${item.rating}/5 stars\n`;
+            }
+
+            alert(detailsText);
+        }
+
+        function requestAgain(id) {
+            const item = historyData.find(h => h.id === id);
+            alert(`🔄 Request Again\n\nWould you like to make a similar request for:\n"${item.title}"\n\nThis will create a new help request with the same helper.`);
+        }
+
+        function thankHelper(id) {
+            const item = historyData.find(h => h.id === id);
+            alert(`💝 Thank ${item.helper.name}\n\nSend a thank you message:\n\n"Thank you so much for helping me with ${item.title.toLowerCase()}. Your assistance was invaluable!"\n\nMessage sent! 📤`);
+        }
+
+        function goBack() {
+            if (document.referrer && document.referrer !== '') {
+                window.history.back();
+            } else {
+                window.location.href = 'profile.html';
+            }
+        }
+
+        // Initialize page
+        window.addEventListener('load', function() {
+            renderHistory();
+            
+            // Animate summary numbers
+            setTimeout(() => {
+                document.querySelectorAll('.summary-number').forEach((stat, index) => {
+                    const finalValue = stat.textContent;
+                    const isDecimal = finalValue.includes('.');
+                    stat.textContent = '0';
+                    
+                    setTimeout(() => {
+                        if (isDecimal) {
+                            animateDecimal(stat, 0, parseFloat(finalValue), 1500);
+                        } else {
+                            animateNumber(stat, 0, parseInt(finalValue), 1500);
+                        }
+                    }, index * 200);
+                });
+            }, 500);
+        });
+
+        function animateNumber(element, start, end, duration) {
+            const startTime = performance.now();
+            
+            function update(currentTime) {
+                const elapsed = currentTime - startTime;
+                const progress = Math.min(elapsed / duration, 1);
+                
+                const current = Math.floor(start + (end - start) * progress);
+                element.textContent = current;
+                
+                if (progress < 1) {
+                    requestAnimationFrame(update);
+                }
+            }
+            
+            requestAnimationFrame(update);
+        }
+
+        function animateDecimal(element, start, end, duration) {
+            const startTime = performance.now();
+            
+            function update(currentTime) {
+                const elapsed = currentTime - startTime;
+                const progress = Math.min(elapsed / duration, 1);
+                
+                const current = start + (end - start) * progress;
+                element.textContent = current.toFixed(1);
+                
+                if (progress < 1) {
+                    requestAnimationFrame(update);
+                }
+            }
+            
+            requestAnimationFrame(update);
+        }
+
+        // Simulate new help request notification
+        setTimeout(() => {
+            alert('🔔 New Help Request Update!\n\nYour request for "Job application guidance" has been updated. Vikash Singh has provided interview tips and company insights.');
+        }, 8000);
+    </script>
+</body>
+</html>

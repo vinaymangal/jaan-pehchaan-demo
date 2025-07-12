@@ -1,0 +1,711 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>My Network - Jaan Pehchaan</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 10px;
+        }
+
+        .container {
+            max-width: 400px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+            overflow: hidden;
+            min-height: calc(100vh - 20px);
+            display: flex;
+            flex-direction: column;
+        }
+
+        .header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 20px;
+            text-align: center;
+            position: relative;
+        }
+
+        .back-button {
+            position: absolute;
+            left: 20px;
+            top: 50%;
+            transform: translateY(-50%);
+            background: none;
+            border: none;
+            color: white;
+            font-size: 24px;
+            cursor: pointer;
+            padding: 5px;
+            border-radius: 50%;
+            transition: background-color 0.3s;
+        }
+
+        .back-button:hover {
+            background-color: rgba(255, 255, 255, 0.2);
+        }
+
+        .header h1 {
+            font-size: 1.5em;
+            margin-bottom: 5px;
+        }
+
+        .header p {
+            font-size: 0.9em;
+            opacity: 0.9;
+        }
+
+        .network-stats {
+            background: #f8f9fa;
+            padding: 20px;
+            border-bottom: 1px solid #e0e0e0;
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr 1fr;
+            gap: 15px;
+            text-align: center;
+        }
+
+        .stat {
+            background: white;
+            padding: 15px 10px;
+            border-radius: 10px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        .stat-number {
+            font-size: 1.5em;
+            font-weight: bold;
+            color: #667eea;
+            display: block;
+        }
+
+        .stat-label {
+            color: #666;
+            font-size: 0.8em;
+            margin-top: 5px;
+        }
+
+        .filter-tabs {
+            display: flex;
+            background: white;
+            border-bottom: 1px solid #e0e0e0;
+            overflow-x: auto;
+        }
+
+        .tab {
+            flex: 1;
+            padding: 15px 10px;
+            text-align: center;
+            background: none;
+            border: none;
+            cursor: pointer;
+            font-size: 0.9em;
+            color: #666;
+            transition: all 0.3s ease;
+            border-bottom: 3px solid transparent;
+            min-width: 80px;
+        }
+
+        .tab.active {
+            color: #667eea;
+            border-bottom-color: #667eea;
+            font-weight: 600;
+        }
+
+        .tab:hover {
+            background: #f8f9fa;
+        }
+
+        .search-container {
+            padding: 15px 20px;
+            background: white;
+            border-bottom: 1px solid #e0e0e0;
+        }
+
+        .search-bar {
+            width: 100%;
+            padding: 12px 15px;
+            border: 2px solid #e0e0e0;
+            border-radius: 20px;
+            font-size: 0.9em;
+            outline: none;
+            transition: border-color 0.3s;
+        }
+
+        .search-bar:focus {
+            border-color: #667eea;
+        }
+
+        .connections-list {
+            flex: 1;
+            overflow-y: auto;
+            padding: 0 0 20px 0;
+        }
+
+        .connection-item {
+            padding: 15px 20px;
+            border-bottom: 1px solid #f0f0f0;
+            cursor: pointer;
+            transition: background-color 0.3s;
+            position: relative;
+        }
+
+        .connection-item:hover {
+            background: #f8f9fa;
+        }
+
+        .connection-item:last-child {
+            border-bottom: none;
+        }
+
+        .connection-header {
+            display: flex;
+            align-items: center;
+            margin-bottom: 8px;
+        }
+
+        .connection-avatar {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: bold;
+            margin-right: 15px;
+            font-size: 1.2em;
+        }
+
+        .connection-info {
+            flex: 1;
+        }
+
+        .connection-name {
+            font-weight: 600;
+            color: #333;
+            margin-bottom: 3px;
+            font-size: 1em;
+        }
+
+        .connection-role {
+            color: #667eea;
+            font-size: 0.9em;
+            margin-bottom: 2px;
+        }
+
+        .connection-workplace {
+            color: #666;
+            font-size: 0.8em;
+        }
+
+        .connection-meta {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-top: 8px;
+        }
+
+        .degree-badge {
+            padding: 3px 8px;
+            border-radius: 12px;
+            font-size: 0.7em;
+            font-weight: 600;
+            color: white;
+        }
+
+        .degree-1 { background: #4CAF50; }
+        .degree-2 { background: #2196F3; }
+        .degree-3 { background: #FF9800; }
+        .degree-4 { background: #F44336; }
+
+        .connection-stats {
+            display: flex;
+            gap: 10px;
+            font-size: 0.7em;
+            color: #888;
+        }
+
+        .help-indicator {
+            position: absolute;
+            top: 15px;
+            right: 20px;
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background: #4CAF50;
+        }
+
+        .help-indicator.busy {
+            background: #FF5722;
+        }
+
+        .help-indicator.offline {
+            background: #999;
+        }
+
+        .institution-filter {
+            display: none;
+            padding: 10px 20px;
+            background: #f8f9fa;
+            border-bottom: 1px solid #e0e0e0;
+        }
+
+        .institution-filter.active {
+            display: block;
+        }
+
+        .institution-tags {
+            display: flex;
+            gap: 8px;
+            overflow-x: auto;
+            padding-bottom: 5px;
+        }
+
+        .institution-tag {
+            background: white;
+            color: #667eea;
+            padding: 6px 12px;
+            border-radius: 15px;
+            font-size: 0.8em;
+            white-space: nowrap;
+            cursor: pointer;
+            border: 1px solid #667eea;
+            transition: all 0.3s ease;
+        }
+
+        .institution-tag.selected {
+            background: #667eea;
+            color: white;
+        }
+
+        .empty-state {
+            text-align: center;
+            padding: 40px 20px;
+            color: #888;
+            display: none;
+        }
+
+        .empty-state.show {
+            display: block;
+        }
+
+        .empty-state-icon {
+            font-size: 3em;
+            margin-bottom: 15px;
+        }
+
+        .fab {
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            font-size: 24px;
+            cursor: pointer;
+            box-shadow: 0 8px 20px rgba(102, 126, 234, 0.3);
+            transition: all 0.3s ease;
+            z-index: 1000;
+        }
+
+        .fab:hover {
+            transform: scale(1.1);
+            box-shadow: 0 12px 30px rgba(102, 126, 234, 0.4);
+        }
+
+        @media (max-width: 480px) {
+            .container {
+                margin: 0;
+                border-radius: 0;
+                min-height: 100vh;
+            }
+            
+            .stats-grid {
+                gap: 10px;
+            }
+            
+            .connection-item {
+                padding: 12px 15px;
+            }
+            
+            .fab {
+                bottom: 20px;
+                right: 20px;
+                width: 50px;
+                height: 50px;
+                font-size: 20px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- Header -->
+        <div class="header">
+            <button class="back-button" onclick="goBack()">←</button>
+            <h1>My Network</h1>
+            <p>जान पहचान • Know & Recognize</p>
+        </div>
+
+        <!-- Network Statistics -->
+        <div class="network-stats">
+            <div class="stats-grid">
+                <div class="stat">
+                    <span class="stat-number" id="totalConnections">127</span>
+                    <div class="stat-label">Total Connections</div>
+                </div>
+                <div class="stat">
+                    <span class="stat-number" id="activeConnections">89</span>
+                    <div class="stat-label">Active Now</div>
+                </div>
+                <div class="stat">
+                    <span class="stat-number" id="nearbyConnections">12</span>
+                    <div class="stat-label">Nearby</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Filter Tabs -->
+        <div class="filter-tabs">
+            <button class="tab active" onclick="filterConnections('all')">All</button>
+            <button class="tab" onclick="filterConnections('degree1')">1st Degree</button>
+            <button class="tab" onclick="filterConnections('degree2')">2nd Degree</button>
+            <button class="tab" onclick="filterConnections('institutions')">By Place</button>
+            <button class="tab" onclick="filterConnections('available')">Available</button>
+        </div>
+
+        <!-- Institution Filter (hidden by default) -->
+        <div class="institution-filter" id="institutionFilter">
+            <div class="institution-tags">
+                <div class="institution-tag selected" onclick="filterByInstitution('all')">All</div>
+                <div class="institution-tag" onclick="filterByInstitution('government')">Government</div>
+                <div class="institution-tag" onclick="filterByInstitution('banks')">Banks</div>
+                <div class="institution-tag" onclick="filterByInstitution('hospitals')">Hospitals</div>
+                <div class="institution-tag" onclick="filterByInstitution('companies')">Companies</div>
+                <div class="institution-tag" onclick="filterByInstitution('education')">Education</div>
+            </div>
+        </div>
+
+        <!-- Search Bar -->
+        <div class="search-container">
+            <input type="text" class="search-bar" placeholder="Search connections by name, workplace, or role..." id="searchInput">
+        </div>
+
+        <!-- Connections List -->
+        <div class="connections-list" id="connectionsList">
+            <!-- Connections will be populated by JavaScript -->
+        </div>
+
+        <!-- Empty State -->
+        <div class="empty-state" id="emptyState">
+            <div class="empty-state-icon">🔍</div>
+            <h3>No connections found</h3>
+            <p>Try adjusting your search or filters</p>
+        </div>
+    </div>
+
+    <!-- Add Connection FAB -->
+    <button class="fab" onclick="addConnection()" title="Add Connection">+</button>
+
+    <script>
+        // Sample connections data
+        const connectionsData = [
+            {
+                id: 1,
+                name: "Rajesh Kumar",
+                role: "Senior Manager - Loan Department",
+                workplace: "State Bank of India, CP",
+                degree: 2,
+                status: "available",
+                helpCount: 12,
+                successRate: 94,
+                institution: "banks",
+                initials: "RK"
+            },
+            {
+                id: 2,
+                name: "Dr. Priya Sharma",
+                role: "Senior Cardiologist",
+                workplace: "AIIMS Delhi",
+                degree: 1,
+                status: "available",
+                helpCount: 8,
+                successRate: 100,
+                institution: "hospitals",
+                initials: "PS"
+            },
+            {
+                id: 3,
+                name: "Vikash Singh",
+                role: "HR Manager",
+                workplace: "Maruti Suzuki India Ltd",
+                degree: 3,
+                status: "busy",
+                helpCount: 5,
+                successRate: 85,
+                institution: "companies",
+                initials: "VS"
+            },
+            {
+                id: 4,
+                name: "Anita Gupta",
+                role: "Assistant Commissioner",
+                workplace: "Income Tax Department",
+                degree: 1,
+                status: "available",
+                helpCount: 15,
+                successRate: 92,
+                institution: "government",
+                initials: "AG"
+            },
+            {
+                id: 5,
+                name: "Prof. Rohit Verma",
+                role: "Deputy Registrar",
+                workplace: "Delhi University",
+                degree: 4,
+                status: "offline",
+                helpCount: 3,
+                successRate: 78,
+                institution: "education",
+                initials: "RV"
+            },
+            {
+                id: 6,
+                name: "Sunita Yadav",
+                role: "Branch Manager",
+                workplace: "HDFC Bank, Karol Bagh",
+                degree: 2,
+                status: "available",
+                helpCount: 18,
+                successRate: 96,
+                institution: "banks",
+                initials: "SY"
+            },
+            {
+                id: 7,
+                name: "Dr. Amit Joshi",
+                role: "Chief Medical Officer",
+                workplace: "Safdarjung Hospital",
+                degree: 2,
+                status: "busy",
+                helpCount: 7,
+                successRate: 89,
+                institution: "hospitals",
+                initials: "AJ"
+            },
+            {
+                id: 8,
+                name: "Ravi Agarwal",
+                role: "Deputy Collector",
+                workplace: "District Collectorate",
+                degree: 3,
+                status: "available",
+                helpCount: 9,
+                successRate: 88,
+                institution: "government",
+                initials: "RA"
+            }
+        ];
+
+        let currentFilter = 'all';
+        let currentInstitution = 'all';
+
+        function renderConnections(connections = connectionsData) {
+            const connectionsList = document.getElementById('connectionsList');
+            const emptyState = document.getElementById('emptyState');
+
+            if (connections.length === 0) {
+                connectionsList.style.display = 'none';
+                emptyState.classList.add('show');
+                return;
+            }
+
+            connectionsList.style.display = 'block';
+            emptyState.classList.remove('show');
+
+            connectionsList.innerHTML = connections.map(conn => `
+                <div class="connection-item" onclick="viewConnection(${conn.id})" data-degree="${conn.degree}" data-institution="${conn.institution}" data-status="${conn.status}">
+                    <div class="help-indicator ${conn.status}"></div>
+                    <div class="connection-header">
+                        <div class="connection-avatar">${conn.initials}</div>
+                        <div class="connection-info">
+                            <div class="connection-name">${conn.name}</div>
+                            <div class="connection-role">${conn.role}</div>
+                            <div class="connection-workplace">📍 ${conn.workplace}</div>
+                        </div>
+                    </div>
+                    <div class="connection-meta">
+                        <div class="degree-badge degree-${conn.degree}">
+                            ${conn.degree}${conn.degree === 1 ? 'st' : conn.degree === 2 ? 'nd' : conn.degree === 3 ? 'rd' : 'th'} Degree
+                        </div>
+                        <div class="connection-stats">
+                            <span>✅ ${conn.helpCount} helps</span>
+                            <span>📊 ${conn.successRate}% success</span>
+                        </div>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        function filterConnections(filter) {
+            currentFilter = filter;
+            
+            // Update active tab
+            document.querySelectorAll('.tab').forEach(tab => tab.classList.remove('active'));
+            event.target.classList.add('active');
+
+            // Show/hide institution filter
+            const institutionFilter = document.getElementById('institutionFilter');
+            if (filter === 'institutions') {
+                institutionFilter.classList.add('active');
+            } else {
+                institutionFilter.classList.remove('active');
+                currentInstitution = 'all';
+            }
+
+            applyFilters();
+        }
+
+        function filterByInstitution(institution) {
+            currentInstitution = institution;
+            
+            // Update selected institution tag
+            document.querySelectorAll('.institution-tag').forEach(tag => tag.classList.remove('selected'));
+            event.target.classList.add('selected');
+
+            applyFilters();
+        }
+
+        function applyFilters() {
+            let filteredConnections = [...connectionsData];
+
+            // Apply degree filter
+            if (currentFilter === 'degree1') {
+                filteredConnections = filteredConnections.filter(conn => conn.degree === 1);
+            } else if (currentFilter === 'degree2') {
+                filteredConnections = filteredConnections.filter(conn => conn.degree === 2);
+            } else if (currentFilter === 'available') {
+                filteredConnections = filteredConnections.filter(conn => conn.status === 'available');
+            }
+
+            // Apply institution filter
+            if (currentInstitution !== 'all') {
+                filteredConnections = filteredConnections.filter(conn => conn.institution === currentInstitution);
+            }
+
+            // Apply search filter
+            const searchQuery = document.getElementById('searchInput').value.toLowerCase();
+            if (searchQuery) {
+                filteredConnections = filteredConnections.filter(conn => 
+                    conn.name.toLowerCase().includes(searchQuery) ||
+                    conn.role.toLowerCase().includes(searchQuery) ||
+                    conn.workplace.toLowerCase().includes(searchQuery)
+                );
+            }
+
+            renderConnections(filteredConnections);
+            updateStats(filteredConnections);
+        }
+
+        function updateStats(connections) {
+            const total = connections.length;
+            const active = connections.filter(conn => conn.status === 'available').length;
+            const nearby = Math.floor(total * 0.3); // Simulate nearby count
+
+            document.getElementById('totalConnections').textContent = total;
+            document.getElementById('activeConnections').textContent = active;
+            document.getElementById('nearbyConnections').textContent = nearby;
+        }
+
+        function viewConnection(connectionId) {
+            const connection = connectionsData.find(conn => conn.id === connectionId);
+            alert(`Viewing ${connection.name}\n\n📍 ${connection.workplace}\n🔗 ${connection.degree}${connection.degree === 1 ? 'st' : connection.degree === 2 ? 'nd' : connection.degree === 3 ? 'rd' : 'th'} degree connection\n✅ Helped ${connection.helpCount} times\n📊 ${connection.successRate}% success rate\n\n💬 Tap to send message\n📞 Tap to request help`);
+        }
+
+        function addConnection() {
+            alert('🔗 Add New Connection\n\nOptions:\n📱 Invite from contacts\n🔍 Search by workplace\n📧 Send invitation email\n\nThis will help you discover more connections in your network!');
+        }
+
+        function goBack() {
+            if (document.referrer && document.referrer !== '') {
+                window.history.back();
+            } else {
+                window.location.href = 'map.html';
+            }
+        }
+
+        // Search functionality
+        document.getElementById('searchInput').addEventListener('input', function() {
+            applyFilters();
+        });
+
+        // Initialize page
+        window.addEventListener('load', function() {
+            renderConnections();
+            
+            // Animate stats on load
+            setTimeout(() => {
+                document.querySelectorAll('.stat-number').forEach((stat, index) => {
+                    const finalValue = parseInt(stat.textContent);
+                    stat.textContent = '0';
+                    
+                    setTimeout(() => {
+                        animateNumber(stat, 0, finalValue, 1500);
+                    }, index * 200);
+                });
+            }, 500);
+        });
+
+        function animateNumber(element, start, end, duration) {
+            const startTime = performance.now();
+            
+            function update(currentTime) {
+                const elapsed = currentTime - startTime;
+                const progress = Math.min(elapsed / duration, 1);
+                
+                const current = Math.floor(start + (end - start) * progress);
+                element.textContent = current;
+                
+                if (progress < 1) {
+                    requestAnimationFrame(update);
+                }
+            }
+            
+            requestAnimationFrame(update);
+        }
+
+        // Simulate real-time status updates
+        setInterval(() => {
+            const randomConnection = connectionsData[Math.floor(Math.random() * connectionsData.length)];
+            const statuses = ['available', 'busy', 'offline'];
+            const newStatus = statuses[Math.floor(Math.random() * statuses.length)];
+            
+            if (randomConnection.status !== newStatus) {
+                randomConnection.status = newStatus;
+                renderConnections();
+            }
+        }, 10000); // Update every 10 seconds
+    </script>
+</body>
+</html>

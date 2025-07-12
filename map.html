@@ -13,341 +13,449 @@
         }
 
         body {
-            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Arial, sans-serif;
-            background-color: #f5f5f5;
-            color: #333;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 10px;
         }
 
         .container {
             max-width: 400px;
             margin: 0 auto;
-            height: 100vh;
-            background-color: white;
-            box-shadow: 0 0 20px rgba(0,0,0,0.1);
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+            overflow: hidden;
+            min-height: calc(100vh - 20px);
             display: flex;
             flex-direction: column;
         }
 
         .header {
-            background-color: white;
-            padding: 15px;
-            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
-            z-index: 1000;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 20px;
+            text-align: center;
+            position: relative;
         }
 
-        .search-box {
+        .profile-button {
+            position: absolute;
+            right: 20px;
+            top: 50%;
+            transform: translateY(-50%);
+            background: rgba(255, 255, 255, 0.2);
+            border: none;
+            color: white;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            cursor: pointer;
+            font-size: 18px;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .profile-button:hover {
+            background: rgba(255, 255, 255, 0.3);
+            transform: translateY(-50%) scale(1.1);
+        }
+
+        .header h1 {
+            font-size: 1.5em;
+            margin-bottom: 5px;
+        }
+
+        .header p {
+            font-size: 0.9em;
+            opacity: 0.9;
+        }
+
+        .location-banner {
+            background: #e3f2fd;
+            padding: 15px 20px;
+            border-bottom: 1px solid #e0e0e0;
+            color: #1976d2;
+            font-size: 0.9em;
+            text-align: center;
+        }
+
+        .search-container {
+            padding: 20px;
+            background: white;
+            border-bottom: 1px solid #e0e0e0;
+        }
+
+        .search-bar {
             width: 100%;
-            padding: 12px;
+            padding: 15px 20px;
             border: 2px solid #e0e0e0;
-            border-radius: 8px;
-            font-size: 16px;
+            border-radius: 25px;
+            font-size: 1em;
             outline: none;
+            transition: border-color 0.3s;
         }
 
-        .search-box:focus {
+        .search-bar:focus {
             border-color: #667eea;
         }
 
         .map-container {
             flex: 1;
             position: relative;
+            min-height: 300px;
         }
 
         #map {
+            width: 100%;
             height: 100%;
-            width: 100%;
+            min-height: 300px;
         }
 
-        .bottom-panel {
-            background-color: white;
+        .connection-legend {
+            position: absolute;
+            top: 20px;
+            left: 20px;
+            background: rgba(255, 255, 255, 0.95);
             padding: 15px;
-            box-shadow: 0 -2px 10px rgba(0,0,0,0.1);
+            border-radius: 10px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
             z-index: 1000;
-        }
-
-        .help-button {
-            width: 100%;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            color: white;
-            padding: 15px;
-            border: none;
-            border-radius: 8px;
-            font-size: 18px;
-            font-weight: bold;
-            cursor: pointer;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 10px;
-        }
-
-        .help-button:hover {
-            opacity: 0.9;
-        }
-
-        .connection-info {
-            position: absolute;
-            bottom: 100px;
-            left: 10px;
-            right: 10px;
-            background-color: white;
-            padding: 15px;
-            border-radius: 8px;
-            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
-            z-index: 1001;
-        }
-
-        .legend {
-            position: absolute;
-            top: 80px;
-            right: 10px;
-            background-color: white;
-            padding: 10px;
-            border-radius: 8px;
-            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
-            z-index: 1001;
-            font-size: 12px;
+            font-size: 0.8em;
         }
 
         .legend-item {
             display: flex;
             align-items: center;
-            gap: 8px;
-            margin: 5px 0;
+            margin-bottom: 8px;
+        }
+
+        .legend-item:last-child {
+            margin-bottom: 0;
         }
 
         .legend-dot {
             width: 12px;
             height: 12px;
             border-radius: 50%;
+            margin-right: 8px;
         }
 
-        .demo-note {
+        .degree-1 { background: #4CAF50; }
+        .degree-2 { background: #2196F3; }
+        .degree-3 { background: #FF9800; }
+        .degree-4 { background: #F44336; }
+
+        .connection-info {
             position: absolute;
-            top: 10px;
-            right: 10px;
-            background-color: #ff6b6b;
-            color: white;
-            padding: 5px 10px;
-            border-radius: 5px;
-            font-size: 12px;
-            z-index: 1002;
+            bottom: 20px;
+            left: 20px;
+            right: 20px;
+            background: rgba(255, 255, 255, 0.95);
+            padding: 15px;
+            border-radius: 10px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+            z-index: 1000;
+            display: none;
         }
 
-        /* Custom marker styles */
-        .custom-marker {
-            background-color: white;
-            border-radius: 50%;
-            width: 30px;
-            height: 30px;
+        .connection-info h3 {
+            color: #333;
+            margin-bottom: 5px;
+            font-size: 1em;
+        }
+
+        .connection-info p {
+            color: #666;
+            font-size: 0.9em;
+            margin-bottom: 3px;
+        }
+
+        .bottom-actions {
+            padding: 20px;
+            background: white;
+            border-top: 1px solid #e0e0e0;
+        }
+
+        .help-button {
+            width: 100%;
+            background: linear-gradient(135deg, #FF5722 0%, #E91E63 100%);
+            color: white;
+            border: none;
+            padding: 18px;
+            border-radius: 15px;
+            font-size: 1.1em;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 5px 15px rgba(255, 87, 34, 0.3);
+            margin-bottom: 15px;
+        }
+
+        .help-button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(255, 87, 34, 0.4);
+        }
+
+        .action-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+        }
+
+        .action-button {
+            background: #f8f9fa;
+            color: #667eea;
+            border: 2px solid #667eea;
+            padding: 12px;
+            border-radius: 10px;
+            font-size: 0.9em;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-align: center;
+            text-decoration: none;
             display: flex;
             align-items: center;
             justify-content: center;
-            font-weight: bold;
-            box-shadow: 0 2px 5px rgba(0,0,0,0.3);
-            cursor: pointer;
+            gap: 5px;
         }
 
-        .marker-1st { background-color: #10b981; color: white; }
-        .marker-2nd { background-color: #3b82f6; color: white; }
-        .marker-3rd { background-color: #f59e0b; color: white; }
-        .marker-4th { background-color: #ef4444; color: white; }
-
-        .user-marker {
-            background-color: #667eea;
+        .action-button:hover {
+            background: #667eea;
             color: white;
-            width: 40px;
-            height: 40px;
-            border: 3px solid white;
         }
 
-        .popup-content {
-            text-align: center;
-        }
-
-        .popup-content h4 {
-            margin: 0 0 5px 0;
-            color: #333;
-        }
-
-        .popup-content p {
-            margin: 0;
-            font-size: 12px;
-            color: #666;
-        }
-
-        .popup-content button {
-            margin-top: 10px;
-            background-color: #667eea;
-            color: white;
-            border: none;
-            padding: 5px 15px;
-            border-radius: 5px;
-            cursor: pointer;
+        @media (max-width: 480px) {
+            .container {
+                margin: 0;
+                border-radius: 0;
+                min-height: 100vh;
+            }
+            
+            .connection-legend {
+                left: 10px;
+                right: 10px;
+                padding: 10px;
+            }
+            
+            .connection-info {
+                left: 10px;
+                right: 10px;
+            }
         }
     </style>
 </head>
 <body>
     <div class="container">
-        <div class="demo-note">DEMO VERSION</div>
-        
+        <!-- Header with Profile Button -->
         <div class="header">
-            <input type="text" class="search-box" placeholder="Search institution or type of help..." />
+            <button class="profile-button" onclick="goToProfile()" title="My Profile">
+                👤
+            </button>
+            <h1>Jaan Pehchaan</h1>
+            <p>जान पहचान • Know & Recognize</p>
         </div>
 
+        <!-- Location Banner -->
+        <div class="location-banner">
+            📍 You are near 3 institutions with connections
+        </div>
+
+        <!-- Search Bar -->
+        <div class="search-container">
+            <input type="text" class="search-bar" placeholder="Search institutions, help types, or connections..." id="searchInput">
+        </div>
+
+        <!-- Map Container -->
         <div class="map-container">
             <div id="map"></div>
             
-            <div class="legend">
-                <strong>Connections</strong>
+            <!-- Connection Legend -->
+            <div class="connection-legend">
                 <div class="legend-item">
-                    <div class="legend-dot marker-1st"></div>
-                    <span>Direct (1st)</span>
+                    <div class="legend-dot degree-1"></div>
+                    <span>1st Degree (Direct)</span>
                 </div>
                 <div class="legend-item">
-                    <div class="legend-dot marker-2nd"></div>
-                    <span>2nd Degree</span>
+                    <div class="legend-dot degree-2"></div>
+                    <span>2nd Degree (Friend's Friend)</span>
                 </div>
                 <div class="legend-item">
-                    <div class="legend-dot marker-3rd"></div>
+                    <div class="legend-dot degree-3"></div>
                     <span>3rd Degree</span>
                 </div>
                 <div class="legend-item">
-                    <div class="legend-dot marker-4th"></div>
+                    <div class="legend-dot degree-4"></div>
                     <span>4th Degree</span>
                 </div>
             </div>
 
-            <div class="connection-info" style="display: none;">
-                <h4>3 Connections Nearby</h4>
-                <p>Click on markers to see details</p>
+            <!-- Connection Info Panel -->
+            <div class="connection-info" id="connectionInfo">
+                <h3 id="connectionName">Rajesh Kumar</h3>
+                <p id="connectionRole">Senior Manager - Loan Department</p>
+                <p id="connectionInstitution">📍 State Bank of India, Connaught Place</p>
+                <p id="connectionDegree">🔗 2nd degree connection (via Amit Sharma)</p>
             </div>
         </div>
 
-        <div class="bottom-panel">
-            <button class="help-button" onclick="requestHelp()">
-                <span>🚨</span>
-                <span>Need Help Now</span>
+        <!-- Bottom Actions -->
+        <div class="bottom-actions">
+            <button class="help-button" onclick="needHelp()">
+                🆘 Need Help Now
             </button>
+            
+            <div class="action-grid">
+                <button class="action-button" onclick="findNearby()">
+                    📍 Find Nearby
+                </button>
+                <a href="connections.html" class="action-button">
+                    👥 My Network
+                </a>
+            </div>
         </div>
     </div>
 
     <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
     <script>
-        // Demo data - In real app, this would come from database
-        const demoConnections = [
-            {
-                name: "Raj Kumar",
-                degree: 1,
-                workplace: "State Bank of India",
-                position: "Branch Manager",
-                lat: 28.6139,
-                lng: 77.2090,
-                helpType: "Banking"
-            },
-            {
-                name: "Priya Sharma",
-                degree: 2,
-                workplace: "Delhi RTO Office",
-                position: "Senior Inspector",
-                lat: 28.6229,
-                lng: 77.2195,
-                helpType: "Government"
-            },
-            {
-                name: "Dr. Amit Verma",
-                degree: 2,
-                workplace: "Apollo Hospital",
-                position: "Cardiologist",
-                lat: 28.6083,
-                lng: 77.2070,
-                helpType: "Healthcare"
-            },
-            {
-                name: "Sanjay Gupta",
-                degree: 3,
-                workplace: "Delhi High Court",
-                position: "Advocate",
-                lat: 28.6289,
-                lng: 77.2065,
-                helpType: "Legal"
-            },
-            {
-                name: "Neha Patel",
-                degree: 1,
-                workplace: "DPS School",
-                position: "Principal",
-                lat: 28.6019,
-                lng: 77.2177,
-                helpType: "Education"
-            }
-        ];
-
         // Initialize map
-        const map = L.map('map').setView([28.6139, 77.2090], 13);
+        let map;
+        let userMarker;
+        let connectionMarkers = [];
 
-        // Add map tiles
-        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-            attribution: '© OpenStreetMap contributors'
-        }).addTo(map);
-
-        // Custom icon for user location
-        const userIcon = L.divIcon({
-            className: 'custom-marker user-marker',
-            html: '<div class="custom-marker user-marker">ME</div>',
-            iconSize: [40, 40],
-            iconAnchor: [20, 20]
-        });
-
-        // Add user marker
-        L.marker([28.6139, 77.2090], { icon: userIcon })
-            .addTo(map)
-            .bindPopup('<div class="popup-content"><h4>Your Location</h4></div>');
-
-        // Add connection markers
-        demoConnections.forEach(connection => {
-            const markerClass = `marker-${connection.degree}${connection.degree === 1 ? 'st' : connection.degree === 2 ? 'nd' : connection.degree === 3 ? 'rd' : 'th'}`;
+        function initMap() {
+            // Initialize map centered on Delhi
+            map = L.map('map').setView([28.6139, 77.2090], 13);
             
-            const icon = L.divIcon({
-                className: 'custom-marker',
-                html: `<div class="custom-marker ${markerClass}">${connection.degree}</div>`,
-                iconSize: [30, 30],
-                iconAnchor: [15, 15]
-            });
+            // Add tile layer
+            L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+                attribution: '© OpenStreetMap contributors'
+            }).addTo(map);
 
-            const marker = L.marker([connection.lat, connection.lng], { icon: icon })
+            // Add user location marker
+            userMarker = L.marker([28.6139, 77.2090])
                 .addTo(map)
-                .bindPopup(`
-                    <div class="popup-content">
-                        <h4>${connection.name}</h4>
-                        <p><strong>${connection.position}</strong></p>
-                        <p>${connection.workplace}</p>
-                        <p style="color: #667eea; margin-top: 5px;">${connection.degree}${connection.degree === 1 ? 'st' : connection.degree === 2 ? 'nd' : connection.degree === 3 ? 'rd' : 'th'} degree connection</p>
-                        <button onclick="contactConnection('${connection.name}')">Request Help</button>
-                    </div>
-                `);
-        });
+                .bindPopup("📍 You are here");
 
-        // Show connection info after map loads
-        setTimeout(() => {
-            document.querySelector('.connection-info').style.display = 'block';
-        }, 1000);
+            // Add connection markers
+            addConnectionMarkers();
+        }
 
-        // Handle search
-        document.querySelector('.search-box').addEventListener('input', (e) => {
-            const searchTerm = e.target.value.toLowerCase();
-            // In real app, this would filter markers
-            console.log('Searching for:', searchTerm);
-        });
+        function addConnectionMarkers() {
+            const connections = [
+                {
+                    lat: 28.6304, lng: 77.2177, 
+                    name: "Rajesh Kumar", 
+                    role: "Senior Manager - Loan Dept", 
+                    institution: "State Bank of India",
+                    degree: 2, color: '#2196F3'
+                },
+                {
+                    lat: 28.6169, lng: 77.2295, 
+                    name: "Priya Sharma", 
+                    role: "Assistant Commissioner", 
+                    institution: "Income Tax Office",
+                    degree: 1, color: '#4CAF50'
+                },
+                {
+                    lat: 28.5562, lng: 77.1000, 
+                    name: "Vikash Singh", 
+                    role: "HR Manager", 
+                    institution: "Maruti Suzuki HQ",
+                    degree: 3, color: '#FF9800'
+                },
+                {
+                    lat: 28.6289, lng: 77.2065, 
+                    name: "Dr. Anita Gupta", 
+                    role: "Senior Doctor", 
+                    institution: "AIIMS Delhi",
+                    degree: 1, color: '#4CAF50'
+                },
+                {
+                    lat: 28.6127, lng: 77.2395, 
+                    name: "Rohit Verma", 
+                    role: "Deputy Registrar", 
+                    institution: "Delhi University",
+                    degree: 4, color: '#F44336'
+                }
+            ];
 
-        // Demo functions
-        function requestHelp() {
+            connections.forEach(conn => {
+                const marker = L.circleMarker([conn.lat, conn.lng], {
+                    color: conn.color,
+                    fillColor: conn.color,
+                    fillOpacity: 0.7,
+                    radius: 8
+                }).addTo(map);
+
+                marker.on('click', () => showConnectionInfo(conn));
+                connectionMarkers.push(marker);
+            });
+        }
+
+        function showConnectionInfo(connection) {
+            const infoPanel = document.getElementById('connectionInfo');
+            document.getElementById('connectionName').textContent = connection.name;
+            document.getElementById('connectionRole').textContent = connection.role;
+            document.getElementById('connectionInstitution').textContent = `📍 ${connection.institution}`;
+            
+            const degreeText = {
+                1: "🔗 1st degree connection (Direct contact)",
+                2: "🔗 2nd degree connection (Friend's friend)", 
+                3: "🔗 3rd degree connection",
+                4: "🔗 4th degree connection"
+            };
+            document.getElementById('connectionDegree').textContent = degreeText[connection.degree];
+            
+            infoPanel.style.display = 'block';
+            
+            // Hide after 5 seconds
+            setTimeout(() => {
+                infoPanel.style.display = 'none';
+            }, 5000);
+        }
+
+        function needHelp() {
             window.location.href = 'help-request.html';
         }
 
-        function contactConnection(name) {
-            alert(`Demo: Sending help request to ${name}. In real app, this would start the connection chain.`);
+        function findNearby() {
+            // Simulate finding nearby connections
+            alert('Found 3 connections within 2km of your location!\n\n📍 State Bank (500m)\n📍 Income Tax Office (1.2km)\n📍 AIIMS Delhi (1.8km)');
         }
+
+        function goToProfile() {
+            window.location.href = 'profile.html';
+        }
+
+        // Search functionality
+        document.getElementById('searchInput').addEventListener('input', function(e) {
+            const query = e.target.value.toLowerCase();
+            if (query.length > 2) {
+                // Simulate search results
+                console.log('Searching for:', query);
+            }
+        });
+
+        // Initialize map when page loads
+        window.addEventListener('load', initMap);
+
+        // Show welcome message
+        setTimeout(() => {
+            const banner = document.querySelector('.location-banner');
+            banner.style.background = '#4CAF50';
+            banner.style.color = 'white';
+            banner.innerHTML = '✅ Welcome back! Your network is ready to help.';
+            
+            setTimeout(() => {
+                banner.style.background = '#e3f2fd';
+                banner.style.color = '#1976d2';
+                banner.innerHTML = '📍 You are near 3 institutions with connections';
+            }, 3000);
+        }, 2000);
     </script>
 </body>
 </html>

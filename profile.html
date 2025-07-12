@@ -1,0 +1,658 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>My Profile - Jaan Pehchaan</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 10px;
+        }
+
+        .container {
+            max-width: 400px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+            overflow: hidden;
+            min-height: calc(100vh - 20px);
+        }
+
+        .header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 20px;
+            text-align: center;
+            position: relative;
+        }
+
+        .back-button {
+            position: absolute;
+            left: 20px;
+            top: 50%;
+            transform: translateY(-50%);
+            background: none;
+            border: none;
+            color: white;
+            font-size: 24px;
+            cursor: pointer;
+            padding: 5px;
+            border-radius: 50%;
+            transition: background-color 0.3s;
+        }
+
+        .back-button:hover {
+            background-color: rgba(255, 255, 255, 0.2);
+        }
+
+        .header h1 {
+            font-size: 1.5em;
+            margin-bottom: 5px;
+        }
+
+        .header p {
+            font-size: 0.9em;
+            opacity: 0.9;
+        }
+
+        .profile-content {
+            padding: 30px 20px;
+        }
+
+        .profile-avatar {
+            width: 100px;
+            height: 100px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            margin: 0 auto 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 2.5em;
+            color: white;
+            font-weight: bold;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+            position: relative;
+        }
+
+        .avatar-edit {
+            position: absolute;
+            bottom: 0;
+            right: 0;
+            background: #667eea;
+            color: white;
+            border: 3px solid white;
+            border-radius: 50%;
+            width: 30px;
+            height: 30px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 12px;
+            cursor: pointer;
+        }
+
+        .profile-info {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        .profile-info h2 {
+            color: #333;
+            margin-bottom: 5px;
+            font-size: 1.3em;
+        }
+
+        .profile-info .title {
+            color: #667eea;
+            font-weight: 600;
+            margin-bottom: 5px;
+        }
+
+        .profile-info .workplace {
+            color: #666;
+            margin-bottom: 15px;
+        }
+
+        .profile-info .location {
+            color: #888;
+            font-size: 0.9em;
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr 1fr;
+            gap: 20px;
+            margin-bottom: 30px;
+            padding: 20px;
+            background: #f8f9fa;
+            border-radius: 15px;
+        }
+
+        .stat {
+            text-align: center;
+        }
+
+        .stat-number {
+            font-size: 1.8em;
+            font-weight: bold;
+            color: #667eea;
+            display: block;
+        }
+
+        .stat-label {
+            color: #666;
+            font-size: 0.8em;
+            margin-top: 5px;
+        }
+
+        .section {
+            margin-bottom: 25px;
+        }
+
+        .section h3 {
+            color: #333;
+            margin-bottom: 15px;
+            font-size: 1.1em;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .section-icon {
+            font-size: 1.2em;
+            color: #667eea;
+        }
+
+        .info-item {
+            background: #f8f9fa;
+            padding: 15px;
+            border-radius: 10px;
+            margin-bottom: 10px;
+        }
+
+        .info-item .label {
+            color: #666;
+            font-size: 0.9em;
+            margin-bottom: 5px;
+        }
+
+        .info-item .value {
+            color: #333;
+            font-weight: 500;
+        }
+
+        .skills-tags {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            margin-top: 10px;
+        }
+
+        .skill-tag {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 5px 12px;
+            border-radius: 20px;
+            font-size: 0.8em;
+            font-weight: 500;
+        }
+
+        .availability-toggle {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            background: #f8f9fa;
+            padding: 15px;
+            border-radius: 10px;
+            margin-bottom: 10px;
+        }
+
+        .availability-status {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .status-indicator {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            background: #4CAF50;
+        }
+
+        .status-indicator.busy {
+            background: #FF5722;
+        }
+
+        .toggle-switch {
+            position: relative;
+            width: 50px;
+            height: 24px;
+            background: #4CAF50;
+            border-radius: 12px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+
+        .toggle-switch.off {
+            background: #ccc;
+        }
+
+        .toggle-switch::after {
+            content: '';
+            position: absolute;
+            top: 2px;
+            left: 2px;
+            width: 20px;
+            height: 20px;
+            background: white;
+            border-radius: 50%;
+            transition: transform 0.3s;
+        }
+
+        .toggle-switch.off::after {
+            transform: translateX(26px);
+        }
+
+        .help-stats {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+            margin-top: 15px;
+        }
+
+        .help-stat {
+            background: #f8f9fa;
+            padding: 15px;
+            border-radius: 10px;
+            text-align: center;
+        }
+
+        .help-stat .number {
+            font-size: 1.5em;
+            font-weight: bold;
+            color: #667eea;
+        }
+
+        .help-stat .label {
+            color: #666;
+            font-size: 0.9em;
+            margin-top: 5px;
+        }
+
+        .action-buttons {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+            margin-top: 30px;
+        }
+
+        .btn {
+            padding: 12px 20px;
+            border: none;
+            border-radius: 10px;
+            font-size: 1em;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-decoration: none;
+            text-align: center;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(102, 126, 234, 0.4);
+        }
+
+        .btn-secondary {
+            background: #f8f9fa;
+            color: #667eea;
+            border: 2px solid #667eea;
+        }
+
+        .btn-secondary:hover {
+            background: #667eea;
+            color: white;
+        }
+
+        .achievement-badges {
+            display: flex;
+            gap: 10px;
+            margin-top: 15px;
+            overflow-x: auto;
+            padding-bottom: 10px;
+        }
+
+        .badge {
+            min-width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #FFD700 0%, #FFA500 100%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5em;
+            color: white;
+            box-shadow: 0 3px 10px rgba(255, 215, 0, 0.3);
+        }
+
+        .privacy-note {
+            background: #e3f2fd;
+            padding: 15px;
+            border-radius: 10px;
+            margin-top: 20px;
+            font-size: 0.9em;
+            color: #1976d2;
+            border-left: 4px solid #2196f3;
+        }
+
+        @media (max-width: 480px) {
+            .container {
+                margin: 0;
+                border-radius: 0;
+                min-height: 100vh;
+            }
+            
+            .stats-grid {
+                gap: 15px;
+                padding: 15px;
+            }
+            
+            .profile-content {
+                padding: 20px 15px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- Header -->
+        <div class="header">
+            <button class="back-button" onclick="goBack()">←</button>
+            <h1>My Profile</h1>
+            <p>जान पहचान • Know & Recognize</p>
+        </div>
+
+        <!-- Profile Content -->
+        <div class="profile-content">
+            <!-- Profile Avatar & Info -->
+            <div class="profile-avatar">
+                RK
+                <div class="avatar-edit">✏️</div>
+            </div>
+
+            <div class="profile-info">
+                <h2>Rahul Kumar</h2>
+                <div class="title">Senior Software Engineer</div>
+                <div class="workplace">TCS, Cyber City, Gurgaon</div>
+                <div class="location">📍 New Delhi, India</div>
+            </div>
+
+            <!-- Connection Stats -->
+            <div class="stats-grid">
+                <div class="stat">
+                    <span class="stat-number">127</span>
+                    <div class="stat-label">Connections</div>
+                </div>
+                <div class="stat">
+                    <span class="stat-number">23</span>
+                    <div class="stat-label">Helped</div>
+                </div>
+                <div class="stat">
+                    <span class="stat-number">8</span>
+                    <div class="stat-label">Got Help</div>
+                </div>
+            </div>
+
+            <!-- Availability Status -->
+            <div class="section">
+                <h3>
+                    <span class="section-icon">🟢</span>
+                    Availability Status
+                </h3>
+                <div class="availability-toggle">
+                    <div class="availability-status">
+                        <div class="status-indicator" id="statusIndicator"></div>
+                        <span id="statusText">Available to Help</span>
+                    </div>
+                    <div class="toggle-switch" id="availabilityToggle" onclick="toggleAvailability()"></div>
+                </div>
+            </div>
+
+            <!-- Contact Information -->
+            <div class="section">
+                <h3>
+                    <span class="section-icon">📞</span>
+                    Contact Information
+                </h3>
+                <div class="info-item">
+                    <div class="label">Phone Number</div>
+                    <div class="value">+91 98765 43210</div>
+                </div>
+                <div class="info-item">
+                    <div class="label">Email</div>
+                    <div class="value">rahul.kumar@email.com</div>
+                </div>
+                <div class="info-item">
+                    <div class="label">Languages</div>
+                    <div class="value">Hindi, English, Punjabi</div>
+                </div>
+            </div>
+
+            <!-- Professional Info -->
+            <div class="section">
+                <h3>
+                    <span class="section-icon">💼</span>
+                    Professional Information
+                </h3>
+                <div class="info-item">
+                    <div class="label">Department</div>
+                    <div class="value">Digital Innovation Lab</div>
+                </div>
+                <div class="info-item">
+                    <div class="label">Experience</div>
+                    <div class="value">5 years at TCS</div>
+                </div>
+                <div class="info-item">
+                    <div class="label">Specialization</div>
+                    <div class="value">Mobile Apps, Cloud Solutions</div>
+                </div>
+            </div>
+
+            <!-- Skills & Expertise -->
+            <div class="section">
+                <h3>
+                    <span class="section-icon">🎯</span>
+                    Skills & Expertise
+                </h3>
+                <div class="skills-tags">
+                    <span class="skill-tag">Software Development</span>
+                    <span class="skill-tag">Banking Processes</span>
+                    <span class="skill-tag">Government Services</span>
+                    <span class="skill-tag">Tech Support</span>
+                    <span class="skill-tag">Career Guidance</span>
+                </div>
+            </div>
+
+            <!-- Help Statistics -->
+            <div class="section">
+                <h3>
+                    <span class="section-icon">📊</span>
+                    Help Statistics
+                </h3>
+                <div class="help-stats">
+                    <div class="help-stat">
+                        <div class="number">94%</div>
+                        <div class="label">Success Rate</div>
+                    </div>
+                    <div class="help-stat">
+                        <div class="number">2.3 hrs</div>
+                        <div class="label">Avg Response</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Achievement Badges -->
+            <div class="section">
+                <h3>
+                    <span class="section-icon">🏆</span>
+                    Achievement Badges
+                </h3>
+                <div class="achievement-badges">
+                    <div class="badge" title="Super Helper - Helped 20+ people">🌟</div>
+                    <div class="badge" title="Quick Responder - Avg response < 1 hour">⚡</div>
+                    <div class="badge" title="Network Builder - 100+ connections">🔗</div>
+                    <div class="badge" title="Problem Solver - High success rate">🎯</div>
+                </div>
+            </div>
+
+            <!-- Action Buttons -->
+            <div class="action-buttons">
+                <a href="settings.html" class="btn btn-secondary">
+                    ⚙️ Settings
+                </a>
+                <a href="history.html" class="btn btn-primary">
+                    📋 Help History
+                </a>
+            </div>
+
+            <!-- Privacy Note -->
+            <div class="privacy-note">
+                🔒 <strong>Privacy Note:</strong> Your workplace information is only visible to your direct connections. Location data is used only for finding nearby help opportunities.
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Availability toggle functionality
+        let isAvailable = true;
+
+        function toggleAvailability() {
+            isAvailable = !isAvailable;
+            const toggle = document.getElementById('availabilityToggle');
+            const indicator = document.getElementById('statusIndicator');
+            const statusText = document.getElementById('statusText');
+
+            if (isAvailable) {
+                toggle.classList.remove('off');
+                indicator.classList.remove('busy');
+                statusText.textContent = 'Available to Help';
+            } else {
+                toggle.classList.add('off');
+                indicator.classList.add('busy');
+                statusText.textContent = 'Currently Busy';
+            }
+        }
+
+        // Back button functionality
+        function goBack() {
+            // Check if there's a previous page in history
+            if (document.referrer && document.referrer !== '') {
+                window.history.back();
+            } else {
+                // Fallback to map page
+                window.location.href = 'map.html';
+            }
+        }
+
+        // Demo data animation on load
+        window.addEventListener('load', function() {
+            // Animate stats numbers
+            const statNumbers = document.querySelectorAll('.stat-number');
+            statNumbers.forEach((stat, index) => {
+                const finalValue = stat.textContent;
+                stat.textContent = '0';
+                
+                setTimeout(() => {
+                    animateNumber(stat, 0, parseInt(finalValue), 1500);
+                }, index * 200);
+            });
+        });
+
+        function animateNumber(element, start, end, duration) {
+            const startTime = performance.now();
+            
+            function update(currentTime) {
+                const elapsed = currentTime - startTime;
+                const progress = Math.min(elapsed / duration, 1);
+                
+                const current = Math.floor(start + (end - start) * progress);
+                element.textContent = current;
+                
+                if (progress < 1) {
+                    requestAnimationFrame(update);
+                }
+            }
+            
+            requestAnimationFrame(update);
+        }
+
+        // Simulate real-time updates (for demo purposes)
+        setTimeout(() => {
+            const helpedStat = document.querySelector('.stat-number');
+            if (helpedStat && helpedStat.textContent === '127') {
+                helpedStat.textContent = '128';
+                showNotification('New connection added to your network!');
+            }
+        }, 5000);
+
+        function showNotification(message) {
+            // Create a simple notification
+            const notification = document.createElement('div');
+            notification.style.cssText = `
+                position: fixed;
+                top: 20px;
+                right: 20px;
+                background: #4CAF50;
+                color: white;
+                padding: 15px 20px;
+                border-radius: 10px;
+                box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+                z-index: 1000;
+                font-size: 0.9em;
+                max-width: 300px;
+                opacity: 0;
+                transform: translateX(100%);
+                transition: all 0.3s ease;
+            `;
+            notification.textContent = message;
+            document.body.appendChild(notification);
+
+            // Animate in
+            setTimeout(() => {
+                notification.style.opacity = '1';
+                notification.style.transform = 'translateX(0)';
+            }, 100);
+
+            // Remove after 3 seconds
+            setTimeout(() => {
+                notification.style.opacity = '0';
+                notification.style.transform = 'translateX(100%)';
+                setTimeout(() => {
+                    document.body.removeChild(notification);
+                }, 300);
+            }, 3000);
+        }
+    </script>
+</body>
+</html>
