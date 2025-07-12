@@ -1,0 +1,586 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Settings - Jaan Pehchaan</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 10px;
+        }
+
+        .container {
+            max-width: 400px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+            overflow: hidden;
+            min-height: calc(100vh - 20px);
+            display: flex;
+            flex-direction: column;
+        }
+
+        .header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 20px;
+            text-align: center;
+            position: relative;
+        }
+
+        .back-button {
+            position: absolute;
+            left: 20px;
+            top: 50%;
+            transform: translateY(-50%);
+            background: none;
+            border: none;
+            color: white;
+            font-size: 24px;
+            cursor: pointer;
+            padding: 5px;
+            border-radius: 50%;
+            transition: background-color 0.3s;
+        }
+
+        .back-button:hover {
+            background-color: rgba(255, 255, 255, 0.2);
+        }
+
+        .header h1 {
+            font-size: 1.5em;
+            margin-bottom: 5px;
+        }
+
+        .header p {
+            font-size: 0.9em;
+            opacity: 0.9;
+        }
+
+        .settings-content {
+            flex: 1;
+            padding: 20px;
+            overflow-y: auto;
+        }
+
+        .settings-section {
+            margin-bottom: 30px;
+        }
+
+        .section-title {
+            font-size: 1.1em;
+            font-weight: 600;
+            color: #333;
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .section-icon {
+            font-size: 1.3em;
+            color: #667eea;
+        }
+
+        .setting-item {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 15px 0;
+            border-bottom: 1px solid #f0f0f0;
+        }
+
+        .setting-item:last-child {
+            border-bottom: none;
+        }
+
+        .setting-info {
+            flex: 1;
+        }
+
+        .setting-label {
+            font-weight: 500;
+            color: #333;
+            margin-bottom: 3px;
+        }
+
+        .setting-description {
+            font-size: 0.85em;
+            color: #666;
+            line-height: 1.3;
+        }
+
+        .toggle-switch {
+            position: relative;
+            width: 50px;
+            height: 24px;
+            background: #ccc;
+            border-radius: 12px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+
+        .toggle-switch.on {
+            background: #4CAF50;
+        }
+
+        .toggle-switch::after {
+            content: '';
+            position: absolute;
+            top: 2px;
+            left: 2px;
+            width: 20px;
+            height: 20px;
+            background: white;
+            border-radius: 50%;
+            transition: transform 0.3s;
+        }
+
+        .toggle-switch.on::after {
+            transform: translateX(26px);
+        }
+
+        .dropdown-select {
+            padding: 8px 12px;
+            border: 2px solid #e0e0e0;
+            border-radius: 8px;
+            background: white;
+            color: #333;
+            font-size: 0.9em;
+            cursor: pointer;
+            transition: border-color 0.3s;
+        }
+
+        .dropdown-select:focus {
+            outline: none;
+            border-color: #667eea;
+        }
+
+        .privacy-card {
+            background: #e3f2fd;
+            padding: 15px;
+            border-radius: 10px;
+            margin-top: 15px;
+            border-left: 4px solid #2196f3;
+        }
+
+        .privacy-title {
+            font-weight: 600;
+            color: #1976d2;
+            margin-bottom: 8px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .privacy-text {
+            font-size: 0.9em;
+            color: #1976d2;
+            line-height: 1.4;
+        }
+
+        .danger-zone {
+            background: #ffebee;
+            padding: 15px;
+            border-radius: 10px;
+            margin-top: 20px;
+            border-left: 4px solid #f44336;
+        }
+
+        .danger-title {
+            font-weight: 600;
+            color: #d32f2f;
+            margin-bottom: 10px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .danger-button {
+            background: #f44336;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 8px;
+            font-size: 0.9em;
+            cursor: pointer;
+            transition: background-color 0.3s;
+            margin-top: 8px;
+        }
+
+        .danger-button:hover {
+            background: #d32f2f;
+        }
+
+        .save-button {
+            width: 100%;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            padding: 15px;
+            border-radius: 10px;
+            font-size: 1em;
+            font-weight: 600;
+            cursor: pointer;
+            margin-top: 20px;
+            transition: transform 0.3s;
+        }
+
+        .save-button:hover {
+            transform: translateY(-2px);
+        }
+
+        .version-info {
+            text-align: center;
+            padding: 20px;
+            color: #888;
+            font-size: 0.8em;
+            border-top: 1px solid #f0f0f0;
+        }
+
+        @media (max-width: 480px) {
+            .container {
+                margin: 0;
+                border-radius: 0;
+                min-height: 100vh;
+            }
+            
+            .settings-content {
+                padding: 15px;
+            }
+            
+            .setting-item {
+                padding: 12px 0;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- Header -->
+        <div class="header">
+            <button class="back-button" onclick="goBack()">←</button>
+            <h1>Settings</h1>
+            <p>जान पहचान • Know & Recognize</p>
+        </div>
+
+        <!-- Settings Content -->
+        <div class="settings-content">
+            
+            <!-- Notification Settings -->
+            <div class="settings-section">
+                <div class="section-title">
+                    <span class="section-icon">🔔</span>
+                    Notifications
+                </div>
+                
+                <div class="setting-item">
+                    <div class="setting-info">
+                        <div class="setting-label">Help Request Alerts</div>
+                        <div class="setting-description">Get notified when someone requests your help</div>
+                    </div>
+                    <div class="toggle-switch on" onclick="toggleSetting(this)"></div>
+                </div>
+                
+                <div class="setting-item">
+                    <div class="setting-info">
+                        <div class="setting-label">Connection Updates</div>
+                        <div class="setting-description">Alerts when new connections join your network</div>
+                    </div>
+                    <div class="toggle-switch on" onclick="toggleSetting(this)"></div>
+                </div>
+                
+                <div class="setting-item">
+                    <div class="setting-info">
+                        <div class="setting-label">Location-based Alerts</div>
+                        <div class="setting-description">Notify when you're near helpful connections</div>
+                    </div>
+                    <div class="toggle-switch on" onclick="toggleSetting(this)"></div>
+                </div>
+                
+                <div class="setting-item">
+                    <div class="setting-info">
+                        <div class="setting-label">Success Stories</div>
+                        <div class="setting-description">Inspiring updates from your network</div>
+                    </div>
+                    <div class="toggle-switch" onclick="toggleSetting(this)"></div>
+                </div>
+            </div>
+
+            <!-- Privacy Settings -->
+            <div class="settings-section">
+                <div class="section-title">
+                    <span class="section-icon">🔒</span>
+                    Privacy & Visibility
+                </div>
+                
+                <div class="setting-item">
+                    <div class="setting-info">
+                        <div class="setting-label">Show Workplace Info</div>
+                        <div class="setting-description">Let connections see where you work</div>
+                    </div>
+                    <div class="toggle-switch on" onclick="toggleSetting(this)"></div>
+                </div>
+                
+                <div class="setting-item">
+                    <div class="setting-info">
+                        <div class="setting-label">Location Sharing</div>
+                        <div class="setting-description">Share approximate location for nearby help</div>
+                    </div>
+                    <div class="toggle-switch on" onclick="toggleSetting(this)"></div>
+                </div>
+                
+                <div class="setting-item">
+                    <div class="setting-info">
+                        <div class="setting-label">Profile Visibility</div>
+                        <div class="setting-description">Who can see your full profile</div>
+                    </div>
+                    <select class="dropdown-select">
+                        <option>Direct connections only</option>
+                        <option>Up to 2nd degree</option>
+                        <option>Up to 3rd degree</option>
+                        <option>Everyone in network</option>
+                    </select>
+                </div>
+                
+                <div class="setting-item">
+                    <div class="setting-info">
+                        <div class="setting-label">Anonymous Help Requests</div>
+                        <div class="setting-description">Allow others to request help without revealing identity initially</div>
+                    </div>
+                    <div class="toggle-switch" onclick="toggleSetting(this)"></div>
+                </div>
+            </div>
+
+            <!-- Help Preferences -->
+            <div class="settings-section">
+                <div class="section-title">
+                    <span class="section-icon">🤝</span>
+                    Help Preferences
+                </div>
+                
+                <div class="setting-item">
+                    <div class="setting-info">
+                        <div class="setting-label">Availability Status</div>
+                        <div class="setting-description">Your current availability to help others</div>
+                    </div>
+                    <select class="dropdown-select">
+                        <option>Available to help</option>
+                        <option>Limited availability</option>
+                        <option>Currently busy</option>
+                        <option>Emergency only</option>
+                    </select>
+                </div>
+                
+                <div class="setting-item">
+                    <div class="setting-info">
+                        <div class="setting-label">Auto-Accept from Close Friends</div>
+                        <div class="setting-description">Automatically accept help requests from 1st degree connections</div>
+                    </div>
+                    <div class="toggle-switch" onclick="toggleSetting(this)"></div>
+                </div>
+                
+                <div class="setting-item">
+                    <div class="setting-info">
+                        <div class="setting-label">Help Categories</div>
+                        <div class="setting-description">Types of help you're comfortable providing</div>
+                    </div>
+                    <select class="dropdown-select">
+                        <option>All categories</option>
+                        <option>Professional only</option>
+                        <option>Personal only</option>
+                        <option>Emergency only</option>
+                    </select>
+                </div>
+            </div>
+
+            <!-- Language & Region -->
+            <div class="settings-section">
+                <div class="section-title">
+                    <span class="section-icon">🌐</span>
+                    Language & Region
+                </div>
+                
+                <div class="setting-item">
+                    <div class="setting-info">
+                        <div class="setting-label">App Language</div>
+                        <div class="setting-description">Choose your preferred language</div>
+                    </div>
+                    <select class="dropdown-select">
+                        <option>English</option>
+                        <option>हिंदी (Hindi)</option>
+                        <option>ਪੰਜਾਬੀ (Punjabi)</option>
+                        <option>বাংলা (Bengali)</option>
+                        <option>தமிழ் (Tamil)</option>
+                    </select>
+                </div>
+                
+                <div class="setting-item">
+                    <div class="setting-info">
+                        <div class="setting-label">Regional Preferences</div>
+                        <div class="setting-description">Customize app for your region</div>
+                    </div>
+                    <select class="dropdown-select">
+                        <option>Delhi NCR</option>
+                        <option>Mumbai</option>
+                        <option>Bangalore</option>
+                        <option>Chennai</option>
+                        <option>Kolkata</option>
+                        <option>Other</option>
+                    </select>
+                </div>
+            </div>
+
+            <!-- Privacy Information -->
+            <div class="privacy-card">
+                <div class="privacy-title">
+                    🔒 Your Privacy Matters
+                </div>
+                <div class="privacy-text">
+                    We never share your personal information without permission. Your workplace and location data are only used to connect you with relevant help opportunities within your trusted network.
+                </div>
+            </div>
+
+            <!-- Save Button -->
+            <button class="save-button" onclick="saveSettings()">
+                💾 Save All Settings
+            </button>
+
+            <!-- Danger Zone -->
+            <div class="danger-zone">
+                <div class="danger-title">
+                    ⚠️ Danger Zone
+                </div>
+                <button class="danger-button" onclick="deleteAccount()">
+                    Delete My Account
+                </button>
+                <button class="danger-button" onclick="clearData()">
+                    Clear All Data
+                </button>
+            </div>
+        </div>
+
+        <!-- Version Info -->
+        <div class="version-info">
+            Jaan Pehchaan v1.0.0 • Made with ❤️ in India<br>
+            Privacy Policy • Terms of Service • Support
+        </div>
+    </div>
+
+    <script>
+        function toggleSetting(toggle) {
+            toggle.classList.toggle('on');
+            
+            // Show feedback
+            const feedback = toggle.classList.contains('on') ? 'ON' : 'OFF';
+            showToast(`Setting turned ${feedback}`);
+        }
+
+        function saveSettings() {
+            // Simulate saving
+            showToast('Settings saved successfully! 💾');
+            
+            // Add some visual feedback
+            const button = document.querySelector('.save-button');
+            const originalText = button.innerHTML;
+            button.innerHTML = '✅ Saved!';
+            button.style.background = '#4CAF50';
+            
+            setTimeout(() => {
+                button.innerHTML = originalText;
+                button.style.background = 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)';
+            }, 2000);
+        }
+
+        function deleteAccount() {
+            const confirmed = confirm('⚠️ Delete Account\n\nAre you sure you want to delete your account? This action cannot be undone.\n\n• All your connections will be removed\n• Your help history will be deleted\n• You won\'t be able to recover your data\n\nType "DELETE" to confirm:');
+            
+            if (confirmed) {
+                const userInput = prompt('Type "DELETE" to confirm account deletion:');
+                if (userInput === 'DELETE') {
+                    alert('🗑️ Account Deletion\n\nAccount deletion request submitted. You will receive a confirmation email within 24 hours.\n\nWe\'re sorry to see you go! 😢');
+                } else {
+                    alert('Account deletion cancelled. Your account is safe! 🛡️');
+                }
+            }
+        }
+
+        function clearData() {
+            const confirmed = confirm('🗑️ Clear All Data\n\nThis will remove:\n• All your help requests\n• Connection history\n• Saved preferences\n• Location data\n\nYour account and connections will remain.\n\nContinue?');
+            
+            if (confirmed) {
+                alert('✅ Data Cleared\n\nAll your data has been cleared successfully. Your account settings have been reset to default.\n\nYou can start fresh! 🆕');
+            }
+        }
+
+        function goBack() {
+            if (document.referrer && document.referrer !== '') {
+                window.history.back();
+            } else {
+                window.location.href = 'profile.html';
+            }
+        }
+
+        function showToast(message) {
+            // Create toast notification
+            const toast = document.createElement('div');
+            toast.style.cssText = `
+                position: fixed;
+                top: 20px;
+                right: 20px;
+                background: #333;
+                color: white;
+                padding: 12px 20px;
+                border-radius: 8px;
+                z-index: 1000;
+                font-size: 0.9em;
+                opacity: 0;
+                transform: translateX(100%);
+                transition: all 0.3s ease;
+            `;
+            toast.textContent = message;
+            document.body.appendChild(toast);
+
+            // Animate in
+            setTimeout(() => {
+                toast.style.opacity = '1';
+                toast.style.transform = 'translateX(0)';
+            }, 100);
+
+            // Remove after 3 seconds
+            setTimeout(() => {
+                toast.style.opacity = '0';
+                toast.style.transform = 'translateX(100%)';
+                setTimeout(() => {
+                    document.body.removeChild(toast);
+                }, 300);
+            }, 3000);
+        }
+
+        // Initialize page
+        window.addEventListener('load', function() {
+            // Show welcome message
+            setTimeout(() => {
+                showToast('Welcome to Settings! Customize your experience 🛠️');
+            }, 1000);
+        });
+
+        // Simulate auto-save for dropdowns
+        document.querySelectorAll('.dropdown-select').forEach(select => {
+            select.addEventListener('change', function() {
+                showToast(`${this.previousElementSibling.querySelector('.setting-label').textContent} updated`);
+            });
+        });
+    </script>
+</body>
+</html>

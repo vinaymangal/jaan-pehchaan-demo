@@ -1,0 +1,683 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>How It Works - Jaan Pehchaan</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 10px;
+        }
+
+        .container {
+            max-width: 400px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+            overflow: hidden;
+            min-height: calc(100vh - 20px);
+            display: flex;
+            flex-direction: column;
+        }
+
+        .header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 20px;
+            text-align: center;
+            position: relative;
+        }
+
+        .back-button {
+            position: absolute;
+            left: 20px;
+            top: 50%;
+            transform: translateY(-50%);
+            background: none;
+            border: none;
+            color: white;
+            font-size: 24px;
+            cursor: pointer;
+            padding: 5px;
+            border-radius: 50%;
+            transition: background-color 0.3s;
+        }
+
+        .back-button:hover {
+            background-color: rgba(255, 255, 255, 0.2);
+        }
+
+        .header h1 {
+            font-size: 1.5em;
+            margin-bottom: 5px;
+        }
+
+        .header p {
+            font-size: 0.9em;
+            opacity: 0.9;
+        }
+
+        .content {
+            flex: 1;
+            overflow-y: auto;
+            padding: 0 0 20px 0;
+        }
+
+        .hero-section {
+            padding: 30px 20px;
+            text-align: center;
+            background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+        }
+
+        .hero-icon {
+            font-size: 4em;
+            margin-bottom: 15px;
+        }
+
+        .hero-title {
+            font-size: 1.3em;
+            font-weight: 600;
+            color: #333;
+            margin-bottom: 10px;
+        }
+
+        .hero-subtitle {
+            color: #666;
+            line-height: 1.5;
+            font-size: 0.95em;
+        }
+
+        .section {
+            padding: 25px 20px;
+            border-bottom: 1px solid #f0f0f0;
+        }
+
+        .section:last-child {
+            border-bottom: none;
+        }
+
+        .section-title {
+            font-size: 1.1em;
+            font-weight: 600;
+            color: #333;
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .section-icon {
+            font-size: 1.3em;
+            color: #667eea;
+        }
+
+        .section-content {
+            color: #555;
+            line-height: 1.6;
+            font-size: 0.9em;
+        }
+
+        .step-list {
+            list-style: none;
+            margin-top: 15px;
+        }
+
+        .step-item {
+            display: flex;
+            align-items: flex-start;
+            margin-bottom: 15px;
+            padding: 12px;
+            background: #f8f9fa;
+            border-radius: 10px;
+        }
+
+        .step-number {
+            background: #667eea;
+            color: white;
+            width: 24px;
+            height: 24px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.8em;
+            font-weight: bold;
+            margin-right: 12px;
+            flex-shrink: 0;
+        }
+
+        .step-text {
+            flex: 1;
+        }
+
+        .step-title {
+            font-weight: 600;
+            color: #333;
+            margin-bottom: 3px;
+        }
+
+        .step-description {
+            font-size: 0.85em;
+            color: #666;
+        }
+
+        .feature-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+            margin-top: 15px;
+        }
+
+        .feature-card {
+            background: #f8f9fa;
+            padding: 15px;
+            border-radius: 10px;
+            text-align: center;
+        }
+
+        .feature-icon {
+            font-size: 2em;
+            margin-bottom: 8px;
+        }
+
+        .feature-title {
+            font-weight: 600;
+            color: #333;
+            margin-bottom: 5px;
+            font-size: 0.9em;
+        }
+
+        .feature-description {
+            font-size: 0.8em;
+            color: #666;
+            line-height: 1.3;
+        }
+
+        .example-scenario {
+            background: #e3f2fd;
+            padding: 15px;
+            border-radius: 10px;
+            margin-top: 15px;
+            border-left: 4px solid #2196f3;
+        }
+
+        .scenario-title {
+            font-weight: 600;
+            color: #1976d2;
+            margin-bottom: 8px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .scenario-text {
+            font-size: 0.9em;
+            color: #1976d2;
+            line-height: 1.4;
+        }
+
+        .benefits-list {
+            list-style: none;
+            margin-top: 15px;
+        }
+
+        .benefit-item {
+            display: flex;
+            align-items: center;
+            margin-bottom: 10px;
+            font-size: 0.9em;
+            color: #555;
+        }
+
+        .benefit-icon {
+            color: #4CAF50;
+            margin-right: 10px;
+            font-size: 1.1em;
+        }
+
+        .cta-section {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 25px 20px;
+            text-align: center;
+        }
+
+        .cta-title {
+            font-size: 1.2em;
+            font-weight: 600;
+            margin-bottom: 10px;
+        }
+
+        .cta-text {
+            margin-bottom: 20px;
+            opacity: 0.9;
+            line-height: 1.5;
+        }
+
+        .cta-buttons {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+        }
+
+        .cta-button {
+            background: rgba(255, 255, 255, 0.2);
+            color: white;
+            border: 2px solid rgba(255, 255, 255, 0.3);
+            padding: 12px 15px;
+            border-radius: 10px;
+            font-size: 0.9em;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+        }
+
+        .cta-button:hover {
+            background: rgba(255, 255, 255, 0.3);
+            transform: translateY(-2px);
+        }
+
+        .stats-highlight {
+            background: #fff3e0;
+            padding: 15px;
+            border-radius: 10px;
+            margin-top: 15px;
+            text-align: center;
+            border: 2px solid #ffb74d;
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr 1fr;
+            gap: 15px;
+            margin-top: 10px;
+        }
+
+        .stat-item {
+            text-align: center;
+        }
+
+        .stat-number {
+            font-size: 1.4em;
+            font-weight: bold;
+            color: #f57c00;
+            display: block;
+        }
+
+        .stat-label {
+            font-size: 0.8em;
+            color: #bf360c;
+            margin-top: 3px;
+        }
+
+        @media (max-width: 480px) {
+            .container {
+                margin: 0;
+                border-radius: 0;
+                min-height: 100vh;
+            }
+            
+            .feature-grid {
+                grid-template-columns: 1fr;
+                gap: 10px;
+            }
+            
+            .cta-buttons {
+                grid-template-columns: 1fr;
+            }
+            
+            .stats-grid {
+                grid-template-columns: 1fr;
+                gap: 10px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- Header -->
+        <div class="header">
+            <button class="back-button" onclick="goBack()">←</button>
+            <h1>How It Works</h1>
+            <p>जान पहचान • Know & Recognize</p>
+        </div>
+
+        <!-- Content -->
+        <div class="content">
+            <!-- Hero Section -->
+            <div class="hero-section">
+                <div class="hero-icon">🤝</div>
+                <div class="hero-title">Your Network is Your Net Worth</div>
+                <div class="hero-subtitle">
+                    Discover hidden connections in your network and get help from people you never knew could assist you.
+                </div>
+            </div>
+
+            <!-- The Problem Section -->
+            <div class="section">
+                <div class="section-title">
+                    <span class="section-icon">😰</span>
+                    The Universal Problem
+                </div>
+                <div class="section-content">
+                    We've all been there: stuck at a government office, struggling with bureaucracy, waiting in endless queues. Hours later, after finally getting your work done, a friend casually mentions, "Oh, my uncle works at that same office!"
+                    
+                    <div class="example-scenario">
+                        <div class="scenario-title">
+                            💡 The "If Only I Had Known" Moment
+                        </div>
+                        <div class="scenario-text">
+                            "What if I had known this connection beforehand? How much easier would my life have been?"
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- The Solution Section -->
+            <div class="section">
+                <div class="section-title">
+                    <span class="section-icon">🎯</span>
+                    Our Solution
+                </div>
+                <div class="section-content">
+                    Jaan Pehchaan reveals these hidden connections BEFORE you need them. Imagine walking into any institution and instantly knowing: "My friend's brother-in-law works here" or "My colleague's neighbor is a senior officer here."
+
+                    <div class="feature-grid">
+                        <div class="feature-card">
+                            <div class="feature-icon">🔍</div>
+                            <div class="feature-title">Proactive Discovery</div>
+                            <div class="feature-description">Find connections before you need them</div>
+                        </div>
+                        <div class="feature-card">
+                            <div class="feature-icon">🏢</div>
+                            <div class="feature-title">Institution Mapping</div>
+                            <div class="feature-description">Know who works where in your network</div>
+                        </div>
+                        <div class="feature-card">
+                            <div class="feature-icon">🚀</div>
+                            <div class="feature-title">Skip the Hassle</div>
+                            <div class="feature-description">Avoid bureaucratic nightmares</div>
+                        </div>
+                        <div class="feature-card">
+                            <div class="feature-icon">💡</div>
+                            <div class="feature-title">Hidden Networks</div>
+                            <div class="feature-description">Discover surprising connections</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- How It Works Section -->
+            <div class="section">
+                <div class="section-title">
+                    <span class="section-icon">⚙️</span>
+                    How It Works
+                </div>
+                <div class="section-content">
+                    Getting started is simple. Here's how Jaan Pehchaan connects you with help:
+
+                    <ul class="step-list">
+                        <li class="step-item">
+                            <div class="step-number">1</div>
+                            <div class="step-text">
+                                <div class="step-title">Build Your Network</div>
+                                <div class="step-description">Invite 5 close contacts. Each connection expands your network exponentially.</div>
+                            </div>
+                        </li>
+                        <li class="step-item">
+                            <div class="step-number">2</div>
+                            <div class="step-text">
+                                <div class="step-title">Map Workplaces</div>
+                                <div class="step-description">Add where you and your connections work. This creates an institutional map.</div>
+                            </div>
+                        </li>
+                        <li class="step-item">
+                            <div class="step-number">3</div>
+                            <div class="step-text">
+                                <div class="step-title">Discover Connections</div>
+                                <div class="step-description">See colored dots on the map showing connections at different institutions.</div>
+                            </div>
+                        </li>
+                        <li class="step-item">
+                            <div class="step-number">4</div>
+                            <div class="step-text">
+                                <div class="step-title">Request Help</div>
+                                <div class="step-description">Tap "Need Help" and your request routes through the best connection path.</div>
+                            </div>
+                        </li>
+                        <li class="step-item">
+                            <div class="step-number">5</div>
+                            <div class="step-text">
+                                <div class="step-title">Get Results</div>
+                                <div class="step-description">Receive guidance, shortcuts, and insider knowledge to solve your problem.</div>
+                            </div>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+
+            <!-- Real Examples Section -->
+            <div class="section">
+                <div class="section-title">
+                    <span class="section-icon">📚</span>
+                    Real-World Examples
+                </div>
+                <div class="section-content">
+                    Here's how Jaan Pehchaan helps in everyday situations:
+
+                    <div class="example-scenario">
+                        <div class="scenario-title">
+                            🏦 Bank Loan Scenario
+                        </div>
+                        <div class="scenario-text">
+                            Need a business loan? App shows: "Your neighbor's brother is a loan officer at ABC Bank." Get introduced, receive insider tips, and get approved faster with better terms.
+                        </div>
+                    </div>
+
+                    <div class="example-scenario">
+                        <div class="scenario-title">
+                            📄 Government Office Visit
+                        </div>
+                        <div class="scenario-text">
+                            Renewing your passport? Discover: "Your college friend's father works at the passport office." Get guidance on documents, timing, and avoid common mistakes.
+                        </div>
+                    </div>
+
+                    <div class="example-scenario">
+                        <div class="scenario-title">
+                            🏥 Medical Emergency
+                        </div>
+                        <div class="scenario-text">
+                            Need a specialist quickly? Find: "Your colleague's wife is a cardiologist at City Hospital." Get priority appointment and expert care without waiting.
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Benefits Section -->
+            <div class="section">
+                <div class="section-title">
+                    <span class="section-icon">✨</span>
+                    Key Benefits
+                </div>
+                <div class="section-content">
+                    <ul class="benefits-list">
+                        <li class="benefit-item">
+                            <span class="benefit-icon">⚡</span>
+                            Save hours of waiting and bureaucratic hassles
+                        </li>
+                        <li class="benefit-item">
+                            <span class="benefit-icon">🎯</span>
+                            Get insider knowledge and proper guidance
+                        </li>
+                        <li class="benefit-item">
+                            <span class="benefit-icon">🤝</span>
+                            Strengthen relationships through mutual help
+                        </li>
+                        <li class="benefit-item">
+                            <span class="benefit-icon">🌟</span>
+                            Discover hidden value in your existing network
+                        </li>
+                        <li class="benefit-item">
+                            <span class="benefit-icon">📱</span>
+                            Simple, intuitive interface for all age groups
+                        </li>
+                        <li class="benefit-item">
+                            <span class="benefit-icon">🔒</span>
+                            Privacy-first approach with secure connections
+                        </li>
+                    </ul>
+
+                    <div class="stats-highlight">
+                        <strong>Current Demo Statistics</strong>
+                        <div class="stats-grid">
+                            <div class="stat-item">
+                                <span class="stat-number">127</span>
+                                <div class="stat-label">Connections</div>
+                            </div>
+                            <div class="stat-item">
+                                <span class="stat-number">31</span>
+                                <div class="stat-label">Help Requests</div>
+                            </div>
+                            <div class="stat-item">
+                                <span class="stat-number">94%</span>
+                                <div class="stat-label">Success Rate</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Call to Action -->
+            <div class="cta-section">
+                <div class="cta-title">Ready to Unlock Your Network?</div>
+                <div class="cta-text">
+                    Join thousands of Indians who are already leveraging their connections for mutual success.
+                </div>
+                <div class="cta-buttons">
+                    <a href="map.html" class="cta-button">
+                        🗺️ Explore Map
+                    </a>
+                    <a href="invite-contacts.html" class="cta-button">
+                        👥 Add Connections
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function goBack() {
+            if (document.referrer && document.referrer !== '') {
+                window.history.back();
+            } else {
+                window.location.href = 'map.html';
+            }
+        }
+
+        // Add some interactive elements
+        window.addEventListener('load', function() {
+            // Animate stats on scroll into view
+            const statsSection = document.querySelector('.stats-highlight');
+            
+            const observer = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        // Animate the numbers
+                        const numbers = entry.target.querySelectorAll('.stat-number');
+                        numbers.forEach((number, index) => {
+                            const finalValue = number.textContent;
+                            const isPercentage = finalValue.includes('%');
+                            number.textContent = '0';
+                            
+                            setTimeout(() => {
+                                if (isPercentage) {
+                                    animateNumber(number, 0, parseInt(finalValue), 2000, '%');
+                                } else {
+                                    animateNumber(number, 0, parseInt(finalValue), 2000);
+                                }
+                            }, index * 200);
+                        });
+                        
+                        observer.unobserve(entry.target);
+                    }
+                });
+            });
+
+            observer.observe(statsSection);
+        });
+
+        function animateNumber(element, start, end, duration, suffix = '') {
+            const startTime = performance.now();
+            
+            function update(currentTime) {
+                const elapsed = currentTime - startTime;
+                const progress = Math.min(elapsed / duration, 1);
+                
+                const current = Math.floor(start + (end - start) * progress);
+                element.textContent = current + suffix;
+                
+                if (progress < 1) {
+                    requestAnimationFrame(update);
+                }
+            }
+            
+            requestAnimationFrame(update);
+        }
+
+        // Add click tracking for demo purposes
+        document.querySelectorAll('.cta-button').forEach(button => {
+            button.addEventListener('click', function(e) {
+                // Show a toast message before navigation
+                showToast('Navigating to ' + this.textContent.trim() + '...');
+            });
+        });
+
+        function showToast(message) {
+            const toast = document.createElement('div');
+            toast.style.cssText = `
+                position: fixed;
+                top: 20px;
+                right: 20px;
+                background: #333;
+                color: white;
+                padding: 12px 20px;
+                border-radius: 8px;
+                z-index: 1000;
+                font-size: 0.9em;
+                opacity: 0;
+                transform: translateX(100%);
+                transition: all 0.3s ease;
+            `;
+            toast.textContent = message;
+            document.body.appendChild(toast);
+
+            setTimeout(() => {
+                toast.style.opacity = '1';
+                toast.style.transform = 'translateX(0)';
+            }, 100);
+
+            setTimeout(() => {
+                toast.style.opacity = '0';
+                toast.style.transform = 'translateX(100%)';
+                setTimeout(() => document.body.removeChild(toast), 300);
+            }, 2000);
+        }
+    </script>
+</body>
+</html>
