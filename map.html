@@ -124,6 +124,67 @@
             box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
             z-index: 1000;
             font-size: 0.8em;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .connection-legend:hover {
+            background: rgba(255, 255, 255, 1);
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
+        }
+
+        .connection-legend.minimized {
+            padding: 10px;
+            width: 40px;
+            height: 40px;
+            overflow: hidden;
+            background: rgba(102, 126, 234, 0.9);
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.2em;
+        }
+
+        .connection-legend.minimized .legend-content {
+            display: none;
+        }
+
+        .connection-legend.minimized::before {
+            content: '🎨';
+        }
+
+        .legend-content {
+            transition: opacity 0.3s ease;
+        }
+
+        .legend-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 10px;
+            font-weight: 600;
+            color: #333;
+        }
+
+        .legend-title {
+            font-size: 0.9em;
+        }
+
+        .legend-toggle {
+            background: none;
+            border: none;
+            font-size: 1em;
+            color: #999;
+            cursor: pointer;
+            padding: 2px;
+            border-radius: 3px;
+            transition: all 0.3s ease;
+        }
+
+        .legend-toggle:hover {
+            background: #f0f0f0;
+            color: #333;
         }
 
         .legend-item {
@@ -159,6 +220,32 @@
             box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
             z-index: 1000;
             display: none;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .connection-info:hover {
+            background: rgba(255, 255, 255, 1);
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
+        }
+
+        .connection-info .close-btn {
+            position: absolute;
+            top: 10px;
+            right: 15px;
+            background: none;
+            border: none;
+            font-size: 1.2em;
+            color: #999;
+            cursor: pointer;
+            padding: 5px;
+            border-radius: 50%;
+            transition: all 0.3s ease;
+        }
+
+        .connection-info .close-btn:hover {
+            background: #f0f0f0;
+            color: #333;
         }
 
         .connection-info h3 {
@@ -228,6 +315,158 @@
             color: white;
         }
 
+        /* NOTIFICATION SYSTEM STYLES */
+        .notification-container {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            z-index: 10000;
+            pointer-events: none;
+        }
+
+        .notification {
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
+            margin-bottom: 10px;
+            padding: 16px 20px;
+            max-width: 350px;
+            min-width: 300px;
+            border-left: 4px solid #4CAF50;
+            transform: translateX(400px);
+            opacity: 0;
+            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            pointer-events: auto;
+            cursor: pointer;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .notification.show {
+            transform: translateX(0);
+            opacity: 1;
+        }
+
+        .notification.hide {
+            transform: translateX(400px);
+            opacity: 0;
+        }
+
+        .notification.success { border-left-color: #4CAF50; }
+        .notification.info { border-left-color: #2196F3; }
+        .notification.warning { border-left-color: #FF9800; }
+        .notification.connection { border-left-color: #00BCD4; }
+
+        .notification-header {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 8px;
+        }
+
+        .notification-icon {
+            font-size: 1.5em;
+            flex-shrink: 0;
+        }
+
+        .notification-title {
+            font-weight: 600;
+            color: #333;
+            font-size: 0.95em;
+            flex: 1;
+        }
+
+        .notification-time {
+            font-size: 0.7em;
+            color: #999;
+            white-space: nowrap;
+        }
+
+        .notification-body {
+            color: #666;
+            font-size: 0.85em;
+            line-height: 1.4;
+            margin-bottom: 12px;
+        }
+
+        .notification-close {
+            position: absolute;
+            top: 8px;
+            right: 12px;
+            background: none;
+            border: none;
+            font-size: 1.1em;
+            color: #999;
+            cursor: pointer;
+            padding: 4px;
+            border-radius: 4px;
+            transition: all 0.3s ease;
+        }
+
+        .notification-close:hover {
+            background: #f0f0f0;
+            color: #333;
+        }
+
+        .notification-progress {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            height: 3px;
+            background: rgba(102, 126, 234, 0.3);
+            border-radius: 0 0 12px 12px;
+            animation: notificationProgress 5s linear forwards;
+        }
+
+        @keyframes notificationProgress {
+            from { width: 100%; }
+            to { width: 0%; }
+        }
+
+        .success-story {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            background: linear-gradient(135deg, #4CAF50 0%, #45a049 100%);
+            color: white;
+            padding: 20px;
+            border-radius: 15px;
+            max-width: 320px;
+            box-shadow: 0 10px 30px rgba(76, 175, 80, 0.3);
+            transform: translateY(100px);
+            opacity: 0;
+            transition: all 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            z-index: 9999;
+            cursor: pointer;
+        }
+
+        .success-story.show {
+            transform: translateY(0);
+            opacity: 1;
+        }
+
+        .success-story-header {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 10px;
+        }
+
+        .success-story-icon {
+            font-size: 1.8em;
+        }
+
+        .success-story-title {
+            font-weight: 600;
+            font-size: 1em;
+        }
+
+        .success-story-content {
+            font-size: 0.9em;
+            line-height: 1.4;
+            opacity: 0.95;
+        }
+
         /* Guided Tour Styles */
         .tour-overlay {
             position: fixed;
@@ -238,6 +477,7 @@
             background: rgba(0, 0, 0, 0.8);
             z-index: 1000;
             display: none;
+            backdrop-filter: blur(5px);
         }
 
         .tour-highlight {
@@ -327,20 +567,21 @@
         }
 
         .tooltip-button:hover {
-            transform: translateY(-1px);
+            transform: translateY(-2px);
         }
 
         .tour-progress {
             position: fixed;
             top: 20px;
             left: 20px;
-            background: rgba(255, 255, 255, 0.9);
+            background: rgba(255, 255, 255, 0.95);
             padding: 10px 15px;
             border-radius: 20px;
             font-weight: 600;
             color: #667eea;
             z-index: 1002;
             display: none;
+            backdrop-filter: blur(10px);
         }
 
         @media (max-width: 480px) {
@@ -359,6 +600,33 @@
             .connection-info {
                 left: 10px;
                 right: 10px;
+            }
+
+            .notification-container {
+                left: 10px;
+                right: 10px;
+                top: 10px;
+            }
+
+            .notification {
+                min-width: auto;
+                max-width: none;
+                transform: translateY(-100px);
+            }
+
+            .notification.show {
+                transform: translateY(0);
+            }
+
+            .notification.hide {
+                transform: translateY(-100px);
+            }
+
+            .success-story {
+                left: 10px;
+                right: 10px;
+                bottom: 10px;
+                max-width: none;
             }
         }
     </style>
@@ -389,27 +657,34 @@
             <div id="map"></div>
             
             <!-- Connection Legend -->
-            <div class="connection-legend">
-                <div class="legend-item">
-                    <div class="legend-dot degree-1"></div>
-                    <span>1st Degree (Direct)</span>
-                </div>
-                <div class="legend-item">
-                    <div class="legend-dot degree-2"></div>
-                    <span>2nd Degree (Friend's Friend)</span>
-                </div>
-                <div class="legend-item">
-                    <div class="legend-dot degree-3"></div>
-                    <span>3rd Degree</span>
-                </div>
-                <div class="legend-item">
-                    <div class="legend-dot degree-4"></div>
-                    <span>4th Degree</span>
+            <div class="connection-legend" id="connectionLegend" onclick="toggleLegend()">
+                <div class="legend-content" id="legendContent">
+                    <div class="legend-header">
+                        <span class="legend-title">Network Degrees</span>
+                        <button class="legend-toggle" onclick="minimizeLegend(); event.stopPropagation();">−</button>
+                    </div>
+                    <div class="legend-item">
+                        <div class="legend-dot degree-1"></div>
+                        <span>1st Degree (Direct)</span>
+                    </div>
+                    <div class="legend-item">
+                        <div class="legend-dot degree-2"></div>
+                        <span>2nd Degree (Friend's Friend)</span>
+                    </div>
+                    <div class="legend-item">
+                        <div class="legend-dot degree-3"></div>
+                        <span>3rd Degree</span>
+                    </div>
+                    <div class="legend-item">
+                        <div class="legend-dot degree-4"></div>
+                        <span>4th Degree</span>
+                    </div>
                 </div>
             </div>
 
             <!-- Connection Info Panel -->
-            <div class="connection-info" id="connectionInfo">
+            <div class="connection-info" id="connectionInfo" onclick="hideConnectionInfo()">
+                <button class="close-btn" onclick="hideConnectionInfo(); event.stopPropagation();">×</button>
                 <h3 id="connectionName">Rajesh Kumar</h3>
                 <p id="connectionRole">Senior Manager - Loan Department</p>
                 <p id="connectionInstitution">📍 State Bank of India, Connaught Place</p>
@@ -443,6 +718,9 @@
         </div>
     </div>
 
+    <!-- NOTIFICATION SYSTEM ELEMENTS -->
+    <div class="notification-container" id="notificationContainer"></div>
+
     <!-- Guided Tour Elements -->
     <div class="tour-overlay" id="tourOverlay"></div>
     <div class="tour-progress" id="tourProgress">Step 1 of 5</div>
@@ -455,6 +733,173 @@
         let connectionMarkers = [];
         let isInTourMode = false;
         let currentTourStep = 0;
+
+        // NOTIFICATION SYSTEM
+        class NotificationSystem {
+            constructor() {
+                this.notifications = [];
+                this.container = document.getElementById('notificationContainer');
+                this.isActive = true;
+                this.init();
+            }
+
+            init() {
+                // Start realistic notification simulation after 5 seconds
+                setTimeout(() => this.startRealisticSimulation(), 5000);
+            }
+
+            show(options) {
+                const notification = this.createNotification(options);
+                this.container.appendChild(notification);
+                
+                // Trigger show animation
+                setTimeout(() => {
+                    notification.classList.add('show');
+                }, 100);
+
+                // Auto dismiss
+                if (options.autoDismiss !== false) {
+                    setTimeout(() => {
+                        this.dismiss(notification);
+                    }, options.duration || 5000);
+                }
+
+                return notification;
+            }
+
+            createNotification(options) {
+                const notification = document.createElement('div');
+                notification.className = `notification ${options.type || 'info'}`;
+                
+                notification.innerHTML = `
+                    <button class="notification-close" onclick="this.parentElement.remove()">×</button>
+                    <div class="notification-header">
+                        <div class="notification-icon">${options.icon || '🔔'}</div>
+                        <div class="notification-title">${options.title}</div>
+                        <div class="notification-time">${options.time || 'now'}</div>
+                    </div>
+                    <div class="notification-body">${options.body}</div>
+                    <div class="notification-progress"></div>
+                `;
+
+                // Add click handler
+                notification.addEventListener('click', () => {
+                    if (options.onClick) options.onClick();
+                    this.dismiss(notification);
+                });
+
+                return notification;
+            }
+
+            dismiss(notification) {
+                notification.classList.add('hide');
+                setTimeout(() => {
+                    if (notification.parentElement) {
+                        notification.parentElement.removeChild(notification);
+                    }
+                }, 400);
+            }
+
+            // Realistic notification simulation
+            startRealisticSimulation() {
+                if (!this.isActive) return;
+
+                const scenarios = [
+                    {
+                        title: "New Connection Request",
+                        body: "Anjali Verma wants to connect. She works at HDFC Bank, Karol Bagh.",
+                        icon: "👥",
+                        type: "connection",
+                        time: "2m ago"
+                    },
+                    {
+                        title: "Help Request Response",
+                        body: "Rajesh Kumar: 'Happy to help with your loan documentation! When can we meet?'",
+                        icon: "💬",
+                        type: "success",
+                        time: "5m ago"
+                    },
+                    {
+                        title: "Location Opportunity",
+                        body: "You're near SBI Connaught Place - Rajesh Kumar works here and can help with banking.",
+                        icon: "📍",
+                        type: "info",
+                        time: "now"
+                    },
+                    {
+                        title: "Network Activity",
+                        body: "Amit Sharma helped someone in your network get a passport appointment today!",
+                        icon: "🌟",
+                        type: "success",
+                        time: "10m ago"
+                    },
+                    {
+                        title: "Someone Needs Help",
+                        body: "A connection needs urgent help at Income Tax Office. Can you assist?",
+                        icon: "🆘",
+                        type: "warning",
+                        time: "just now"
+                    }
+                ];
+
+                // Show random notifications
+                const showRandomNotification = () => {
+                    if (!this.isActive) return;
+                    
+                    const scenario = scenarios[Math.floor(Math.random() * scenarios.length)];
+                    this.show(scenario);
+                    
+                    // Schedule next notification (20-60 seconds)
+                    setTimeout(showRandomNotification, 20000 + Math.random() * 40000);
+                };
+
+                // Start first notification
+                setTimeout(showRandomNotification, 10000);
+            }
+
+            // Success story popup
+            showSuccessStory(story) {
+                const popup = document.createElement('div');
+                popup.className = 'success-story';
+                popup.innerHTML = `
+                    <div class="success-story-header">
+                        <div class="success-story-icon">🎉</div>
+                        <div class="success-story-title">${story.title}</div>
+                    </div>
+                    <div class="success-story-content">${story.content}</div>
+                `;
+                
+                document.body.appendChild(popup);
+                
+                setTimeout(() => popup.classList.add('show'), 100);
+                
+                setTimeout(() => {
+                    popup.classList.remove('show');
+                    setTimeout(() => document.body.removeChild(popup), 500);
+                }, 6000);
+
+                popup.addEventListener('click', () => {
+                    popup.classList.remove('show');
+                    setTimeout(() => document.body.removeChild(popup), 500);
+                });
+            }
+
+            // Quick notification methods
+            success(title, body) {
+                return this.show({ title, body, icon: "✅", type: "success" });
+            }
+
+            info(title, body) {
+                return this.show({ title, body, icon: "ℹ️", type: "info" });
+            }
+
+            warning(title, body) {
+                return this.show({ title, body, icon: "⚠️", type: "warning" });
+            }
+        }
+
+        // Initialize notification system
+        let notificationSystem;
 
         // Tour configuration for map page
         const tourSteps = [
@@ -495,7 +940,7 @@
             const urlParams = new URLSearchParams(window.location.search);
             if (urlParams.get('tour') === 'true') {
                 isInTourMode = true;
-                setTimeout(startTour, 2000); // Wait for map to load
+                setTimeout(startTour, 2000);
             }
         }
 
@@ -514,16 +959,14 @@
             currentTourStep = stepIndex;
             const step = tourSteps[stepIndex];
             
-            // Update progress
             document.getElementById('tourProgress').textContent = `Step ${stepIndex + 1} of ${tourSteps.length}`;
 
-            // Clear previous highlights
+            // Clear previous elements
             const existingHighlight = document.querySelector('.tour-highlight');
             const existingTooltip = document.querySelector('.tour-tooltip');
             if (existingHighlight) existingHighlight.remove();
             if (existingTooltip) existingTooltip.remove();
 
-            // Find target element
             const targetElement = document.querySelector(step.target);
             if (!targetElement) return;
 
@@ -557,11 +1000,9 @@
                 </div>
             `;
 
-            // Position tooltip
             tooltip.style.left = Math.max(10, (rect.left + rect.width/2 - 160)) + 'px';
             tooltip.style.top = (rect.bottom + 20) + 'px';
 
-            // Adjust if tooltip goes off screen
             if (rect.bottom + 200 > window.innerHeight) {
                 tooltip.style.top = (rect.top - 180) + 'px';
             }
@@ -572,7 +1013,6 @@
         function nextTourStep() {
             if (currentTourStep === tourSteps.length - 1) {
                 endTour();
-                // Auto-trigger help request for demo
                 setTimeout(() => {
                     if (isInTourMode) {
                         needHelp();
@@ -587,7 +1027,6 @@
             document.getElementById('tourOverlay').style.display = 'none';
             document.getElementById('tourProgress').style.display = 'none';
             
-            // Clean up
             const highlight = document.querySelector('.tour-highlight');
             const tooltip = document.querySelector('.tour-tooltip');
             if (highlight) highlight.remove();
@@ -680,24 +1119,93 @@
             
             infoPanel.style.display = 'block';
             
-            // Hide after 5 seconds
-            setTimeout(() => {
-                infoPanel.style.display = 'none';
-            }, 5000);
+            // Auto-hide after 5 seconds (only in non-tour mode)
+            if (!isInTourMode) {
+                setTimeout(() => {
+                    hideConnectionInfo();
+                }, 5000);
+            }
+
+            // Show notification about this connection
+            if (notificationSystem) {
+                notificationSystem.info(
+                    "Connection Details",
+                    `${connection.name} works at ${connection.institution}. Great for ${connection.role.toLowerCase()} help!`
+                );
+            }
+        }
+
+        function hideConnectionInfo() {
+            const infoPanel = document.getElementById('connectionInfo');
+            infoPanel.style.display = 'none';
+        }
+
+        // Hide connection info when clicking elsewhere
+        document.addEventListener('click', function(event) {
+            const infoPanel = document.getElementById('connectionInfo');
+            const isClickInsidePanel = infoPanel.contains(event.target);
+            const isClickOnMarker = event.target.closest('.leaflet-marker-icon') || event.target.closest('.leaflet-interactive');
+            
+            if (!isClickInsidePanel && !isClickOnMarker && infoPanel.style.display === 'block') {
+                hideConnectionInfo();
+            }
+        });
+
+        // Legend management functions
+        function toggleLegend() {
+            const legend = document.getElementById('connectionLegend');
+            if (legend.classList.contains('minimized')) {
+                expandLegend();
+            } else {
+                minimizeLegend();
+            }
+        }
+
+        function minimizeLegend() {
+            const legend = document.getElementById('connectionLegend');
+            legend.classList.add('minimized');
+        }
+
+        function expandLegend() {
+            const legend = document.getElementById('connectionLegend');
+            legend.classList.remove('minimized');
+        }
+
+        // Auto-minimize legend after 10 seconds
+        function autoMinimizeLegend() {
+            if (!isInTourMode) {
+                setTimeout(() => {
+                    minimizeLegend();
+                    if (notificationSystem) {
+                        notificationSystem.info(
+                            "Legend Minimized",
+                            "Click the color icon in top-left to expand the network legend again."
+                        );
+                    }
+                }, 10000);
+            }
         }
 
         function needHelp() {
             if (isInTourMode) {
-                alert('🎯 Demo Mode\n\nGreat! You\'re about to see the help request process. This shows how your request routes through your network to find the best helper.\n\nNext: Experience the category selection and routing system!');
-                window.location.href = 'help-request.html?tour=true';
+                notificationSystem.success(
+                    "Demo Mode",
+                    "Great! You're about to see the help request process. This shows how your request routes through your network."
+                );
+                setTimeout(() => {
+                    window.location.href = 'help-request.html?tour=true';
+                }, 2000);
             } else {
                 window.location.href = 'help-request.html';
             }
         }
 
         function findNearby() {
-            // Simulate finding nearby connections
-            alert('Found 3 connections within 2km of your location!\n\n📍 State Bank (500m)\n📍 Income Tax Office (1.2km)\n📍 AIIMS Delhi (1.8km)');
+            // Show notification with nearby connections
+            notificationSystem.success(
+                "Nearby Connections Found",
+                "3 connections within 2km: SBI (500m), Income Tax Office (1.2km), AIIMS Delhi (1.8km)"
+            );
         }
 
         function goToProfile() {
@@ -708,18 +1216,47 @@
         document.getElementById('searchInput').addEventListener('input', function(e) {
             const query = e.target.value.toLowerCase();
             if (query.length > 2) {
-                // Simulate search results
-                console.log('Searching for:', query);
+                // Show search notification
+                if (notificationSystem) {
+                    notificationSystem.info(
+                        "Search Results",
+                        `Found ${Math.floor(Math.random() * 5) + 2} connections related to "${query}"`
+                    );
+                }
             }
         });
 
-        // Initialize map when page loads
+        // Initialize everything when page loads
         window.addEventListener('load', function() {
             initMap();
             initPage();
+            
+            // Initialize notification system
+            notificationSystem = new NotificationSystem();
+            
+            // Auto-minimize legend after 10 seconds
+            autoMinimizeLegend();
+            
+            // Show welcome notification
+            setTimeout(() => {
+                if (notificationSystem) {
+                    notificationSystem.success(
+                        "Welcome to Your Network Map!",
+                        "Your network is active with 127 connections. Discover help opportunities around you!"
+                    );
+                    
+                    // Show success story after 30 seconds
+                    setTimeout(() => {
+                        notificationSystem.showSuccessStory({
+                            title: "Success Story",
+                            content: "Rohit helped Priya get her passport renewed in just 2 hours through a connection at the passport office. The power of networking! 🌟"
+                        });
+                    }, 30000);
+                }
+            }, 3000);
         });
 
-        // Show welcome message
+        // Show welcome message for banner
         setTimeout(() => {
             if (!isInTourMode) {
                 const banner = document.querySelector('.location-banner');
