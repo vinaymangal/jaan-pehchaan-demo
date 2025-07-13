@@ -1,0 +1,23 @@
+# Jaan Pehchaan - Social Networking Assistance App
+A mobile-responsive web application that helps people discover hidden connections in their network and get assistance through trusted paths.
+
+## Key Features
+- 🤝 AI-powered network building
+- 🗺️ Interactive connection map
+- 🆘 Smart help request routing
+- 📱 100% mobile responsive
+- 🎯 Complete guided demo tour
+
+## Tech Stack
+- HTML5, CSS3, JavaScript
+- Leaflet.js for maps
+- Mobile-first responsive design
+
+## Market Focus
+Built for 450M+ Indians navigating daily bureaucratic challenges through network connections.
+
+## Demo
+Experience the full interactive demo at: https://vinaymangal.github.io/jaan-pehchaan-demo
+
+## Keywords
+networking, social assistance, India, connections, bureaucracy, help routing, trust network

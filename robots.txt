@@ -1,0 +1,3 @@
+User-agent: *
+Allow: /
+Sitemap: https://vinaymangal.github.io/jaan-pehchaan-demo/sitemap.xml
