@@ -3,8 +3,10 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Jaan Pehchaan - Find Connections</title>
+    <title>Jaan Pehchaan</title>
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+    <link rel="stylesheet" href="https://unpkg.com/leaflet.markercluster@1.4.1/dist/MarkerCluster.css" />
+    <link rel="stylesheet" href="https://unpkg.com/leaflet.markercluster@1.4.1/dist/MarkerCluster.Default.css" />
     <style>
         * {
             margin: 0;
@@ -14,1263 +16,1302 @@
 
         body {
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            min-height: 100vh;
-            padding: 10px;
-        }
-
-        .container {
-            max-width: 400px;
+            background: #f5f5f5;
+            color: #333;
+            max-width: 430px;
             margin: 0 auto;
-            background: white;
-            border-radius: 20px;
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
-            overflow: hidden;
-            min-height: calc(100vh - 20px);
-            display: flex;
-            flex-direction: column;
-        }
-
-        .header {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            color: white;
-            padding: 20px;
-            text-align: center;
+            box-shadow: 0 0 20px rgba(0,0,0,0.1);
             position: relative;
+            min-height: 100vh;
         }
 
-        .profile-button {
-            position: absolute;
-            right: 20px;
-            top: 50%;
-            transform: translateY(-50%);
-            background: rgba(255, 255, 255, 0.2);
-            border: none;
-            color: white;
-            width: 40px;
-            height: 40px;
-            border-radius: 50%;
-            cursor: pointer;
-            font-size: 18px;
-            transition: all 0.3s ease;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-        }
-
-        .profile-button:hover {
-            background: rgba(255, 255, 255, 0.3);
-            transform: translateY(-50%) scale(1.1);
+        /* Mobile-first header */
+        .header {
+            background: white;
+            padding: 1rem;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            position: relative;
+            z-index: 1000;
         }
 
         .header h1 {
-            font-size: 1.5em;
-            margin-bottom: 5px;
+            color: #333;
+            font-size: 1.5rem;
+            margin-bottom: 0.25rem;
+            text-align: center;
         }
 
         .header p {
-            font-size: 0.9em;
-            opacity: 0.9;
-        }
-
-        .location-banner {
-            background: #e3f2fd;
-            padding: 15px 20px;
-            border-bottom: 1px solid #e0e0e0;
-            color: #1976d2;
-            font-size: 0.9em;
+            color: #666;
             text-align: center;
+            font-size: 0.9rem;
         }
 
-        .search-container {
-            padding: 20px;
-            background: white;
-            border-bottom: 1px solid #e0e0e0;
-        }
-
-        .search-bar {
-            width: 100%;
-            padding: 15px 20px;
-            border: 2px solid #e0e0e0;
-            border-radius: 25px;
-            font-size: 1em;
-            outline: none;
-            transition: border-color 0.3s;
-        }
-
-        .search-bar:focus {
-            border-color: #667eea;
-        }
-
+        /* Map container */
         .map-container {
-            flex: 1;
             position: relative;
-            min-height: 300px;
+            height: calc(100vh - 80px);
+            width: 100%;
         }
 
         #map {
-            width: 100%;
             height: 100%;
-            min-height: 300px;
-        }
-
-        .connection-legend {
-            position: absolute;
-            top: 20px;
-            left: 20px;
-            background: rgba(255, 255, 255, 0.95);
-            padding: 15px;
-            border-radius: 10px;
-            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
-            z-index: 1000;
-            font-size: 0.8em;
-            cursor: pointer;
-            transition: all 0.3s ease;
-        }
-
-        .connection-legend:hover {
-            background: rgba(255, 255, 255, 1);
-            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
-        }
-
-        .connection-legend.minimized {
-            padding: 10px;
-            width: 40px;
-            height: 40px;
-            overflow: hidden;
-            background: rgba(102, 126, 234, 0.9);
-            color: white;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 1.2em;
-        }
-
-        .connection-legend.minimized .legend-content {
-            display: none;
-        }
-
-        .connection-legend.minimized::before {
-            content: '🎨';
-        }
-
-        .legend-content {
-            transition: opacity 0.3s ease;
-        }
-
-        .legend-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 10px;
-            font-weight: 600;
-            color: #333;
-        }
-
-        .legend-title {
-            font-size: 0.9em;
-        }
-
-        .legend-toggle {
-            background: none;
-            border: none;
-            font-size: 1em;
-            color: #999;
-            cursor: pointer;
-            padding: 2px;
-            border-radius: 3px;
-            transition: all 0.3s ease;
-        }
-
-        .legend-toggle:hover {
-            background: #f0f0f0;
-            color: #333;
-        }
-
-        .legend-item {
-            display: flex;
-            align-items: center;
-            margin-bottom: 8px;
-        }
-
-        .legend-item:last-child {
-            margin-bottom: 0;
-        }
-
-        .legend-dot {
-            width: 12px;
-            height: 12px;
-            border-radius: 50%;
-            margin-right: 8px;
-        }
-
-        .degree-1 { background: #4CAF50; }
-        .degree-2 { background: #2196F3; }
-        .degree-3 { background: #FF9800; }
-        .degree-4 { background: #F44336; }
-
-        .connection-info {
-            position: absolute;
-            bottom: 20px;
-            left: 20px;
-            right: 20px;
-            background: rgba(255, 255, 255, 0.95);
-            padding: 15px;
-            border-radius: 10px;
-            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
-            z-index: 1000;
-            display: none;
-            cursor: pointer;
-            transition: all 0.3s ease;
-        }
-
-        .connection-info:hover {
-            background: rgba(255, 255, 255, 1);
-            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
-        }
-
-        .connection-info .close-btn {
-            position: absolute;
-            top: 10px;
-            right: 15px;
-            background: none;
-            border: none;
-            font-size: 1.2em;
-            color: #999;
-            cursor: pointer;
-            padding: 5px;
-            border-radius: 50%;
-            transition: all 0.3s ease;
-        }
-
-        .connection-info .close-btn:hover {
-            background: #f0f0f0;
-            color: #333;
-        }
-
-        .connection-info h3 {
-            color: #333;
-            margin-bottom: 5px;
-            font-size: 1em;
-        }
-
-        .connection-info p {
-            color: #666;
-            font-size: 0.9em;
-            margin-bottom: 3px;
-        }
-
-        .bottom-actions {
-            padding: 20px;
-            background: white;
-            border-top: 1px solid #e0e0e0;
-        }
-
-        .help-button {
             width: 100%;
-            background: linear-gradient(135deg, #FF5722 0%, #E91E63 100%);
-            color: white;
+        }
+
+        /* Mobile search bar */
+        .search-container {
+            position: absolute;
+            top: 1rem;
+            left: 1rem;
+            right: 1rem;
+            z-index: 1000;
+            display: flex;
+            gap: 0.5rem;
+        }
+
+        .search-box {
+            flex: 1;
+            background: white;
             border: none;
-            padding: 18px;
-            border-radius: 15px;
-            font-size: 1.1em;
-            font-weight: 600;
+            border-radius: 25px;
+            padding: 12px 16px;
+            font-size: 14px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+
+        .search-box:focus {
+            outline: none;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+        }
+
+        /* Profile button - mobile friendly */
+        .profile-btn {
+            position: absolute;
+            top: 1rem;
+            right: 1rem;
+            z-index: 1000;
+            background: white;
+            border: none;
+            border-radius: 50%;
+            width: 45px;
+            height: 45px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            font-size: 18px;
             cursor: pointer;
-            transition: all 0.3s ease;
-            box-shadow: 0 5px 15px rgba(255, 87, 34, 0.3);
-            margin-bottom: 15px;
-        }
-
-        .help-button:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 8px 25px rgba(255, 87, 34, 0.4);
-        }
-
-        .action-grid {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 15px;
-        }
-
-        .action-button {
-            background: #f8f9fa;
-            color: #667eea;
-            border: 2px solid #667eea;
-            padding: 12px;
-            border-radius: 10px;
-            font-size: 0.9em;
-            font-weight: 600;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            text-align: center;
-            text-decoration: none;
             display: flex;
             align-items: center;
             justify-content: center;
-            gap: 5px;
         }
 
-        .action-button:hover {
-            background: #667eea;
-            color: white;
+        .profile-btn:active {
+            transform: scale(0.95);
         }
 
-        /* NOTIFICATION SYSTEM STYLES */
-        .notification-container {
-            position: fixed;
-            top: 20px;
-            right: 20px;
-            z-index: 10000;
-            pointer-events: none;
-        }
-
-        .notification {
-            background: white;
-            border-radius: 12px;
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
-            margin-bottom: 10px;
-            padding: 16px 20px;
-            max-width: 350px;
-            min-width: 300px;
-            border-left: 4px solid #4CAF50;
-            transform: translateX(400px);
-            opacity: 0;
-            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-            pointer-events: auto;
-            cursor: pointer;
-            position: relative;
-            overflow: hidden;
-        }
-
-        .notification.show {
-            transform: translateX(0);
-            opacity: 1;
-        }
-
-        .notification.hide {
-            transform: translateX(400px);
-            opacity: 0;
-        }
-
-        .notification.success { border-left-color: #4CAF50; }
-        .notification.info { border-left-color: #2196F3; }
-        .notification.warning { border-left-color: #FF9800; }
-        .notification.connection { border-left-color: #00BCD4; }
-
-        .notification-header {
-            display: flex;
-            align-items: center;
-            gap: 12px;
-            margin-bottom: 8px;
-        }
-
-        .notification-icon {
-            font-size: 1.5em;
-            flex-shrink: 0;
-        }
-
-        .notification-title {
-            font-weight: 600;
-            color: #333;
-            font-size: 0.95em;
-            flex: 1;
-        }
-
-        .notification-time {
-            font-size: 0.7em;
-            color: #999;
-            white-space: nowrap;
-        }
-
-        .notification-body {
-            color: #666;
-            font-size: 0.85em;
-            line-height: 1.4;
-            margin-bottom: 12px;
-        }
-
-        .notification-close {
+        /* Emergency help button - mobile centered */
+        .emergency-help {
             position: absolute;
-            top: 8px;
-            right: 12px;
-            background: none;
+            bottom: 2rem;
+            left: 50%;
+            transform: translateX(-50%);
+            z-index: 1000;
+            background: linear-gradient(45deg, #ff4757, #ff3742);
+            color: white;
             border: none;
-            font-size: 1.1em;
-            color: #999;
+            padding: 12px 24px;
+            border-radius: 25px;
+            font-size: 16px;
+            font-weight: bold;
             cursor: pointer;
-            padding: 4px;
-            border-radius: 4px;
-            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(255,71,87,0.3);
+            animation: pulse 3s infinite;
         }
 
-        .notification-close:hover {
-            background: #f0f0f0;
+        @keyframes pulse {
+            0%, 100% { box-shadow: 0 4px 15px rgba(255,71,87,0.3); }
+            50% { box-shadow: 0 6px 20px rgba(255,71,87,0.5); }
+        }
+
+        .emergency-help:active {
+            transform: translateX(-50%) scale(0.95);
+        }
+
+        /* Mobile action buttons */
+        .action-buttons {
+            position: absolute;
+            bottom: 6rem;
+            left: 1rem;
+            right: 1rem;
+            z-index: 1000;
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 0.5rem;
+        }
+
+        .action-btn {
+            background: white;
+            border: none;
+            border-radius: 12px;
+            padding: 12px 8px;
+            text-align: center;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            cursor: pointer;
+            font-size: 11px;
             color: #333;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 4px;
         }
 
-        .notification-progress {
+        .action-btn:active {
+            transform: scale(0.95);
+        }
+
+        .action-btn .icon {
+            font-size: 18px;
+            margin-bottom: 2px;
+        }
+
+        /* Connection info panel - mobile bottom sheet */
+        .connection-info {
             position: absolute;
             bottom: 0;
             left: 0;
-            height: 3px;
-            background: rgba(102, 126, 234, 0.3);
-            border-radius: 0 0 12px 12px;
-            animation: notificationProgress 5s linear forwards;
+            right: 0;
+            background: white;
+            border-radius: 20px 20px 0 0;
+            padding: 1.5rem;
+            box-shadow: 0 -5px 20px rgba(0,0,0,0.1);
+            z-index: 1000;
+            transform: translateY(100%);
+            transition: transform 0.3s ease;
+            max-height: 50vh;
+            overflow-y: auto;
         }
 
-        @keyframes notificationProgress {
-            from { width: 100%; }
-            to { width: 0%; }
+        .connection-info.show {
+            transform: translateY(0);
         }
 
-        .success-story {
-            position: fixed;
-            bottom: 20px;
-            right: 20px;
-            background: linear-gradient(135deg, #4CAF50 0%, #45a049 100%);
+        .connection-info h3 {
+            margin-bottom: 1rem;
+            color: #333;
+            font-size: 1.2rem;
+        }
+
+        .connection-detail {
+            margin-bottom: 0.75rem;
+            font-size: 14px;
+            display: flex;
+            justify-content: space-between;
+            padding: 8px 0;
+            border-bottom: 1px solid #f0f0f0;
+        }
+
+        .connection-detail:last-child {
+            border-bottom: none;
+        }
+
+        .connection-detail .label {
+            font-weight: 500;
+            color: #666;
+        }
+
+        .connection-detail .value {
+            color: #333;
+            text-align: right;
+        }
+
+        .degree-badge {
+            display: inline-block;
+            padding: 2px 8px;
+            border-radius: 12px;
+            font-size: 11px;
+            font-weight: bold;
             color: white;
-            padding: 20px;
-            border-radius: 15px;
-            max-width: 320px;
-            box-shadow: 0 10px 30px rgba(76, 175, 80, 0.3);
-            transform: translateY(100px);
-            opacity: 0;
-            transition: all 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-            z-index: 9999;
+        }
+
+        .degree-1 { background: #2ecc71; }
+        .degree-2 { background: #f39c12; }
+        .degree-3 { background: #3498db; }
+        .degree-4 { background: #e74c3c; }
+
+        .close-btn {
+            position: absolute;
+            top: 1rem;
+            right: 1rem;
+            background: none;
+            border: none;
+            font-size: 24px;
+            color: #999;
             cursor: pointer;
         }
 
-        .success-story.show {
-            transform: translateY(0);
-            opacity: 1;
+        .request-help-btn {
+            background: linear-gradient(45deg, #3498db, #2ecc71);
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            border-radius: 25px;
+            font-size: 14px;
+            font-weight: bold;
+            cursor: pointer;
+            width: 100%;
+            margin-top: 1rem;
         }
 
-        .success-story-header {
+        .request-help-btn:active {
+            transform: scale(0.98);
+        }
+
+        /* Advanced Controls - Hidden by default, mobile friendly */
+        .advanced-controls {
+            position: absolute;
+            top: 4rem;
+            right: 1rem;
+            background: white;
+            border-radius: 15px;
+            padding: 1rem;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+            z-index: 1000;
+            transform: translateX(100%);
+            transition: transform 0.3s ease;
+            max-width: 250px;
+            width: calc(100vw - 2rem);
+        }
+
+        .advanced-controls.show {
+            transform: translateX(0);
+        }
+
+        .controls-toggle {
+            position: absolute;
+            top: 4rem;
+            right: 1rem;
+            z-index: 1001;
+            background: white;
+            border: none;
+            border-radius: 50%;
+            width: 45px;
+            height: 45px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            font-size: 18px;
+            cursor: pointer;
             display: flex;
             align-items: center;
-            gap: 10px;
-            margin-bottom: 10px;
+            justify-content: center;
         }
 
-        .success-story-icon {
-            font-size: 1.8em;
+        .control-group {
+            margin-bottom: 1rem;
         }
 
-        .success-story-title {
-            font-weight: 600;
-            font-size: 1em;
+        .control-group label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: 500;
+            color: #666;
+            font-size: 12px;
         }
 
-        .success-story-content {
-            font-size: 0.9em;
-            line-height: 1.4;
-            opacity: 0.95;
+        .control-group select {
+            width: 100%;
+            padding: 8px;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            font-size: 14px;
         }
 
-        /* Guided Tour Styles */
+        .control-btn {
+            background: linear-gradient(45deg, #3498db, #2ecc71);
+            color: white;
+            border: none;
+            padding: 8px 12px;
+            border-radius: 8px;
+            font-size: 12px;
+            cursor: pointer;
+            width: 100%;
+            margin: 4px 0;
+        }
+
+        /* Custom marker styles */
+        .leaflet-marker-icon {
+            border-radius: 50% !important;
+            border: 2px solid white !important;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.3) !important;
+        }
+
+        /* User marker */
+        .user-marker {
+            background: #2ecc71 !important;
+            color: white !important;
+            font-size: 16px !important;
+            display: flex !important;
+            align-items: center !important;
+            justify-content: center !important;
+            animation: userPulse 2s infinite;
+        }
+
+        @keyframes userPulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.1); }
+        }
+
+        /* Connection markers by degree */
+        .connection-marker-1 {
+            background: #2ecc71 !important;
+            color: white !important;
+        }
+
+        .connection-marker-2 {
+            background: #f39c12 !important;
+            color: white !important;
+        }
+
+        .connection-marker-3 {
+            background: #3498db !important;
+            color: white !important;
+        }
+
+        .connection-marker-4 {
+            background: #e74c3c !important;
+            color: white !important;
+        }
+
+        /* Connection lines */
+        .connection-line {
+            stroke-width: 2;
+            stroke-opacity: 0.6;
+            fill: none;
+            pointer-events: none;
+            animation: connectionPulse 3s infinite;
+        }
+
+        @keyframes connectionPulse {
+            0%, 100% { stroke-opacity: 0.6; }
+            50% { stroke-opacity: 1; }
+        }
+
+        .line-degree-1 { stroke: #2ecc71; }
+        .line-degree-2 { stroke: #f39c12; stroke-dasharray: 5,5; }
+        .line-degree-3 { stroke: #3498db; stroke-dasharray: 3,3; }
+        .line-degree-4 { stroke: #e74c3c; stroke-dasharray: 2,2; }
+
+        /* Help path animation */
+        .help-path {
+            stroke: #ff4757;
+            stroke-width: 4;
+            stroke-opacity: 0.8;
+            fill: none;
+            stroke-dasharray: 10,5;
+            animation: pathFlow 2s linear infinite;
+        }
+
+        @keyframes pathFlow {
+            0% { stroke-dashoffset: 15; }
+            100% { stroke-dashoffset: 0; }
+        }
+
+        /* Clustering styles */
+        .marker-cluster {
+            background: rgba(52, 152, 219, 0.8) !important;
+            border: 2px solid white !important;
+            border-radius: 50% !important;
+            color: white !important;
+            font-weight: bold !important;
+            text-align: center !important;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.3) !important;
+        }
+
+        .marker-cluster div {
+            background: rgba(52, 152, 219, 0.9) !important;
+            border-radius: 50% !important;
+            width: 40px !important;
+            height: 40px !important;
+            line-height: 36px !important;
+        }
+
+        /* Loading and notifications */
+        .loading-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(255,255,255,0.9);
+            display: none;
+            align-items: center;
+            justify-content: center;
+            z-index: 9999;
+        }
+
+        .loading-spinner {
+            width: 40px;
+            height: 40px;
+            border: 4px solid #f3f3f3;
+            border-top: 4px solid #3498db;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        .notification {
+            position: fixed;
+            top: 5rem;
+            left: 1rem;
+            right: 1rem;
+            background: #2ecc71;
+            color: white;
+            padding: 1rem;
+            border-radius: 10px;
+            z-index: 10000;
+            transform: translateY(-100px);
+            transition: transform 0.3s ease;
+            text-align: center;
+            font-weight: 500;
+        }
+
+        .notification.show {
+            transform: translateY(0);
+        }
+
+        .notification.error {
+            background: #e74c3c;
+        }
+
+        .notification.warning {
+            background: #f39c12;
+        }
+
+        /* Tour mode styles */
         .tour-overlay {
             position: fixed;
             top: 0;
             left: 0;
             width: 100%;
             height: 100%;
-            background: rgba(0, 0, 0, 0.8);
-            z-index: 1000;
+            background: rgba(0,0,0,0.7);
+            z-index: 10000;
             display: none;
-            backdrop-filter: blur(5px);
-        }
-
-        .tour-highlight {
-            position: absolute;
-            background: rgba(102, 126, 234, 0.2);
-            border: 3px solid #667eea;
-            border-radius: 10px;
-            pointer-events: none;
-            animation: pulse 2s infinite;
-        }
-
-        @keyframes pulse {
-            0% { box-shadow: 0 0 0 0 rgba(102, 126, 234, 0.7); }
-            70% { box-shadow: 0 0 0 20px rgba(102, 126, 234, 0); }
-            100% { box-shadow: 0 0 0 0 rgba(102, 126, 234, 0); }
         }
 
         .tour-tooltip {
             position: absolute;
             background: white;
-            padding: 20px;
+            padding: 1.5rem;
             border-radius: 15px;
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
-            max-width: 320px;
-            z-index: 1001;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+            max-width: 280px;
+            z-index: 10001;
         }
 
-        .tour-tooltip::before {
-            content: '';
+        .tour-highlight {
             position: absolute;
-            width: 0;
-            height: 0;
-            border: 10px solid transparent;
-            border-bottom-color: white;
-            top: -20px;
-            left: 50%;
-            transform: translateX(-50%);
+            border: 3px solid #3498db;
+            border-radius: 10px;
+            animation: tourPulse 2s infinite;
+            z-index: 10001;
         }
 
-        .tooltip-header {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            margin-bottom: 10px;
+        @keyframes tourPulse {
+            0%, 100% { border-color: #3498db; box-shadow: 0 0 0 0 rgba(52,152,219,0.7); }
+            50% { border-color: #2ecc71; box-shadow: 0 0 0 10px rgba(46,204,113,0); }
         }
 
-        .tooltip-icon {
-            font-size: 1.5em;
-            color: #667eea;
-        }
-
-        .tooltip-title {
-            font-weight: 600;
-            color: #333;
-            font-size: 1.1em;
-        }
-
-        .tooltip-text {
-            color: #666;
-            line-height: 1.5;
-            margin-bottom: 15px;
-        }
-
-        .tooltip-buttons {
-            display: flex;
-            gap: 10px;
-            justify-content: flex-end;
-        }
-
-        .tooltip-button {
-            padding: 8px 15px;
-            border: none;
-            border-radius: 8px;
-            font-weight: 600;
-            cursor: pointer;
-            transition: all 0.3s ease;
-        }
-
-        .tooltip-skip {
-            background: #f8f9fa;
-            color: #666;
-        }
-
-        .tooltip-next {
-            background: #667eea;
-            color: white;
-        }
-
-        .tooltip-button:hover {
-            transform: translateY(-2px);
-        }
-
-        .tour-progress {
-            position: fixed;
-            top: 20px;
-            left: 20px;
-            background: rgba(255, 255, 255, 0.95);
-            padding: 10px 15px;
-            border-radius: 20px;
-            font-weight: 600;
-            color: #667eea;
-            z-index: 1002;
-            display: none;
-            backdrop-filter: blur(10px);
-        }
-
+        /* Responsive adjustments */
         @media (max-width: 480px) {
-            .container {
-                margin: 0;
-                border-radius: 0;
-                min-height: 100vh;
+            .header h1 {
+                font-size: 1.3rem;
             }
             
-            .connection-legend {
-                left: 10px;
-                right: 10px;
-                padding: 10px;
+            .action-btn {
+                font-size: 10px;
+                padding: 10px 6px;
             }
             
-            .connection-info {
-                left: 10px;
-                right: 10px;
+            .action-btn .icon {
+                font-size: 16px;
             }
-
-            .notification-container {
-                left: 10px;
-                right: 10px;
-                top: 10px;
-            }
-
-            .notification {
-                min-width: auto;
-                max-width: none;
-                transform: translateY(-100px);
-            }
-
-            .notification.show {
-                transform: translateY(0);
-            }
-
-            .notification.hide {
-                transform: translateY(-100px);
-            }
-
-            .success-story {
-                left: 10px;
-                right: 10px;
-                bottom: 10px;
-                max-width: none;
+            
+            .advanced-controls {
+                width: calc(100vw - 1rem);
+                right: 0.5rem;
             }
         }
     </style>
 </head>
 <body>
-    <div class="container">
-        <!-- Header with Profile Button -->
-        <div class="header">
-            <button class="profile-button" onclick="goToProfile()" title="My Profile">
-                👤
-            </button>
-            <h1>Jaan Pehchaan</h1>
-            <p>जान पहचान • Know & Recognize</p>
-        </div>
+    <!-- Loading Overlay -->
+    <div class="loading-overlay" id="loadingOverlay">
+        <div class="loading-spinner"></div>
+    </div>
 
-        <!-- Location Banner -->
-        <div class="location-banner">
-            📍 You are near 3 institutions with connections
-        </div>
+    <!-- Tour Overlay -->
+    <div class="tour-overlay" id="tourOverlay"></div>
 
+    <!-- Notification -->
+    <div class="notification" id="notification"></div>
+
+    <!-- Header -->
+    <div class="header">
+        <h1>Jaan Pehchaan</h1>
+        <p>जान पहचान • Know & Recognize</p>
+    </div>
+
+    <!-- Map Container -->
+    <div class="map-container">
+        <div id="map"></div>
+        
         <!-- Search Bar -->
         <div class="search-container">
-            <input type="text" class="search-bar" placeholder="Search institutions, help types, or connections..." id="searchInput">
+            <input type="text" class="search-box" id="searchBox" 
+                   placeholder="Search institutions, connections..." />
         </div>
 
-        <!-- Map Container -->
-        <div class="map-container">
-            <div id="map"></div>
-            
-            <!-- Connection Legend -->
-            <div class="connection-legend" id="connectionLegend" onclick="toggleLegend()">
-                <div class="legend-content" id="legendContent">
-                    <div class="legend-header">
-                        <span class="legend-title">Network Degrees</span>
-                        <button class="legend-toggle" onclick="minimizeLegend(); event.stopPropagation();">−</button>
-                    </div>
-                    <div class="legend-item">
-                        <div class="legend-dot degree-1"></div>
-                        <span>1st Degree (Direct)</span>
-                    </div>
-                    <div class="legend-item">
-                        <div class="legend-dot degree-2"></div>
-                        <span>2nd Degree (Friend's Friend)</span>
-                    </div>
-                    <div class="legend-item">
-                        <div class="legend-dot degree-3"></div>
-                        <span>3rd Degree</span>
-                    </div>
-                    <div class="legend-item">
-                        <div class="legend-dot degree-4"></div>
-                        <span>4th Degree</span>
-                    </div>
-                </div>
+        <!-- Profile Button -->
+        <button class="profile-btn" onclick="goToProfile()">
+            👤
+        </button>
+
+        <!-- Controls Toggle -->
+        <button class="controls-toggle" onclick="toggleAdvancedControls()">
+            ⚙️
+        </button>
+
+        <!-- Advanced Controls -->
+        <div class="advanced-controls" id="advancedControls">
+            <div class="control-group">
+                <label>Connection Degree:</label>
+                <select id="degreeFilter" onchange="filterByDegree()">
+                    <option value="all">All Degrees</option>
+                    <option value="1">1st Degree</option>
+                    <option value="2">2nd Degree</option>
+                    <option value="3">3rd Degree</option>
+                    <option value="4">4th Degree</option>
+                </select>
             </div>
 
-            <!-- Connection Info Panel -->
-            <div class="connection-info" id="connectionInfo" onclick="hideConnectionInfo()">
-                <button class="close-btn" onclick="hideConnectionInfo(); event.stopPropagation();">×</button>
-                <h3 id="connectionName">Rajesh Kumar</h3>
-                <p id="connectionRole">Senior Manager - Loan Department</p>
-                <p id="connectionInstitution">📍 State Bank of India, Connaught Place</p>
-                <p id="connectionDegree">🔗 2nd degree connection (via Amit Sharma)</p>
+            <div class="control-group">
+                <label>Institution Type:</label>
+                <select id="institutionFilter" onchange="filterByInstitution()">
+                    <option value="all">All Types</option>
+                    <option value="government">Government</option>
+                    <option value="bank">Banks</option>
+                    <option value="hospital">Hospitals</option>
+                    <option value="company">Companies</option>
+                    <option value="education">Education</option>
+                </select>
             </div>
-        </div>
 
-        <!-- Bottom Actions -->
-        <div class="bottom-actions">
-            <button class="help-button" onclick="needHelp()">
-                🆘 Need Help Now
+            <button class="control-btn" onclick="toggleConnectionLines()">
+                Toggle Lines
             </button>
             
-            <div class="action-grid">
-                <button class="action-button" onclick="findNearby()">
-                    📍 Find Nearby
-                </button>
-                <a href="connections.html" class="action-button">
-                    👥 My Network
-                </a>
+            <button class="control-btn" onclick="simulateHelpPath()">
+                Simulate Path
+            </button>
+            
+            <button class="control-btn" onclick="resetMap()">
+                Reset Map
+            </button>
+        </div>
+
+        <!-- Action Buttons -->
+        <div class="action-buttons">
+            <button class="action-btn" onclick="findNearby()">
+                <div class="icon">📍</div>
+                <div>Find Nearby</div>
+            </button>
+            <button class="action-btn" onclick="goToConnections()">
+                <div class="icon">👥</div>
+                <div>My Network</div>
+            </button>
+            <button class="action-btn" onclick="goToAbout()">
+                <div class="icon">❓</div>
+                <div>How It Works</div>
+            </button>
+            <button class="action-btn" onclick="goToHistory()">
+                <div class="icon">📊</div>
+                <div>My History</div>
+            </button>
+        </div>
+
+        <!-- Emergency Help Button -->
+        <button class="emergency-help" onclick="emergencyHelp()">
+            🚨 Need Help Now!
+        </button>
+
+        <!-- Connection Info Panel -->
+        <div class="connection-info" id="connectionInfo">
+            <button class="close-btn" onclick="hideConnectionInfo()">×</button>
+            <h3 id="connectionName">Connection Details</h3>
+            
+            <div class="connection-detail">
+                <span class="label">Role:</span>
+                <span class="value" id="connectionRole">-</span>
             </div>
             
-            <div class="action-grid" style="margin-top: 10px;">
-                <a href="about.html" class="action-button">
-                    ❓ How It Works
-                </a>
-                <a href="history.html" class="action-button">
-                    📋 My History
-                </a>
+            <div class="connection-detail">
+                <span class="label">Institution:</span>
+                <span class="value" id="connectionInstitution">-</span>
             </div>
+            
+            <div class="connection-detail">
+                <span class="label">Department:</span>
+                <span class="value" id="connectionDepartment">-</span>
+            </div>
+            
+            <div class="connection-detail">
+                <span class="label">Can Help With:</span>
+                <span class="value" id="connectionHelp">-</span>
+            </div>
+            
+            <div class="connection-detail">
+                <span class="label">Response Time:</span>
+                <span class="value" id="connectionResponse">-</span>
+            </div>
+            
+            <div class="connection-detail">
+                <span class="label">Success Rate:</span>
+                <span class="value" id="connectionSuccess">-</span>
+            </div>
+
+            <button class="request-help-btn" onclick="requestHelp()">
+                📞 Request Help
+            </button>
         </div>
     </div>
 
-    <!-- NOTIFICATION SYSTEM ELEMENTS -->
-    <div class="notification-container" id="notificationContainer"></div>
-
-    <!-- Guided Tour Elements -->
-    <div class="tour-overlay" id="tourOverlay"></div>
-    <div class="tour-progress" id="tourProgress">Step 1 of 5</div>
-
     <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+    <script src="https://unpkg.com/leaflet.markercluster@1.4.1/dist/leaflet.markercluster.js"></script>
+    <script src="https://unpkg.com/d3@7"></script>
     <script>
-        // Initialize map
+        // Global variables
         let map;
-        let userMarker;
-        let connectionMarkers = [];
-        let isInTourMode = false;
-        let currentTourStep = 0;
+        let userLocation = [28.6139, 77.2090]; // Delhi
+        let markerCluster;
+        let connectionLines = [];
+        let helpPath = null;
+        let showLines = true;
+        let currentFilter = { degree: 'all', institution: 'all' };
+        let allMarkers = [];
+        let svgLayer;
+        let currentConnection = null;
 
-        // NOTIFICATION SYSTEM
-        class NotificationSystem {
-            constructor() {
-                this.notifications = [];
-                this.container = document.getElementById('notificationContainer');
-                this.isActive = true;
-                this.init();
-            }
+        // Sample connections data - Mobile optimized
+        const connections = [
+            // 1st degree - Green markers
+            { id: 1, name: "Rajesh Kumar", degree: 1, lat: 28.6289, lng: 77.2065, institution: "government", role: "IAS Officer", department: "Revenue Department", help: "Property documents", response: "2 hours", success: "96%" },
+            { id: 2, name: "Priya Sharma", degree: 1, lat: 28.6229, lng: 77.2294, institution: "bank", role: "Branch Manager", department: "Loan Department", help: "Business loans", response: "1 hour", success: "92%" },
+            { id: 3, name: "Dr. Amit Singh", degree: 1, lat: 28.6169, lng: 77.2025, institution: "hospital", role: "Cardiologist", department: "Cardiology", help: "Heart checkups", response: "4 hours", success: "98%" },
+            { id: 4, name: "Neha Gupta", degree: 1, lat: 28.6089, lng: 77.2240, institution: "company", role: "HR Director", department: "Human Resources", help: "Job referrals", response: "3 hours", success: "89%" },
+            
+            // 2nd degree - Orange markers
+            { id: 5, name: "Sandeep Verma", degree: 2, lat: 28.6389, lng: 77.2165, institution: "government", role: "Municipal Commissioner", department: "Urban Development", help: "City planning", response: "1 day", success: "87%" },
+            { id: 6, name: "Meera Joshi", degree: 2, lat: 28.6129, lng: 77.2394, institution: "bank", role: "Investment Advisor", department: "Wealth Management", help: "Investment advice", response: "4 hours", success: "91%" },
+            { id: 7, name: "Dr. Rahul Kapoor", degree: 2, lat: 28.6269, lng: 77.1925, institution: "hospital", role: "Surgeon", department: "General Surgery", help: "Surgical consultations", response: "8 hours", success: "95%" },
+            { id: 8, name: "Ankita Malhotra", degree: 2, lat: 28.6089, lng: 77.2340, institution: "company", role: "Tech Lead", department: "Software Development", help: "Tech consulting", response: "2 hours", success: "93%" },
+            
+            // 3rd degree - Blue markers
+            { id: 9, name: "Vikram Yadav", degree: 3, lat: 28.6489, lng: 77.2265, institution: "government", role: "District Collector", department: "Administration", help: "Administrative support", response: "2 days", success: "85%" },
+            { id: 10, name: "Kavita Agarwal", degree: 3, lat: 28.6029, lng: 77.2494, institution: "bank", role: "Regional Manager", department: "Operations", help: "Banking services", response: "1 day", success: "86%" },
+            { id: 11, name: "Dr. Pooja Reddy", degree: 3, lat: 28.6369, lng: 77.1825, institution: "hospital", role: "Pediatrician", department: "Pediatrics", help: "Child healthcare", response: "6 hours", success: "97%" },
+            { id: 12, name: "Rohit Bhardwaj", degree: 3, lat: 28.5989, lng: 77.2440, institution: "company", role: "Marketing Head", department: "Marketing", help: "Business promotion", response: "4 hours", success: "84%" },
+            
+            // 4th degree - Red markers
+            { id: 13, name: "Harsh Agarwal", degree: 4, lat: 28.6589, lng: 77.2365, institution: "government", role: "Joint Secretary", department: "Policy Planning", help: "Policy guidance", response: "3 days", success: "82%" },
+            { id: 14, name: "Ritu Saxena", degree: 4, lat: 28.5929, lng: 77.2594, institution: "bank", role: "Chief Manager", department: "Credit Department", help: "Credit solutions", response: "2 days", success: "83%" },
+            { id: 15, name: "Dr. Manoj Khanna", degree: 4, lat: 28.6469, lng: 77.1725, institution: "hospital", role: "Radiologist", department: "Radiology", help: "Medical imaging", response: "1 day", success: "91%" }
+        ];
 
-            init() {
-                // Start realistic notification simulation after 5 seconds
-                setTimeout(() => this.startRealisticSimulation(), 5000);
-            }
+        // Initialize map
+        function initMap() {
+            // Create map
+            map = L.map('map', {
+                zoomControl: false,
+                attributionControl: false
+            }).setView(userLocation, 13);
 
-            show(options) {
-                const notification = this.createNotification(options);
-                this.container.appendChild(notification);
-                
-                // Trigger show animation
-                setTimeout(() => {
-                    notification.classList.add('show');
-                }, 100);
+            // Add tile layer
+            L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+                attribution: '© OpenStreetMap'
+            }).addTo(map);
 
-                // Auto dismiss
-                if (options.autoDismiss !== false) {
-                    setTimeout(() => {
-                        this.dismiss(notification);
-                    }, options.duration || 5000);
-                }
+            // Add zoom control to bottom right
+            L.control.zoom({
+                position: 'bottomright'
+            }).addTo(map);
 
-                return notification;
-            }
+            // Create SVG overlay for connection lines
+            createSVGLayer();
 
-            createNotification(options) {
-                const notification = document.createElement('div');
-                notification.className = `notification ${options.type || 'info'}`;
-                
-                notification.innerHTML = `
-                    <button class="notification-close" onclick="this.parentElement.remove()">×</button>
-                    <div class="notification-header">
-                        <div class="notification-icon">${options.icon || '🔔'}</div>
-                        <div class="notification-title">${options.title}</div>
-                        <div class="notification-time">${options.time || 'now'}</div>
-                    </div>
-                    <div class="notification-body">${options.body}</div>
-                    <div class="notification-progress"></div>
-                `;
+            // Create marker cluster
+            markerCluster = L.markerClusterGroup({
+                iconCreateFunction: function(cluster) {
+                    const count = cluster.getChildCount();
+                    return L.divIcon({
+                        html: `<div class="marker-cluster"><div>${count}</div></div>`,
+                        className: 'cluster-marker',
+                        iconSize: [40, 40]
+                    });
+                },
+                spiderfyOnMaxZoom: true,
+                showCoverageOnHover: false,
+                maxClusterRadius: 60
+            });
 
-                // Add click handler
-                notification.addEventListener('click', () => {
-                    if (options.onClick) options.onClick();
-                    this.dismiss(notification);
+            // Add user marker
+            addUserMarker();
+            
+            // Add connection markers
+            addConnectionMarkers();
+            
+            // Add markers to map
+            map.addLayer(markerCluster);
+            
+            // Draw connection lines
+            drawConnectionLines();
+
+            // Check for tour mode
+            checkTourMode();
+        }
+
+        // Create SVG layer for lines
+        function createSVGLayer() {
+            svgLayer = L.svg().addTo(map);
+        }
+
+        // Add user marker
+        function addUserMarker() {
+            const userIcon = L.divIcon({
+                html: '<div class="user-marker">📍</div>',
+                className: 'leaflet-marker-icon user-marker',
+                iconSize: [30, 30],
+                iconAnchor: [15, 15]
+            });
+
+            L.marker(userLocation, { icon: userIcon })
+                .bindPopup('<b>You are here</b><br>Delhi, India')
+                .addTo(map);
+        }
+
+        // Add connection markers
+        function addConnectionMarkers() {
+            allMarkers = [];
+            
+            connections.forEach(connection => {
+                // Create marker with degree-based styling
+                const icon = L.divIcon({
+                    html: `<div class="connection-marker-${connection.degree}">${getInstitutionIcon(connection.institution)}</div>`,
+                    className: `leaflet-marker-icon connection-marker-${connection.degree}`,
+                    iconSize: [25, 25],
+                    iconAnchor: [12.5, 12.5]
                 });
 
-                return notification;
-            }
+                const marker = L.marker([connection.lat, connection.lng], { icon: icon })
+                    .bindPopup(createPopupContent(connection))
+                    .on('click', () => showConnectionInfo(connection));
 
-            dismiss(notification) {
-                notification.classList.add('hide');
-                setTimeout(() => {
-                    if (notification.parentElement) {
-                        notification.parentElement.removeChild(notification);
-                    }
-                }, 400);
-            }
+                marker.connectionData = connection;
+                allMarkers.push(marker);
+                markerCluster.addLayer(marker);
+            });
+        }
 
-            // Realistic notification simulation
-            startRealisticSimulation() {
-                if (!this.isActive) return;
+        // Get institution icon
+        function getInstitutionIcon(institution) {
+            const icons = {
+                government: '🏛️',
+                bank: '🏦',
+                hospital: '🏥',
+                company: '🏢',
+                education: '🎓'
+            };
+            return icons[institution] || '📍';
+        }
 
-                const scenarios = [
-                    {
-                        title: "New Connection Request",
-                        body: "Anjali Verma wants to connect. She works at HDFC Bank, Karol Bagh.",
-                        icon: "👥",
-                        type: "connection",
-                        time: "2m ago"
-                    },
-                    {
-                        title: "Help Request Response",
-                        body: "Rajesh Kumar: 'Happy to help with your loan documentation! When can we meet?'",
-                        icon: "💬",
-                        type: "success",
-                        time: "5m ago"
-                    },
-                    {
-                        title: "Location Opportunity",
-                        body: "You're near SBI Connaught Place - Rajesh Kumar works here and can help with banking.",
-                        icon: "📍",
-                        type: "info",
-                        time: "now"
-                    },
-                    {
-                        title: "Network Activity",
-                        body: "Amit Sharma helped someone in your network get a passport appointment today!",
-                        icon: "🌟",
-                        type: "success",
-                        time: "10m ago"
-                    },
-                    {
-                        title: "Someone Needs Help",
-                        body: "A connection needs urgent help at Income Tax Office. Can you assist?",
-                        icon: "🆘",
-                        type: "warning",
-                        time: "just now"
-                    }
-                ];
-
-                // Show random notifications
-                const showRandomNotification = () => {
-                    if (!this.isActive) return;
-                    
-                    const scenario = scenarios[Math.floor(Math.random() * scenarios.length)];
-                    this.show(scenario);
-                    
-                    // Schedule next notification (20-60 seconds)
-                    setTimeout(showRandomNotification, 20000 + Math.random() * 40000);
-                };
-
-                // Start first notification
-                setTimeout(showRandomNotification, 10000);
-            }
-
-            // Success story popup
-            showSuccessStory(story) {
-                const popup = document.createElement('div');
-                popup.className = 'success-story';
-                popup.innerHTML = `
-                    <div class="success-story-header">
-                        <div class="success-story-icon">🎉</div>
-                        <div class="success-story-title">${story.title}</div>
+        // Create popup content
+        function createPopupContent(connection) {
+            return `
+                <div style="text-align: center; min-width: 200px;">
+                    <h4 style="margin-bottom: 8px;">${connection.name}</h4>
+                    <p style="margin-bottom: 4px;"><strong>${connection.role}</strong></p>
+                    <p style="margin-bottom: 4px;">📍 ${connection.department}</p>
+                    <p style="margin-bottom: 8px;">🔗 ${connection.degree}${getDegreeSuffix(connection.degree)} degree connection</p>
+                    <div style="background: #f8f9fa; padding: 8px; border-radius: 8px; margin-top: 8px;">
+                        <p style="margin: 2px 0; font-size: 12px;">⏱️ Response: ${connection.response}</p>
+                        <p style="margin: 2px 0; font-size: 12px;">✅ Success: ${connection.success}</p>
+                        <p style="margin: 2px 0; font-size: 12px;">💼 ${connection.help}</p>
                     </div>
-                    <div class="success-story-content">${story.content}</div>
-                `;
-                
-                document.body.appendChild(popup);
-                
-                setTimeout(() => popup.classList.add('show'), 100);
-                
-                setTimeout(() => {
-                    popup.classList.remove('show');
-                    setTimeout(() => document.body.removeChild(popup), 500);
-                }, 6000);
+                </div>
+            `;
+        }
 
-                popup.addEventListener('click', () => {
-                    popup.classList.remove('show');
-                    setTimeout(() => document.body.removeChild(popup), 500);
+        function getDegreeSuffix(degree) {
+            const suffixes = { 1: 'st', 2: 'nd', 3: 'rd' };
+            return suffixes[degree] || 'th';
+        }
+
+        // Draw connection lines
+        function drawConnectionLines() {
+            if (!showLines) return;
+
+            const svg = d3.select("#map").select("svg").select("g");
+            if (svg.empty()) {
+                const svgElement = d3.select("#map").select("svg");
+                const g = svgElement.append("g").attr("class", "leaflet-zoom-hide");
+            }
+
+            // Clear existing lines
+            d3.select("#map").select("svg").selectAll(".connection-line").remove();
+
+            // Get filtered connections
+            const filteredConnections = getFilteredConnections();
+
+            // Draw lines
+            filteredConnections.forEach(connection => {
+                const userPoint = map.latLngToLayerPoint(userLocation);
+                const connectionPoint = map.latLngToLayerPoint([connection.lat, connection.lng]);
+
+                d3.select("#map").select("svg").select("g")
+                    .append("line")
+                    .attr("class", `connection-line line-degree-${connection.degree}`)
+                    .attr("x1", userPoint.x)
+                    .attr("y1", userPoint.y)
+                    .attr("x2", connectionPoint.x)
+                    .attr("y2", connectionPoint.y);
+            });
+        }
+
+        // Update connection lines on map move
+        function updateConnectionLines() {
+            if (!showLines) return;
+
+            const filteredConnections = getFilteredConnections();
+            
+            d3.select("#map").select("svg").selectAll(".connection-line")
+                .each(function(d, i) {
+                    if (i < filteredConnections.length) {
+                        const connection = filteredConnections[i];
+                        const userPoint = map.latLngToLayerPoint(userLocation);
+                        const connectionPoint = map.latLngToLayerPoint([connection.lat, connection.lng]);
+                        
+                        d3.select(this)
+                            .attr("x1", userPoint.x)
+                            .attr("y1", userPoint.y)
+                            .attr("x2", connectionPoint.x)
+                            .attr("y2", connectionPoint.y);
+                    }
                 });
-            }
+        }
 
-            // Quick notification methods
-            success(title, body) {
-                return this.show({ title, body, icon: "✅", type: "success" });
-            }
+        // Get filtered connections
+        function getFilteredConnections() {
+            return connections.filter(conn => {
+                const degreeMatch = currentFilter.degree === 'all' || conn.degree == currentFilter.degree;
+                const institutionMatch = currentFilter.institution === 'all' || conn.institution === currentFilter.institution;
+                return degreeMatch && institutionMatch;
+            });
+        }
 
-            info(title, body) {
-                return this.show({ title, body, icon: "ℹ️", type: "info" });
-            }
+        // Show connection info (mobile bottom sheet)
+        function showConnectionInfo(connection) {
+            currentConnection = connection;
+            
+            // Update info panel
+            document.getElementById('connectionName').innerHTML = 
+                `${connection.name} <span class="degree-badge degree-${connection.degree}">${connection.degree}°</span>`;
+            document.getElementById('connectionRole').textContent = connection.role;
+            document.getElementById('connectionInstitution').textContent = connection.institution.charAt(0).toUpperCase() + connection.institution.slice(1);
+            document.getElementById('connectionDepartment').textContent = connection.department;
+            document.getElementById('connectionHelp').textContent = connection.help;
+            document.getElementById('connectionResponse').textContent = connection.response;
+            document.getElementById('connectionSuccess').textContent = connection.success;
+            
+            // Show panel
+            document.getElementById('connectionInfo').classList.add('show');
+        }
 
-            warning(title, body) {
-                return this.show({ title, body, icon: "⚠️", type: "warning" });
+        // Hide connection info
+        function hideConnectionInfo() {
+            document.getElementById('connectionInfo').classList.remove('show');
+            currentConnection = null;
+        }
+
+        // Toggle advanced controls
+        function toggleAdvancedControls() {
+            const controls = document.getElementById('advancedControls');
+            controls.classList.toggle('show');
+        }
+
+        // Filter functions
+        function filterByDegree() {
+            const degree = document.getElementById('degreeFilter').value;
+            currentFilter.degree = degree;
+            updateMapDisplay();
+        }
+
+        function filterByInstitution() {
+            const institution = document.getElementById('institutionFilter').value;
+            currentFilter.institution = institution;
+            updateMapDisplay();
+        }
+
+        function updateMapDisplay() {
+            // Clear and rebuild markers
+            markerCluster.clearLayers();
+            
+            const filteredConnections = getFilteredConnections();
+            const filteredMarkers = allMarkers.filter(marker => 
+                filteredConnections.some(conn => conn.id === marker.connectionData.id)
+            );
+            
+            filteredMarkers.forEach(marker => markerCluster.addLayer(marker));
+            
+            // Redraw connection lines
+            drawConnectionLines();
+            
+            showNotification(`Showing ${filteredConnections.length} connections`);
+        }
+
+        // Toggle connection lines
+        function toggleConnectionLines() {
+            showLines = !showLines;
+            if (showLines) {
+                drawConnectionLines();
+                showNotification('Connection lines enabled', 'success');
+            } else {
+                d3.select("#map").select("svg").selectAll(".connection-line").remove();
+                showNotification('Connection lines disabled');
             }
         }
 
-        // Initialize notification system
-        let notificationSystem;
-
-        // Tour configuration for map page
-        const tourSteps = [
-            {
-                target: '.location-banner',
-                title: 'Location-Based Discovery',
-                text: 'The app automatically detects when you\'re near institutions where your network connections work. This banner shows real-time opportunities.',
-                icon: '📍'
-            },
-            {
-                target: '.search-bar',
-                title: 'Smart Institution Search',
-                text: 'Search for any institution, help type, or specific need. Try "Hindustan Lever", "Gangaram Hospital", or "Marriage Lawyer".',
-                icon: '🔍'
-            },
-            {
-                target: '.connection-legend',
-                title: 'Color-Coded Network',
-                text: 'Green dots are direct contacts, blue are friends of friends, yellow are 3rd degree, red are 4th degree. Closer connections = faster help.',
-                icon: '🎨'
-            },
-            {
-                target: '.help-button',
-                title: 'Emergency Help System',
-                text: 'Large, prominent SOS button for urgent situations. Your request will route through the best connection path automatically.',
-                icon: '🆘'
-            },
-            {
-                target: '.action-grid',
-                title: 'Quick Actions',
-                text: 'Access your network, view help history, learn how it works, and find nearby connections. Everything you need is one tap away.',
-                icon: '⚡'
+        // Simulate help path
+        function simulateHelpPath() {
+            if (helpPath) {
+                map.removeLayer(helpPath);
             }
-        ];
 
-        // Initialize page
-        function initPage() {
+            // Select random connections for demo
+            const targetConnection = connections[Math.floor(Math.random() * connections.length)];
+            const intermediateConnection = connections.find(conn => 
+                conn.degree === 1 && conn.institution === targetConnection.institution
+            ) || connections.find(conn => conn.degree === 1);
+
+            // Create animated path
+            const pathCoords = [
+                userLocation,
+                [intermediateConnection.lat, intermediateConnection.lng],
+                [targetConnection.lat, targetConnection.lng]
+            ];
+
+            helpPath = L.polyline(pathCoords, {
+                className: 'help-path',
+                weight: 4,
+                opacity: 0.8,
+                color: '#ff4757'
+            }).addTo(map);
+
+            showNotification(`Help path: You → ${intermediateConnection.name} → ${targetConnection.name}`, 'success');
+
+            // Remove path after 8 seconds
+            setTimeout(() => {
+                if (helpPath) {
+                    map.removeLayer(helpPath);
+                    helpPath = null;
+                }
+            }, 8000);
+        }
+
+        // Reset map
+        function resetMap() {
+            map.setView(userLocation, 13);
+            document.getElementById('degreeFilter').value = 'all';
+            document.getElementById('institutionFilter').value = 'all';
+            currentFilter = { degree: 'all', institution: 'all' };
+            updateMapDisplay();
+            hideConnectionInfo();
+            showNotification('Map reset to default view');
+        }
+
+        // Navigation functions
+        function goToProfile() {
+            showLoading();
+            setTimeout(() => window.location.href = 'profile.html', 500);
+        }
+
+        function goToConnections() {
+            showLoading();
+            setTimeout(() => window.location.href = 'connections.html', 500);
+        }
+
+        function goToAbout() {
+            showLoading();
+            setTimeout(() => window.location.href = 'about.html', 500);
+        }
+
+        function goToHistory() {
+            showLoading();
+            setTimeout(() => window.location.href = 'history.html', 500);
+        }
+
+        function emergencyHelp() {
+            showLoading();
+            setTimeout(() => window.location.href = 'help-request.html?urgent=true', 500);
+        }
+
+        function requestHelp() {
+            if (currentConnection) {
+                showLoading();
+                setTimeout(() => {
+                    window.location.href = `help-request.html?connection=${currentConnection.id}`;
+                }, 500);
+            }
+        }
+
+        // Search functionality
+        function performSearch() {
+            const query = document.getElementById('searchBox').value.toLowerCase().trim();
+            if (!query) return;
+
+            const results = connections.filter(conn => 
+                conn.name.toLowerCase().includes(query) ||
+                conn.role.toLowerCase().includes(query) ||
+                conn.institution.toLowerCase().includes(query) ||
+                conn.help.toLowerCase().includes(query)
+            );
+
+            if (results.length > 0) {
+                const firstResult = results[0];
+                map.setView([firstResult.lat, firstResult.lng], 15);
+                showConnectionInfo(firstResult);
+                showNotification(`Found ${results.length} result(s)`, 'success');
+            } else {
+                showNotification('No results found', 'error');
+            }
+        }
+
+        // Find nearby
+        function findNearby() {
+            const nearbyCount = Math.floor(Math.random() * 6) + 3;
+            showNotification(`Found ${nearbyCount} connections within 2km`, 'success');
+            map.setZoom(12);
+        }
+
+        // Utility functions
+        function showLoading() {
+            document.getElementById('loadingOverlay').style.display = 'flex';
+        }
+
+        function hideLoading() {
+            document.getElementById('loadingOverlay').style.display = 'none';
+        }
+
+        function showNotification(message, type = 'info') {
+            const notification = document.getElementById('notification');
+            notification.textContent = message;
+            notification.className = `notification show ${type}`;
+            
+            setTimeout(() => {
+                notification.classList.remove('show');
+            }, 3000);
+        }
+
+        // Tour mode
+        function checkTourMode() {
             const urlParams = new URLSearchParams(window.location.search);
             if (urlParams.get('tour') === 'true') {
-                isInTourMode = true;
-                setTimeout(startTour, 2000);
+                setTimeout(startTour, 1000);
             }
         }
 
         function startTour() {
-            document.getElementById('tourOverlay').style.display = 'block';
-            document.getElementById('tourProgress').style.display = 'block';
-            showTourStep(0);
-        }
-
-        function showTourStep(stepIndex) {
-            if (stepIndex >= tourSteps.length) {
-                endTour();
-                return;
-            }
-
-            currentTourStep = stepIndex;
-            const step = tourSteps[stepIndex];
-            
-            document.getElementById('tourProgress').textContent = `Step ${stepIndex + 1} of ${tourSteps.length}`;
-
-            // Clear previous elements
-            const existingHighlight = document.querySelector('.tour-highlight');
-            const existingTooltip = document.querySelector('.tour-tooltip');
-            if (existingHighlight) existingHighlight.remove();
-            if (existingTooltip) existingTooltip.remove();
-
-            const targetElement = document.querySelector(step.target);
-            if (!targetElement) return;
-
-            // Create highlight
-            const highlight = document.createElement('div');
-            highlight.className = 'tour-highlight';
-            
-            const rect = targetElement.getBoundingClientRect();
-            highlight.style.left = (rect.left - 5) + 'px';
-            highlight.style.top = (rect.top - 5) + 'px';
-            highlight.style.width = (rect.width + 10) + 'px';
-            highlight.style.height = (rect.height + 10) + 'px';
-            
-            document.body.appendChild(highlight);
-
-            // Create tooltip
-            const tooltip = document.createElement('div');
-            tooltip.className = 'tour-tooltip';
-            
-            tooltip.innerHTML = `
-                <div class="tooltip-header">
-                    <span class="tooltip-icon">${step.icon}</span>
-                    <span class="tooltip-title">${step.title}</span>
-                </div>
-                <div class="tooltip-text">${step.text}</div>
-                <div class="tooltip-buttons">
-                    <button class="tooltip-button tooltip-skip" onclick="endTour()">Skip Tour</button>
-                    <button class="tooltip-button tooltip-next" onclick="nextTourStep()">
-                        ${stepIndex === tourSteps.length - 1 ? 'Try Help Request' : 'Next'}
-                    </button>
-                </div>
-            `;
-
-            tooltip.style.left = Math.max(10, (rect.left + rect.width/2 - 160)) + 'px';
-            tooltip.style.top = (rect.bottom + 20) + 'px';
-
-            if (rect.bottom + 200 > window.innerHeight) {
-                tooltip.style.top = (rect.top - 180) + 'px';
-            }
-
-            document.body.appendChild(tooltip);
-        }
-
-        function nextTourStep() {
-            if (currentTourStep === tourSteps.length - 1) {
-                endTour();
-                setTimeout(() => {
-                    if (isInTourMode) {
-                        needHelp();
-                    }
-                }, 500);
-            } else {
-                showTourStep(currentTourStep + 1);
-            }
-        }
-
-        function endTour() {
-            document.getElementById('tourOverlay').style.display = 'none';
-            document.getElementById('tourProgress').style.display = 'none';
-            
-            const highlight = document.querySelector('.tour-highlight');
-            const tooltip = document.querySelector('.tour-tooltip');
-            if (highlight) highlight.remove();
-            if (tooltip) tooltip.remove();
-        }
-
-        function initMap() {
-            // Initialize map centered on Delhi
-            map = L.map('map').setView([28.6139, 77.2090], 13);
-            
-            // Add tile layer
-            L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-                attribution: '© OpenStreetMap contributors'
-            }).addTo(map);
-
-            // Add user location marker
-            userMarker = L.marker([28.6139, 77.2090])
-                .addTo(map)
-                .bindPopup("📍 You are here");
-
-            // Add connection markers
-            addConnectionMarkers();
-        }
-
-        function addConnectionMarkers() {
-            const connections = [
+            const tourSteps = [
                 {
-                    lat: 28.6304, lng: 77.2177, 
-                    name: "Rajesh Kumar", 
-                    role: "Senior Manager - Loan Dept", 
-                    institution: "State Bank of India",
-                    degree: 2, color: '#2196F3'
+                    element: '.user-marker',
+                    title: 'Your Location',
+                    text: 'This is your current location in Delhi. All connections are mapped around you.',
+                    position: 'bottom'
                 },
                 {
-                    lat: 28.6169, lng: 77.2295, 
-                    name: "Priya Sharma", 
-                    role: "Assistant Commissioner", 
-                    institution: "Income Tax Office",
-                    degree: 1, color: '#4CAF50'
+                    element: '.search-container',
+                    title: 'Smart Search',
+                    text: 'Search for institutions, people, or types of help you need.',
+                    position: 'bottom'
                 },
                 {
-                    lat: 28.5562, lng: 77.1000, 
-                    name: "Vikash Singh", 
-                    role: "HR Manager", 
-                    institution: "Maruti Suzuki HQ",
-                    degree: 3, color: '#FF9800'
+                    element: '.leaflet-marker-icon.connection-marker-1',
+                    title: 'Your Connections',
+                    text: 'Green dots are direct connections, orange are 2nd degree, blue are 3rd degree, red are 4th degree.',
+                    position: 'top'
                 },
                 {
-                    lat: 28.6289, lng: 77.2065, 
-                    name: "Dr. Anita Gupta", 
-                    role: "Senior Doctor", 
-                    institution: "AIIMS Delhi",
-                    degree: 1, color: '#4CAF50'
+                    element: '.action-buttons',
+                    title: 'Quick Actions',
+                    text: 'Find nearby connections, view your network, learn how it works, or check your history.',
+                    position: 'top'
                 },
                 {
-                    lat: 28.6127, lng: 77.2395, 
-                    name: "Rohit Verma", 
-                    role: "Deputy Registrar", 
-                    institution: "Delhi University",
-                    degree: 4, color: '#F44336'
+                    element: '.emergency-help',
+                    title: 'Emergency Help',
+                    text: 'Need urgent assistance? This connects you to your most responsive nearby connections.',
+                    position: 'top'
                 }
             ];
-
-            connections.forEach(conn => {
-                const marker = L.circleMarker([conn.lat, conn.lng], {
-                    color: conn.color,
-                    fillColor: conn.color,
-                    fillOpacity: 0.7,
-                    radius: 8
-                }).addTo(map);
-
-                marker.on('click', () => showConnectionInfo(conn));
-                connectionMarkers.push(marker);
-            });
+            
+            runTour(tourSteps);
         }
 
-        function showConnectionInfo(connection) {
-            const infoPanel = document.getElementById('connectionInfo');
-            document.getElementById('connectionName').textContent = connection.name;
-            document.getElementById('connectionRole').textContent = connection.role;
-            document.getElementById('connectionInstitution').textContent = `📍 ${connection.institution}`;
+        function runTour(steps) {
+            let currentStep = 0;
+            const overlay = document.getElementById('tourOverlay');
             
-            const degreeText = {
-                1: "🔗 1st degree connection (Direct contact)",
-                2: "🔗 2nd degree connection (Friend's friend)", 
-                3: "🔗 3rd degree connection",
-                4: "🔗 4th degree connection"
+            function showStep(stepIndex) {
+                if (stepIndex >= steps.length) {
+                    endTour();
+                    return;
+                }
+                
+                const step = steps[stepIndex];
+                const element = document.querySelector(step.element);
+                
+                if (!element) {
+                    setTimeout(() => showStep(stepIndex + 1), 500);
+                    return;
+                }
+                
+                overlay.style.display = 'block';
+                overlay.innerHTML = '';
+                
+                // Create highlight
+                const rect = element.getBoundingClientRect();
+                const highlight = document.createElement('div');
+                highlight.className = 'tour-highlight';
+                highlight.style.left = rect.left - 5 + 'px';
+                highlight.style.top = rect.top - 5 + 'px';
+                highlight.style.width = rect.width + 10 + 'px';
+                highlight.style.height = rect.height + 10 + 'px';
+                overlay.appendChild(highlight);
+                
+                // Create tooltip
+                const tooltip = document.createElement('div');
+                tooltip.className = 'tour-tooltip';
+                tooltip.innerHTML = `
+                    <h4>${step.title}</h4>
+                    <p>${step.text}</p>
+                    <div style="margin-top: 15px; text-align: right;">
+                        <button onclick="nextTourStep()" style="background: #3498db; color: white; border: none; padding: 8px 16px; border-radius: 5px;">
+                            Next (${stepIndex + 1}/${steps.length})
+                        </button>
+                    </div>
+                `;
+                
+                // Position tooltip
+                let tooltipTop = rect.bottom + 10;
+                let tooltipLeft = rect.left;
+                
+                if (step.position === 'top') {
+                    tooltipTop = rect.top - 120;
+                }
+                
+                // Keep tooltip on screen
+                tooltipLeft = Math.max(10, Math.min(tooltipLeft, window.innerWidth - 300));
+                tooltipTop = Math.max(10, Math.min(tooltipTop, window.innerHeight - 150));
+                
+                tooltip.style.left = tooltipLeft + 'px';
+                tooltip.style.top = tooltipTop + 'px';
+                
+                overlay.appendChild(tooltip);
+            }
+            
+            window.nextTourStep = function() {
+                currentStep++;
+                showStep(currentStep);
             };
-            document.getElementById('connectionDegree').textContent = degreeText[connection.degree];
             
-            infoPanel.style.display = 'block';
-            
-            // Auto-hide after 5 seconds (only in non-tour mode)
-            if (!isInTourMode) {
-                setTimeout(() => {
-                    hideConnectionInfo();
-                }, 5000);
-            }
-
-            // Show notification about this connection
-            if (notificationSystem) {
-                notificationSystem.info(
-                    "Connection Details",
-                    `${connection.name} works at ${connection.institution}. Great for ${connection.role.toLowerCase()} help!`
-                );
-            }
-        }
-
-        function hideConnectionInfo() {
-            const infoPanel = document.getElementById('connectionInfo');
-            infoPanel.style.display = 'none';
-        }
-
-        // Hide connection info when clicking elsewhere
-        document.addEventListener('click', function(event) {
-            const infoPanel = document.getElementById('connectionInfo');
-            const isClickInsidePanel = infoPanel.contains(event.target);
-            const isClickOnMarker = event.target.closest('.leaflet-marker-icon') || event.target.closest('.leaflet-interactive');
-            
-            if (!isClickInsidePanel && !isClickOnMarker && infoPanel.style.display === 'block') {
-                hideConnectionInfo();
-            }
-        });
-
-        // Legend management functions
-        function toggleLegend() {
-            const legend = document.getElementById('connectionLegend');
-            if (legend.classList.contains('minimized')) {
-                expandLegend();
-            } else {
-                minimizeLegend();
-            }
-        }
-
-        function minimizeLegend() {
-            const legend = document.getElementById('connectionLegend');
-            legend.classList.add('minimized');
-        }
-
-        function expandLegend() {
-            const legend = document.getElementById('connectionLegend');
-            legend.classList.remove('minimized');
-        }
-
-        // Auto-minimize legend after 10 seconds
-        function autoMinimizeLegend() {
-            if (!isInTourMode) {
-                setTimeout(() => {
-                    minimizeLegend();
-                    if (notificationSystem) {
-                        notificationSystem.info(
-                            "Legend Minimized",
-                            "Click the color icon in top-left to expand the network legend again."
-                        );
-                    }
-                }, 10000);
-            }
-        }
-
-        function needHelp() {
-            if (isInTourMode) {
-                notificationSystem.success(
-                    "Demo Mode",
-                    "Great! You're about to see the help request process. This shows how your request routes through your network."
-                );
+            function endTour() {
+                overlay.style.display = 'none';
+                overlay.innerHTML = '';
+                showNotification('Map tour completed! Try clicking on any colored dot to see connection details.', 'success');
+                
+                // Continue tour
                 setTimeout(() => {
                     window.location.href = 'help-request.html?tour=true';
                 }, 2000);
-            } else {
-                window.location.href = 'help-request.html';
             }
+            
+            showStep(0);
         }
 
-        function findNearby() {
-            // Show notification with nearby connections
-            notificationSystem.success(
-                "Nearby Connections Found",
-                "3 connections within 2km: SBI (500m), Income Tax Office (1.2km), AIIMS Delhi (1.8km)"
-            );
-        }
-
-        function goToProfile() {
-            window.location.href = 'profile.html';
-        }
-
-        // Search functionality
-        document.getElementById('searchInput').addEventListener('input', function(e) {
-            const query = e.target.value.toLowerCase();
-            if (query.length > 2) {
-                // Show search notification
-                if (notificationSystem) {
-                    notificationSystem.info(
-                        "Search Results",
-                        `Found ${Math.floor(Math.random() * 5) + 2} connections related to "${query}"`
-                    );
-                }
-            }
-        });
-
-        // Initialize everything when page loads
-        window.addEventListener('load', function() {
+        // Event listeners
+        document.addEventListener('DOMContentLoaded', function() {
             initMap();
-            initPage();
             
-            // Initialize notification system
-            notificationSystem = new NotificationSystem();
+            // Map events
+            map.on('zoomend moveend', updateConnectionLines);
             
-            // Auto-minimize legend after 10 seconds
-            autoMinimizeLegend();
-            
-            // Show welcome notification
-            setTimeout(() => {
-                if (notificationSystem) {
-                    notificationSystem.success(
-                        "Welcome to Your Network Map!",
-                        "Your network is active with 127 connections. Discover help opportunities around you!"
-                    );
-                    
-                    // Show success story after 30 seconds
-                    setTimeout(() => {
-                        notificationSystem.showSuccessStory({
-                            title: "Success Story",
-                            content: "Rohit helped Priya get her passport renewed in just 2 hours through a connection at the passport office. The power of networking! 🌟"
-                        });
-                    }, 30000);
+            // Search on Enter
+            document.getElementById('searchBox').addEventListener('keypress', function(e) {
+                if (e.key === 'Enter') {
+                    performSearch();
                 }
-            }, 3000);
+            });
+            
+            // Hide connection info on map click
+            map.on('click', function(e) {
+                // Only hide if not clicking on a marker
+                if (!e.originalEvent.target.closest('.leaflet-marker-icon')) {
+                    hideConnectionInfo();
+                }
+            });
+
+            // Hide advanced controls when clicking outside
+            document.addEventListener('click', function(e) {
+                const controls = document.getElementById('advancedControls');
+                const toggle = document.querySelector('.controls-toggle');
+                
+                if (!controls.contains(e.target) && !toggle.contains(e.target)) {
+                    controls.classList.remove('show');
+                }
+            });
         });
 
-        // Show welcome message for banner
-        setTimeout(() => {
-            if (!isInTourMode) {
-                const banner = document.querySelector('.location-banner');
-                banner.style.background = '#4CAF50';
-                banner.style.color = 'white';
-                banner.innerHTML = '✅ Welcome back! Your network is ready to help.';
-                
-                setTimeout(() => {
-                    banner.style.background = '#e3f2fd';
-                    banner.style.color = '#1976d2';
-                    banner.innerHTML = '📍 You are near 3 institutions with connections';
-                }, 3000);
+        // Touch events for mobile
+        let touchStartY = 0;
+        document.addEventListener('touchstart', function(e) {
+            touchStartY = e.touches[0].clientY;
+        });
+
+        document.addEventListener('touchend', function(e) {
+            const touchEndY = e.changedTouches[0].clientY;
+            const touchDiff = touchStartY - touchEndY;
+            
+            // Swipe up to open connection info (if hidden)
+            if (touchDiff > 50 && !document.getElementById('connectionInfo').classList.contains('show')) {
+                // Could implement quick connection discovery here
             }
-        }, 2000);
+        });
+
+        // Keyboard shortcuts
+        document.addEventListener('keydown', function(e) {
+            if (e.altKey && e.key === 's') {
+                e.preventDefault();
+                document.getElementById('searchBox').focus();
+            }
+            if (e.altKey && e.key === 'h') {
+                e.preventDefault();
+                emergencyHelp();
+            }
+            if (e.key === 'Escape') {
+                hideConnectionInfo();
+                document.getElementById('advancedControls').classList.remove('show');
+            }
+        });
     </script>
 </body>
 </html>
